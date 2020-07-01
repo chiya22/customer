@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1><%= title %></h1>
+  <form name="userform" method="POST">
+    <% if (mode === 'insert') { %>
+    <input type="text" name="id" required>
+    <input type="text" name="name" required>
+    <input type="password" name="password" required>
+    <input type="text" name="role">
+    <input type="button" id="btn_insert" value="登録">
+    <% } else { %>
+    <%= user.id %>
+    <input type="hidden" name="id" value="<%= user.id %>">
+    <input type="text" name="name" value="<%= user.name %>" required>
+    <input type="password" name="password" value="" required>
+    <input type="text" name="role" value="<%= user.role %>">
+    <input type="button" id="btn_update" value="更新">
+    <input type="button" id="btn_delete" value="削除">
+    <% } %>
+    <input type="hidden" id="field_mode">
+  </form>
+  <script>
+    let insertbtn = document.getElementById("btn_insert");
+    if (insertbtn) {
+      insertbtn.addEventListener("click", function () {
+        document.userform.action = "insert";
+        document.userform.submit();
+      })
+    }
+    let updatebtn = document.getElementById("btn_update");
+    if (updatebtn) {
+      updatebtn.addEventListener("click", function () {
+        document.userform.action = "update";
+        document.userform.submit();
+      })
+    }
+    let deletebtn = document.getElementById("btn_delete");
+    if (deletebtn) {
+      deletebtn.addEventListener("click", function () {
+        document.userform.action = "delete";
+        document.userform.submit();
+      })
+    }
+  </script>
+</body>
+
+</html>
