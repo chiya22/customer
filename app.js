@@ -7,7 +7,10 @@ var security = require('./util/security');
 var flash = require("connect-flash");
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var adminRouter = require('./routes/admin/admin');
+var usersRouter = require('./routes/admin/users');
+var companiesRouter = require('./routes/admin/companies');
+var personsRouter = require('./routes/admin/persons');
 
 var app = express();
 
@@ -39,7 +42,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/admin', adminRouter);
+app.use('/admin/users', usersRouter);
+app.use('/admin/companies', companiesRouter);
+app.use('/admin/persons', personsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

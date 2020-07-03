@@ -2,14 +2,16 @@
 <html>
 
 <head>
-  <title>フロントページ</title>
+  <title>管理ページ</title>
   <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 
 <body>
-  <h1>PLATFORM</h1>
-  <p>フロントページ</p>
-  <a href="admin">管理ページ</a>
+  <h1>管理ページ</h1>
+  <p>様々なデータを管理する</p>
+  <a href="/admin/users">ユーザ管理</a>
+  <a href="/admin/companies">会社管理</a>
+  <a href="/admin/persons">個人管理</a>
   <% if (locals.user){ %>
   <form method="POST" action="/logout">
     <input type="submit" button value="ログアウト" />

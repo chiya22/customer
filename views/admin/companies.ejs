@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>会社管理</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>会社管理</h1>
+  <ul>
+    <% if (companies) { %>
+    <%  companies.forEach( company => { %>
+    <li>
+      <a href="/admin/companies/update/<%= company.id %>">
+        <%= company.name %>（<%= company.id %>）
+      </a>
+    </li>
+    <%  }) %>
+    <% } %>
+  </ul>
+  <a href="/admin/companies/insert">登録</a>
+</body>
+
+</html>

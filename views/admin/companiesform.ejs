@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>会社管理（編集）</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>会社管理（編集）</h1>
+  <form name="companyform" method="POST">
+    <% if (mode === 'insert') { %>
+    ID:<input type="text" name="id" required>
+    ID_NYUKYO:<input type="text" name="id_nyukyo" required>
+    ID_KAIGI:<input type="text" name="id_kaigi" required>
+    NAME:<input type="text" name="name" required>
+    KANA:<input type="text" name="kana" required>
+    BIKOU:<input type="text" name="bikou">
+    <input type="button" id="btn_insert" value="登録">
+    <% } else { %>
+    ID:<%= company.id %>
+    <input type="hidden" name="id" value="<%= company.id %>">
+    ID_NYUKYO:<input type="text" name="id_nyukyo" value="<%= company.id_nyukyo %>" required>
+    ID_KAIGI:<input type="text" name="id_kaigi" value="<%= company.id_kaigi %>" required>
+    NAME:<input type="text" name="name" value="<%= company.name %>" required>
+    KANA:<input type="text" name="kana" value="<%= company.kana %>" required>
+    BIKOU:<input type="text" name="bikou" value="<%= company.bikou %>">
+    <input type="button" id="btn_update" value="更新">
+    <input type="button" id="btn_delete" value="削除">
+    <% } %>
+    <input type="hidden" id="field_mode">
+  </form>
+  <script>
+    let insertbtn = document.getElementById("btn_insert");
+    if (insertbtn) {
+      insertbtn.addEventListener("click", function () {
+        document.companyform.action = "insert";
+        document.companyform.submit();
+      })
+    }
+    let updatebtn = document.getElementById("btn_update");
+    if (updatebtn) {
+      updatebtn.addEventListener("click", function () {
+        document.companyform.action = "update";
+        document.companyform.submit();
+      })
+    }
+    let deletebtn = document.getElementById("btn_delete");
+    if (deletebtn) {
+      deletebtn.addEventListener("click", function () {
+        document.companyform.action = "delete";
+        document.companyform.submit();
+      })
+    }
+  </script>
+</body>
+
+</html>

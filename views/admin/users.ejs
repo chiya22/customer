@@ -2,24 +2,24 @@
 <html>
 
 <head>
-  <title><%= title %></title>
+  <title>ユーザ管理</title>
   <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 
 <body>
-  <h1><%= title %></h1>
+  <h1>ユーザ管理</h1>
   <ul>
     <% if (users) { %>
     <%  users.forEach( user => { %>
     <li>
-      <a href="users/update/<%= user.id %>">
+      <a href="/admin/users/update/<%= user.id %>">
         <%= user.name %>（<%= user.id %>）
       </a>
     </li>
     <%  }) %>
     <% } %>
   </ul>
-  <a href="users/insert">登録</a>
+  <a href="/admin/users/insert">登録</a>
 </body>
 
 </html>

@@ -2,25 +2,25 @@
 <html>
 
 <head>
-  <title><%= title %></title>
+  <title>ユーザ管理（編集）</title>
   <link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 
 <body>
-  <h1><%= title %></h1>
+  <h1>ユーザ管理（編集）</h1>
   <form name="userform" method="POST">
     <% if (mode === 'insert') { %>
-    <input type="text" name="id" required>
-    <input type="text" name="name" required>
-    <input type="password" name="password" required>
-    <input type="text" name="role">
+    ID:<input type="text" name="id" required>
+    NAME:<input type="text" name="name" required>
+    PASS:<input type="password" name="password" required>
+    ROLE:<input type="text" name="role">
     <input type="button" id="btn_insert" value="登録">
     <% } else { %>
-    <%= user.id %>
+    ID:<%= user.id %>
     <input type="hidden" name="id" value="<%= user.id %>">
-    <input type="text" name="name" value="<%= user.name %>" required>
-    <input type="password" name="password" value="" required>
-    <input type="text" name="role" value="<%= user.role %>">
+    NAME:<input type="text" name="name" value="<%= user.name %>" required>
+    PASS:<input type="password" name="password" value="" required>
+    ROLE:<input type="text" name="role" value="<%= user.role %>">
     <input type="button" id="btn_update" value="更新">
     <input type="button" id="btn_delete" value="削除">
     <% } %>

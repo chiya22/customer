@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>個人管理（編集）</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>個人管理（編集）</h1>
+  <form name="personform" method="POST">
+    <% if (mode === 'insert') { %>
+    ID:<input type="text" name="id" required>
+    ID_COMPANY:<input type="text" name="id_company" required>
+    NAME:<input type="text" name="name" required>
+    KANA:<input type="text" name="kana">
+    TELNO:<input type="text" name="telno">
+    TELNO_MOBILE:<input type="text" name="telno_mobile">
+    EMAIL:<input type="text" name="email">
+    NO_YUBIN:<input type="text" name="no_yubin">
+    TODOUFUKEN:<input type="text" name="todoufuken">
+    ADDRESS:<input type="text" name="address">
+    BIKOU:<input type="text" name="bikou">
+    <input type="button" id="btn_insert" value="登録">
+    <% } else { %>
+    ID:<%= user.id %>
+    <input type="hidden" name="id" value="<%= person.id %>">
+    ID_COMPANY:<input type="text" name="id_company" value="<%= person.id_company %>" required>
+    NAME:<input type="text" name="name" value="<%= person.name %>" required>
+    KANA:<input type="text" name="kana" value="<%= person.kana %>" >
+    TELNO:<input type="text" name="telno" value="<%= person.telno %>" >
+    TELNO_MOBILE:<input type="text" name="telno_mobile" value="<%= person.telno_mobile %>" >
+    EMAIL:<input type="text" name="email" value="<%= person.email %>" >
+    NO_YUBIN:<input type="text" name="no_yubin" value="<%= person.no_yubin %>" >
+    TODOUFUKEN:<input type="text" name="todoufuken" value="<%= person.todoufuken %>" >
+    ADDRESS:<input type="text" name="address" value="<%= person.address %>" >
+    BIKOU:<input type="text" name="bikou" value="<%= person.bikou %>" >
+
+    <input type="button" id="btn_update" value="更新">
+    <input type="button" id="btn_delete" value="削除">
+    <% } %>
+    <input type="hidden" id="field_mode">
+  </form>
+  <script>
+    let insertbtn = document.getElementById("btn_insert");
+    if (insertbtn) {
+      insertbtn.addEventListener("click", function () {
+        document.personform.action = "insert";
+        document.personform.submit();
+      })
+    }
+    let updatebtn = document.getElementById("btn_update");
+    if (updatebtn) {
+      updatebtn.addEventListener("click", function () {
+        document.personform.action = "update";
+        document.personform.submit();
+      })
+    }
+    let deletebtn = document.getElementById("btn_delete");
+    if (deletebtn) {
+      deletebtn.addEventListener("click", function () {
+        document.personform.action = "delete";
+        document.personform.submit();
+      })
+    }
+  </script>
+</body>
+
+</html>

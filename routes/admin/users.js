@@ -1,16 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-var connection = require('../db/mysqlconfig.js');
-const security = require('../util/security');
-const hash = require('../util/hash').digest;
+var connection = require('../../db/mysqlconfig.js');
+const security = require('../../util/security');
+const hash = require('../../util/hash').digest;
 
 // TOPページ
 router.get('/', security.authorize(), function (req, res, next) {
   connection.query('select id, name from users', function (error, results, fields) {
     if (error) throw error;
-    res.render('users', {
-      title: 'Express',
+    res.render('admin/users', {
       users: results,
     });
   });
@@ -18,8 +17,7 @@ router.get('/', security.authorize(), function (req, res, next) {
 
 // メニューから登録画面（usersForm）へ
 router.get('/insert', security.authorize(), function (req, res, next) {
-  res.render('usersform', {
-    title: 'Express',
+  res.render('admin/usersform', {
     user: null,
     mode: 'insert',
   });
@@ -30,8 +28,7 @@ router.get('/update/:id', security.authorize(), function (req, res, next) {
   const id = req.params.id;
   connection.query('select * from users where id = "' + id + '"', function (error, results, fields) {
     if (error) throw error;
-    res.render('usersform', {
-      title: 'Express',
+    res.render('admin/usersform', {
       user: results[0],
       mode: 'update',
     });
