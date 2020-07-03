@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>会社</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>会社</h1>
+    ID:<%= company.id %>
+    ID_NYUKYO:<%= company.id_nyukyo %>
+    ID_KAIGI:<%= company.id_kaigi %>
+    NAME:<%= company.name %>
+    KANA:<%= company.kana %>
+    BIKOU:<%= company.bikou %>
+    <hr>
+    <ul>
+      <% if (persons) { %>
+      <%  persons.forEach( person => { %>
+      <li>
+          <%= person.name %>（<%= person.id %>）
+      </li>
+      <%  }) %>
+      <% } %>
+    </ul>
+</body>
+
+</html>

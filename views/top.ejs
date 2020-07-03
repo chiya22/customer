@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>トップページ</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>PLATFORM</h1>
+  <p>トップページ</p>
+  <form name="searchform" method="post" action="/top">
+    <input type="text" name="searchvalue" placeholder="検索文字を入力してください" value="<%= searchvalue %>">
+    <input type="submit" value="検索" />
+  </form>
+  <ul>
+    <% if (results) { %>
+    <%  results.forEach( result => { %>
+    <li>
+      <% if (result.kubun === 'company') { %>
+        <a href="./company/<%= result.id %>">
+      <% } else if (result.kubun === 'person') { %>
+        <a href="./person/<%= result.id %>">
+      <% } %>
+        【<%= result.kubun %>】<%= result.name %>（<%= result.id %>）
+      </a>
+    </li>
+    <%  }) %>
+    <% } %>
+  </ul>
+</body>
+
+</html>
