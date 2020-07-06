@@ -4,12 +4,56 @@ var router = express.Router();
 var connection = require('../../db/mysqlconfig.js');
 const security = require('../../util/security');
 
+const m_company = require('../../model/company');
+
+const count_perpage = 10;
+
 // 会社メニュー
 router.get('/', security.authorize(), function (req, res, next) {
-  connection.query('select id, name from companies limit 50', function (error, results, fields) {
-    if (error) throw error;
-    res.render('admin/companies', {
-      companies: results,
+  res.render('admin/companies', {
+    searchvalue: null,
+    results: null,
+    page_current: 0,
+    page_max: 0,
+    count_all: 0,
+  });
+});
+
+router.post('/', security.authorize(), function (req, res, next) {
+
+  const searchvalue = req.body.searchvalue;        //検索文字列
+  const pagecount_current = req.body.page_current; //現在表示されているページ
+  const page_action = req.body.pageaction;         //ページングアクション
+
+  //ページングアクションにより、表示対象のページ数を確定する
+  let pagecount_target;
+  if (page_action === 'next') {
+    pagecount_target = parseInt(pagecount_current) + 1;
+  } else if (page_action === 'prev') {
+    pagecount_target = parseInt(pagecount_current) - 1;
+  } else {
+    pagecount_target = 1;
+  }
+  //表示開始位置を確定する
+  const offset = (pagecount_target - 1) * count_perpage;
+
+  m_company.findLikeCount(searchvalue, (err, retObj) => {
+    if (err) {
+      throw err;
+    }
+    let count_all = retObj;
+    const pagecount_max = parseInt(count_all / count_perpage) + 1;
+    m_company.findLikeForPaging(searchvalue, count_perpage, offset, (err, retObj) => {
+      if (err) {
+        throw err;
+      }
+      res.render('admin/companies', {
+        searchvalue: searchvalue,
+        results: retObj,
+        page_current: pagecount_target,
+        page_max: pagecount_max,
+        count_all: count_all,
+      });
     });
   });
 });
@@ -25,10 +69,12 @@ router.get('/insert', security.authorize(), function (req, res, next) {
 //会社IDを指定して更新画面（companiesForm）へ
 router.get('/update/:id', security.authorize(), function (req, res, next) {
   const id = req.params.id;
-  connection.query('select * from companies where id = "' + id + '"', function (error, results, fields) {
-    if (error) throw error;
+  m_company.findPKey(id, (err, retObj) => {
+    if (err) {
+      throw err;
+    }
     res.render('admin/companiesform', {
-      company: results[0],
+      company: retObj,
       mode: 'update',
     });
   });
@@ -36,31 +82,35 @@ router.get('/update/:id', security.authorize(), function (req, res, next) {
 
 //会社情報の登録
 router.post('/insert', security.authorize(), function (req, res, next) {
-  const id = req.body.id;
-  const id_nyukyo = req.body.id_nyukyo;
-  const id_kaigi = req.body.id_kaigi;
-  const name = req.body.name;
-  const kana = req.body.kana;
-  const bikou = req.body.bikou;
+  let inObj = {};
+  inObj.id = req.body.id;
+  inObj.id_nyukyo = req.body.id_nyukyo;
+  inObj.id_kaigi = req.body.id_kaigi;
+  inObj.name = req.body.name;
+  inObj.kana = req.body.kana;
+  inObj.bikou = req.body.bikou;
 
-  const query = 'insert into companies values ("' + id + '","' + id_nyukyo + '","' + id_kaigi + '","' + name + '","' + kana + '", "20200701", "99991231", "' + bikou + '")';
-  connection.query(query, function (error, results, fields) {
-    if (error) throw error;
+  m_company.insert(inObj, (err, retObj) => {
+    if (err) {
+      throw err;
+    }
     res.redirect(req.baseUrl);
   });
 });
 
 //会社情報の更新
 router.post('/update/update', security.authorize(), function (req, res, next) {
-  const id = req.body.id;
-  const id_nyukyo = req.body.id_nyukyo;
-  const id_kaigi = req.body.id_kaigi;
-  const name = req.body.name;
-  const kana = req.body.kana;
-  const bikou = req.body.bikou;
-  const query = 'update companies set id_nyukyo = "' + id_nyukyo + '", id_kaigi = "' + id_kaigi + '", name = "' + name + '", kana = "' + kana + '", bikou = "' + bikou + '" where id = "' + id + '"';
-  connection.query(query, function (error, results, fields) {
-    if (error) throw error;
+  let inObj = {};
+  inObj.id = req.body.id;
+  inObj.id_nyukyo = req.body.id_nyukyo;
+  inObj.id_kaigi = req.body.id_kaigi;
+  inObj.name = req.body.name;
+  inObj.kana = req.body.kana;
+  inObj.bikou = req.body.bikou;
+  m_company.update(inObj, (err, retObj) => {
+    if (err) {
+      throw err;
+    }
     res.redirect(req.baseUrl);
   });
 });
@@ -68,9 +118,10 @@ router.post('/update/update', security.authorize(), function (req, res, next) {
 //会社情報の削除
 router.post('/update/delete', security.authorize(), function (req, res, next) {
   const id = req.body.id;
-  const query = 'delete from companies where id = "' + id + '"';
-  connection.query(query, function (error, results, fields) {
-    if (error) throw error;
+  m_company.remove(id, (err, retObj) => {
+    if (err) {
+      throw err;
+    }
     res.redirect(req.baseUrl);
   });
 });

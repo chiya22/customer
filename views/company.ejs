@@ -8,22 +8,22 @@
 
 <body>
   <h1>会社</h1>
-    ID:<%= company.id %>
-    ID_NYUKYO:<%= company.id_nyukyo %>
-    ID_KAIGI:<%= company.id_kaigi %>
-    NAME:<%= company.name %>
-    KANA:<%= company.kana %>
-    BIKOU:<%= company.bikou %>
-    <hr>
-    <ul>
-      <% if (persons) { %>
-      <%  persons.forEach( person => { %>
-      <li>
-          <%= person.name %>（<%= person.id %>）
-      </li>
-      <%  }) %>
-      <% } %>
-    </ul>
+  ID:<%= company.id %>
+  ID_NYUKYO:<%= company.id_nyukyo %>
+  ID_KAIGI:<%= company.id_kaigi %>
+  NAME:<%= company.name %>
+  KANA:<%= company.kana %>
+  BIKOU:<%= company.bikou %>
+  <hr>
+  <ul>
+    <% if (persons) { %>
+    <%  persons.forEach( person => { %>
+    <li>
+      <a href="/person/<%= person.id %>"><%= person.name %>（<%= person.id %>）</a>
+    </li>
+    <%  }) %>
+    <% } %>
+  </ul>
 </body>
 
 </html>

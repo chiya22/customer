@@ -8,18 +8,61 @@
 
 <body>
   <h1>会社管理</h1>
+
+  <form name="searchform" method="post" action="/admin/companies/">
+    <input type="text" name="searchvalue" placeholder="検索文字を入力してください" value="<%= searchvalue %>">
+    最大ページ数：<%= page_max %>
+    現在のページ：<%= page_current %>
+    全件数：<%= count_all %>
+    <input type="hidden" id="page_max" name="page_max" value="<%= page_max %>">
+    <input type="hidden" id="page_current" name="page_current" value="<%= page_current %>">
+    <input type="hidden" id="count_all" name="count_all" value="<%= count_all %>">
+    <input type="hidden" id="pageaction" name="pageaction">
+    <input type="button" id="btn_search" value="検索" />
+    <% if ((page_current !== 1) && (page_max !== 0)){ %>
+    <input type="button" id="btn_prev" value="PREV" />
+    <% } %>
+    <% if (page_current !== page_max) { %>
+    <input type="button" id="btn_next" value="NEXT" />
+    <% } %>
+  </form>
   <ul>
-    <% if (companies) { %>
-    <%  companies.forEach( company => { %>
+    <% if (results) { %>
+    <%  results.forEach( result => { %>
     <li>
-      <a href="/admin/companies/update/<%= company.id %>">
-        <%= company.name %>（<%= company.id %>）
+      <a href="/admin/companies/update/<%= result.id %>">
+        <%= result.name %>（<%= result.id %>）
       </a>
     </li>
     <%  }) %>
     <% } %>
   </ul>
   <a href="/admin/companies/insert">登録</a>
+  <script>
+    let btnSearch = document.getElementById("btn_search");
+    btnSearch.addEventListener("click", function () {
+      let pageaction = document.getElementById("pageaction");
+      pageaction.value = "";
+      document.searchform.submit();
+    });
+
+    let btnNext = document.getElementById("btn_next");
+    if (btnNext) {
+      btnNext.addEventListener("click", function () {
+        let pageaction = document.getElementById("pageaction");
+        pageaction.value = "next";
+        document.searchform.submit();
+      });
+    }
+    let btnPrev = document.getElementById("btn_prev");
+    if (btnPrev) {
+      btnPrev.addEventListener("click", function () {
+        let pageaction = document.getElementById("pageaction");
+        pageaction.value = "prev";
+        document.searchform.submit();
+      });
+    }
+  </script>
 </body>
 
 </html>

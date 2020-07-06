@@ -8,8 +8,8 @@
 
 <body>
   <h1>個人</h1>
-    ID:<%= user.id %>
-    ID_COMPANY:<a href=""><%= person.id_company %></a>
+    ID:<%= person.id %>
+    ID_COMPANY:<a href="/company/<%= person.id_company %>"><%= person.id_company %></a>
     NAME:<%= person.name %>
     KANA:<%= person.kana %>
     TELNO:<%= person.telno %>
