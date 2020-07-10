@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>キャビネット管理（編集）</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>キャビネット管理（編集）</h1>
+  <form name="cabinetform" method="POST">
+    <% if (mode === 'insert') { %>
+    ID:<input type="text" name="id" required>
+    ID_NYUKYO:<input type="text" name="id_nyukyo" required>
+    PLACE:<input type="text" name="place" required>
+    NAME:<input type="text" name="name" required>
+    <input type="button" id="btn_insert" value="登録">
+    <% } else { %>
+    ID:<%= cabinet.id %>
+    <input type="hidden" name="id" value="<%= cabinet.id %>">
+    ID_NYUKYO:<input type="text" name="id_nyukyo" value="<%= cabinet.id_nyukyo %>">
+    PLACE:<input type="text" name="place" value="<%= cabinet.place %>" required>
+    NAME:<input type="text" name="name" value="<%= cabinet.name %>" required>
+    <input type="button" id="btn_update" value="更新">
+    <input type="button" id="btn_delete" value="削除">
+    <% } %>
+    <input type="hidden" id="field_mode">
+  </form>
+  <script>
+    let insertbtn = document.getElementById("btn_insert");
+    if (insertbtn) {
+      insertbtn.addEventListener("click", function () {
+        document.cabinetform.action = "/admin/cabinets/insert";
+        document.cabinetform.submit();
+      })
+    }
+    let updatebtn = document.getElementById("btn_update");
+    if (updatebtn) {
+      updatebtn.addEventListener("click", function () {
+        document.cabinetform.action = "/admin/cabinets/update";
+        document.cabinetform.submit();
+      })
+    }
+    let deletebtn = document.getElementById("btn_delete");
+    if (deletebtn) {
+      deletebtn.addEventListener("click", function () {
+        document.cabinetform.action = "/admin/cabinets/delete";
+        document.cabinetform.submit();
+      })
+    }
+  </script>
+</body>
+
+</html>

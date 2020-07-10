@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>入居番号管理（編集）</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>入居番号管理（編集）</h1>
+  <form name="nyukyoform" method="POST">
+    <% if (mode === 'insert') { %>
+    ID:<input type="text" name="id" required>
+    <input type="button" id="btn_insert" value="登録">
+    <% } else { %>
+    ID:<%= nyukyo.id %>
+    YMD_START:<input type="text" name="ymd_start" value="<%= nyukyo.ymd_start %>">
+    YMD_END:<input type="text" name="ymd_end" value="<%= nyukyo.ymd_end %>">
+    <input type="hidden" name="id" value="<%= nyukyo.id %>">
+    <input type="button" id="btn_update" value="更新">
+    <input type="button" id="btn_delete" value="削除">
+    <% } %>
+    <input type="hidden" id="field_mode">
+  </form>
+  <script>
+    let insertbtn = document.getElementById("btn_insert");
+    if (insertbtn) {
+      insertbtn.addEventListener("click", function () {
+        document.nyukyoform.action = "/admin/nyukyos/insert";
+        document.nyukyoform.submit();
+      })
+    }
+    let updatebtn = document.getElementById("btn_update");
+    if (updatebtn) {
+      updatebtn.addEventListener("click", function () {
+        document.nyukyoform.action = "/admin/nyukyos/update";
+        document.nyukyoform.submit();
+      })
+    }
+    let deletebtn = document.getElementById("btn_delete");
+    if (deletebtn) {
+      deletebtn.addEventListener("click", function () {
+        document.nyukyoform.action = "/admin/nyukyos/delete";
+        document.nyukyoform.submit();
+      })
+    }
+  </script>
+</body>
+
+</html>

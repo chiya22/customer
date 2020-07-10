@@ -25,6 +25,8 @@
     <% if (page_current !== page_max) { %>
     <input type="button" id="btn_next" value="NEXT" />
     <% } %>
+    <a href="/company">会社登録</a>
+    <a href="/person/insert/">個人登録</a>
   </form>
   <ul>
     <% if (results) { %>
@@ -34,6 +36,8 @@
       <a href="./company/<%= result.id %>">
         <% } else if (result.kubun === 'person') { %>
         <a href="./person/<%= result.id %>">
+          <% } else if (result.kubun === 'nyukyo') { %>
+          <a href="./nyukyo/<%= result.id %>">
           <% } %>
           【<%= result.kubun %>】<%= result.name %>（<%= result.id %>）
         </a>

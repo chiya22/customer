@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>キャビネット管理</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>キャビネット管理</h1>
+  <ul>
+    <% if (cabinets) { %>
+    <%  cabinets.forEach( cabinet => { %>
+    <li>
+      <a href="/admin/cabinets/update/<%= cabinet.id %>">
+        <%= cabinet.name %>（<%= cabinet.id %>）
+      </a>
+    </li>
+    <%  }) %>
+    <% } %>
+  </ul>
+  <a href="/admin/cabinets/insert">登録</a>
+</body>
+
+</html>

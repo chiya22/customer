@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>部屋管理（編集）</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>部屋管理（編集）</h1>
+  <form name="roomform" method="POST">
+    <% if (mode === 'insert') { %>
+    ID:<input type="text" name="id" required>
+    PLACE:<input type="text" name="place" required>
+    FLOOR:<input type="text" name="floor" required>
+    NAME:<input type="text" name="name" required>
+    <input type="button" id="btn_insert" value="登録">
+    <% } else { %>
+    ID:<%= room.id %>
+    <input type="hidden" name="id" value="<%= room.id %>">
+    FLOOR:<input type="text" name="floor" value="<%= room.floor %>" required>
+    PLACE:<input type="text" name="place" value="<%= room.place %>" required>
+    NAME:<input type="text" name="name" value="<%= room.name %>" required>
+    <input type="button" id="btn_update" value="更新">
+    <input type="button" id="btn_delete" value="削除">
+    <% } %>
+    <input type="hidden" id="field_mode">
+  </form>
+  <script>
+    let insertbtn = document.getElementById("btn_insert");
+    if (insertbtn) {
+      insertbtn.addEventListener("click", function () {
+        document.roomform.action = "/admin/rooms/insert";
+        document.roomform.submit();
+      })
+    }
+    let updatebtn = document.getElementById("btn_update");
+    if (updatebtn) {
+      updatebtn.addEventListener("click", function () {
+        document.roomform.action = "/admin/rooms/update";
+        document.roomform.submit();
+      })
+    }
+    let deletebtn = document.getElementById("btn_delete");
+    if (deletebtn) {
+      deletebtn.addEventListener("click", function () {
+        document.roomform.action = "/admin/rooms/delete";
+        document.roomform.submit();
+      })
+    }
+  </script>
+</body>
+
+</html>

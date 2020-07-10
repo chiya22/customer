@@ -7,8 +7,8 @@ const hash = require('../../util/hash').digest;
 
 // TOPページ
 router.get('/', security.authorize(), function (req, res, next) {
-  connection.query('select id, name from users', function (error, results, fields) {
-    if (error) throw error;
+  connection.query('select id, name from users', function (err, results, fields) {
+    if (err) throw err;
     res.render('admin/users', {
       users: results,
     });
@@ -43,8 +43,8 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   const role = req.body.role;
 
   const query = 'insert into users values ("' + id + '","' + name + '","' + pwd + '","' + role + '")';
-  connection.query(query, function (error, results, fields) {
-    if (error) throw error;
+  connection.query(query, function (err, results, fields) {
+    if (err) throw eerrrror;
     res.redirect(req.baseUrl);
   });
 });
@@ -56,8 +56,8 @@ router.post('/update/update', security.authorize(), function (req, res, next) {
   const pwd = hash(req.body.password);
   const role = req.body.role;
   const query = 'update users set name = "' + name + '", password = "' + pwd + '", role = "' + role + '" where id = "' + id + '"';
-  connection.query(query, function (error, results, fields) {
-    if (error) throw error;
+  connection.query(query, function (err, results, fields) {
+    if (err) throw err;
     res.redirect(req.baseUrl);
   });
 });
@@ -66,8 +66,8 @@ router.post('/update/update', security.authorize(), function (req, res, next) {
 router.post('/update/delete', security.authorize(), function (req, res, next) {
   const id = req.body.id;
   const query = 'delete from users where id = "' + id + '"';
-  connection.query(query, function (error, results, fields) {
-    if (error) throw error;
+  connection.query(query, function (err, results, fields) {
+    if (err) throw err;
     res.redirect(req.baseUrl);
   });
 });

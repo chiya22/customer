@@ -13,8 +13,11 @@
   ID_KAIGI:<%= company.id_kaigi %>
   NAME:<%= company.name %>
   KANA:<%= company.kana %>
-  BIKOU:<%= company.bikou %>
+  BIKOU:<%= company.bikou %>  
+  <a href="/company/update/<%= company.id %>">更新</a>
+  <a href="/company/delete/<%= company.id %>">削除</a>
   <hr>
+  <a href="/person/insert/<%= company.id %>">個人登録</a>
   <ul>
     <% if (persons) { %>
     <%  persons.forEach( person => { %>
@@ -24,6 +27,17 @@
     <%  }) %>
     <% } %>
   </ul>
+  <hr>
+  <ul>
+    <% if (rooms) { %>
+    <%  rooms.forEach( room => { %>
+    <li>
+      <%= room.name %>（<%= room.id %>）<%= room.place %>：<%= room.floor %></a>
+    </li>
+    <%  }) %>
+    <% } %>
+  </ul>
+
 </body>
 
 </html>

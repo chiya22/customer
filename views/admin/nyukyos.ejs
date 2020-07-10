@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>入居番号管理</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>入居番号管理</h1>
+  <ul>
+    <% if (nyukyos) { %>
+    <%  nyukyos.forEach( nyukyo => { %>
+    <li>
+      <a href="/admin/nyukyos/update/<%= nyukyo.id %>">
+        <%= nyukyo.id %> （<%= nyukyo.ymd_start %> - <%= nyukyo.ymd_end %>）
+
+      </a>
+    </li>
+    <%  }) %>
+    <% } %>
+  </ul>
+  <a href="/admin/nyukyos/insert">登録</a>
+</body>
+
+</html>

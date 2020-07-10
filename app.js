@@ -9,9 +9,11 @@ var flash = require("connect-flash");
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin/admin');
 var usersRouter = require('./routes/admin/users');
-var companiesRouter = require('./routes/admin/companies');
-var personsRouter = require('./routes/admin/persons');
+var roomsRouter = require('./routes/admin/rooms');
+var cabinetsRouter = require('./routes/admin/cabinets');
+var nyukyosRouter = require('./routes/admin/nyukyos');
 var topRouter = require('./routes/top');
+var nyukyoRouter = require('./routes/nyukyo');
 var companyRouter = require('./routes/company');
 var personRouter = require('./routes/person');
 
@@ -47,9 +49,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/admin', adminRouter);
 app.use('/admin/users', usersRouter);
-app.use('/admin/companies', companiesRouter);
-app.use('/admin/persons', personsRouter);
+app.use('/admin/rooms', roomsRouter);
+app.use('/admin/cabinets', cabinetsRouter);
+app.use('/admin/nyukyos', nyukyosRouter);
 app.use('/top', topRouter);
+app.use('/nyukyo', nyukyoRouter);
 app.use('/company', companyRouter);
 app.use('/person', personRouter);
 

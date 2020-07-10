@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>部屋管理</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1>部屋管理</h1>
+  <ul>
+    <% if (rooms) { %>
+    <%  rooms.forEach( room => { %>
+    <li>
+      <a href="/admin/rooms/update/<%= room.id %>">
+        <%= room.name %>（<%= room.id %>）| 場所：<%= room.place %> フロア：<%= room.floor %>
+      </a>
+    </li>
+    <%  }) %>
+    <% } %>
+  </ul>
+  <a href="/admin/rooms/insert">登録</a>
+</body>
+
+</html>
