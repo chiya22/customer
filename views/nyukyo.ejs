@@ -23,11 +23,20 @@
     <% } %>
   </ul>
   <hr>
+  <form name="cabinetForm" method="POST" action="/nyukyo/add">
+    <input type="submit" value="キャビネット追加">
+    <select name="id_cabinet">
+      <% freecabinets.forEach(function (freecabinet) { %>
+      <option value="<%= freecabinet.id %>"><%= freecabinet.name %>（<%= freecabinet.id %>）<%= freecabinet.place %></option>
+      <% }) %>
+    </select>
+    <input type="hidden" name="id_nyukyo" value="<%= nyukyo.id %>">
+  </form>
   <ul>
     <% if (cabinets) { %>
     <%  cabinets.forEach( cabinet => { %>
     <li>
-      <%= cabinet.name %>（<%= cabinet.id %>）<%= cabinet.place %>
+      <%= cabinet.name %>（<%= cabinet.id %>）<%= cabinet.place %> <a href="/nyukyo/delete/<%= nyukyo.id %>/<%= cabinet.id %>">削除</a>
     </li>
     <%  }) %>
     <% } %>

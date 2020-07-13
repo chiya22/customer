@@ -26,18 +26,24 @@ router.get('/:id', security.authorize(), function (req, res, next) {
   const id_company = req.params.id;
   let company;
   let persons;
+  let freerooms;
   m_company.findPKey(id_company, (err, retObj) => {
     if (err) { throw err; }
     company = retObj;
     m_person.findByCompany(id_company, (err, retObj) => {
       if (err) { throw err; }
       persons = retObj;
-      m_relation_comroom.findByCompany(id_company, (err, retObj) => {
-        if (err) { throw err; }
-        res.render('company', {
-          company: company,
-          persons: persons,
-          rooms: retObj,
+      m_relation_comroom.findFree((err,retObj) => {
+        if (err) { throw err;};
+        freerooms = retObj;
+        m_relation_comroom.findByCompany(id_company, (err, retObj) => {
+          if (err) { throw err; }
+          res.render('company', {
+            company: company,
+            persons: persons,
+            rooms: retObj,
+            freerooms: freerooms,
+          });
         });
       });
     });
@@ -130,5 +136,29 @@ router.post('/delete', security.authorize(), function (req, res, next) {
     // res.redirect(req.baseUrl);
   });
 });
+
+// 会社⇔部屋情報の追加
+router.post('/add', security.authorize(), function (req, res, next) {
+  const id_room = req.body.id_room;
+  const id_company = req.body.id_company;
+  let relation_comroom = {};
+  relation_comroom.id_company = id_company;
+  relation_comroom.id_room = id_room;
+  m_relation_comroom.insert(relation_comroom, (err, retObj) => {
+    if (err) { throw err; };
+    res.redirect('/company/' + id_company);
+  });
+});
+
+// 会社⇔部屋情報の削除
+router.get('/delete/:id_company/:id_room', security.authorize(), function (req, res, next) {
+  const id_company = req.params.id_company;
+  const id_room = req.params.id_room;
+  m_relation_comroom.remove(id_company, id_room, (err, retObj) => {
+    if (err) { throw err; };
+    res.redirect('/company/' + id_company);
+  });
+});
+
 
 module.exports = router;

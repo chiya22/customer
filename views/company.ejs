@@ -9,7 +9,7 @@
 <body>
   <h1>会社</h1>
   ID:<%= company.id %>
-  ID_NYUKYO:<%= company.id_nyukyo %>
+  ID_NYUKYO:<a href="/nyukyo/<%= company.id_nyukyo %>"><%= company.id_nyukyo %></a>
   ID_KAIGI:<%= company.id_kaigi %>
   NAME:<%= company.name %>
   KANA:<%= company.kana %>
@@ -28,11 +28,20 @@
     <% } %>
   </ul>
   <hr>
+  <form name="roomForm" method="POST" action="/company/add">
+    <input type="submit" value="部屋追加">
+    <select name="id_room">
+      <% freerooms.forEach(function (freeroom) { %>
+      <option value="<%= freeroom.id %>"><%= freeroom.name %>（<%= freeroom.id %>）<%= freeroom.place %> / <%= freeroom.floor %></option>
+      <% }) %>
+    </select>
+    <input type="hidden" name="id_company" value="<%= company.id %>">
+  </form>
   <ul>
     <% if (rooms) { %>
     <%  rooms.forEach( room => { %>
     <li>
-      <%= room.name %>（<%= room.id %>）<%= room.place %>：<%= room.floor %></a>
+      <%= room.name %>（<%= room.id %>）<%= room.place %>：<%= room.floor %> <a href="/company/delete/<%= company.id %>/<%= room.id %>">削除</a>
     </li>
     <%  }) %>
     <% } %>

@@ -24,6 +24,18 @@ const find = function (callback) {
     })();
 };
 
+const findFree = function (callback) {
+    (async function () {
+        await connection.query('SELECT c.id, c.place, c.name FROM cabinets AS c WHERE NOT EXISTS ( SELECT * FROM nyukyos AS n WHERE c.id_nyukyo = n.id )', function (error, results, fields) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+        });
+    })();
+}
+
 const findByNyukyo = function (id_nyukyo, callback) {
     (async function () {
         await connection.query('select * from cabinets where id_nyukyo = "' + id_nyukyo + '" order by id asc', function (error, results, fields) {
@@ -51,7 +63,7 @@ const insert = function (inObj, callback) {
 
 const update = function (inObj, callback) {
     (async function() {
-        const query = 'update cabinets set id_nyukyo = "' + inObj.id_nyukyo + '", place = "' + inObj.place + '", name = "' + inObj.name + '" where id = "' + inObj.id + '"';
+        const query = 'update cabinets set id_nyukyo = ' + (inObj.id_nyukyo ? '"' + inObj.id_nyukyo + '"' : null) + ', place = "' + inObj.place + '", name = "' + inObj.name + '" where id = "' + inObj.id + '"';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
@@ -77,6 +89,7 @@ const remove = function (pkey, callback) {
 
 module.exports = {
     find,
+    findFree,
     findPKey,
     findByNyukyo,
     insert,

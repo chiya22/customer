@@ -36,6 +36,19 @@ const find = function (callback) {
     })();
 };
 
+const findFree = function (callback) {
+    (async function () {
+        await connection.query('SELECT r.id, r.place, r.floor, r.name FROM rooms AS r WHERE NOT EXISTS ( SELECT * FROM relation_comroom AS re WHERE r.id = re.id_room )', function (error, results, fields) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+        });
+    })();
+}
+
+
 const insert = function (inObj, callback) {
     (async function() {
         const query = 'insert into relation_comroom values ("' + inObj.id_company + '","' + inObj.id_room + '", "20200701", "99991231")';
@@ -64,7 +77,7 @@ const update = function (inObj, callback) {
 
 const remove = function (id_company, id_room, callback) {
     (async function() {
-        const query = 'delete from relation_comroom where id_company = "' + id_company+ '" and id_room = "' + id_room + "'";
+        const query = 'delete from relation_comroom where id_company = "' + id_company+ '" and id_room = "' + id_room + '"';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
@@ -77,6 +90,7 @@ const remove = function (id_company, id_room, callback) {
 
 module.exports = {
     find,
+    findFree,
     findPKey,
     findByCompany,
     insert,
