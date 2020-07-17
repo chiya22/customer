@@ -7,20 +7,33 @@
 </head>
 
 <body>
+  <% if (person) { %>
+  <a href="/person/<%= person.id %>">戻る</a>
+  <% } else { %>
+  <a href="/top">戻る</a>
+  <% } %>
+  <hr>
+  <% if (message && message.length !== 0) { %>
+  <div class="alert alert-danger">
+    <%= message %>
+  </div>
+  <hr>
+  <% } %>
   <h1>個人（編集）</h1>
   <form name="personform" method="POST">
     <!-- ◆登録モード -->
     <% if (mode === 'insert') { %>
     ID:<input type="text" name="id" required>
     <% if (id_company) { %>
-      ID_COMPANY:<a href="/company/<%= id_company %>"><%= id_company %></a>
-      <input type="hidden" name="id_company" value="<%= id_company %>" >
+    ID_COMPANY:<a href="/company/<%= id_company %>"><%= id_company %></a>
+    <input type="hidden" name="id_company" value="<%= id_company %>">
     <% } else { %>
-      <select name="id_company">
-        <% companies.forEach(function (company) { %>
-        <option value="<%= company.id %>"><%= company.name %></option>
-        <% }); %>
-      </select>
+    <select name="id_company">
+      <option value="" selected>--会社選択--</option>
+      <% companies.forEach(function (company) { %>
+      <option value="<%= company.id %>"><%= company.name %></option>
+      <% }); %>
+    </select>
     <% } %>
     NAME:<input type="text" name="name" required>
     KANA:<input type="text" name="kana">

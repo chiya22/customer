@@ -7,6 +7,11 @@
 </head>
 
 <body>
+  <% if (message && message.length !== 0) { %>
+  <div class="alert alert-danger">
+    <%= message %>
+  </div>
+  <% } %>
   <h1>入居番号管理（編集）</h1>
   <form name="nyukyoform" method="POST">
     <% if (mode === 'insert') { %>

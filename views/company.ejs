@@ -7,6 +7,8 @@
 </head>
 
 <body>
+  <a href="/top">TOPへ</a>
+  <hr>
   <h1>会社</h1>
   ID:<%= company.id %>
   ID_NYUKYO:<a href="/nyukyo/<%= company.id_nyukyo %>"><%= company.id_nyukyo %></a>
@@ -17,7 +19,6 @@
   <a href="/company/update/<%= company.id %>">更新</a>
   <a href="/company/delete/<%= company.id %>">削除</a>
   <hr>
-  <a href="/person/insert/<%= company.id %>">個人登録</a>
   <ul>
     <% if (persons) { %>
     <%  persons.forEach( person => { %>

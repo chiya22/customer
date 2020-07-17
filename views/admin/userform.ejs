@@ -7,6 +7,11 @@
 </head>
 
 <body>
+  <% if (message && message.length !== 0) { %>
+  <div class="alert alert-danger">
+    <%= message %>
+  </div>
+  <% } %>
   <h1>ユーザ管理（編集）</h1>
   <form name="userform" method="POST">
     <% if (mode === 'insert') { %>

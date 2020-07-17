@@ -5,29 +5,16 @@ const security = require('../util/security');
 const m_company = require('../model/company');
 const m_person = require('../model/person');
 
-// 会社ページから「登録」ボタンでの個人ページへ遷移
-router.get('/insert/:id_company', security.authorize(), function (req, res, next) {
-  const id_company = req.params.id_company;
-  m_company.findForSelect((err, retObj) => {
-    if (err) { throw err };
-    res.render('personform', {
-      id_company: id_company,
-      person: null,
-      companies: retObj,
-      mode: 'insert',
-    });
-  })
-});
-
 // TOPページから「個人登録」で個人（編集）ページへの遷移
 router.get('/insert', security.authorize(), function (req, res, next) {
   m_company.findForSelect((err, retObj) => {
-    if (err) { throw err };
+    if (err) { next(err) };
     res.render('personform', {
       id_company: null,
       person: null,
       companies: retObj,
       mode: 'insert',
+      message: null,
     });
   });
 });
@@ -36,7 +23,7 @@ router.get('/insert', security.authorize(), function (req, res, next) {
 router.get('/:id', security.authorize(), function (req, res, next) {
   const id_person = req.params.id;
   m_person.findPKey(id_person, (err, retObj) => {
-    if (err) { throw err; }
+    if (err) { next(err); }
     res.render('person', {
       person: retObj,
     });
@@ -49,15 +36,16 @@ router.get('/update/:id', security.authorize(), function (req, res, next) {
   const id_person = req.params.id;
   let companies;
   m_company.findForSelect((err, retObj) => {
-    if (err) { throw err };
+    if (err) { next(err) };
     companies = retObj;
     m_person.findPKey(id_person, (err, retObj) => {
-      if (err) { throw (err); }
+      if (err) { next(err); }
       res.render('personform', {
         id_company: retObj.id_company,
         person: retObj,
         companies: companies,
         mode: 'update',
+        message: null,
       });
     })
   });
@@ -67,12 +55,13 @@ router.get('/update/:id', security.authorize(), function (req, res, next) {
 router.get('/delete/:id', security.authorize(), function (req, res, next) {
   const id_person = req.params.id;
   m_person.findPKey(id_person, (err, retObj) => {
-    if (err) { throw (err); }
+    if (err) { next(err); }
     res.render('personform', {
       id_company: retObj.id_company,
       person: retObj,
       companies: null,
       mode: 'delete',
+      message: null,
     });
   })
 });
@@ -92,7 +81,8 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   inObj.address = req.body.address;
   inObj.bikou = req.body.bikou;
   m_person.insert(inObj, (err, retObj) => {
-    if (err) { throw err; }
+    //個人のidは自動採番とするため、Duplicateエラーは考慮不要
+    if (err) { next(err); }
     res.redirect('/company/' + inObj.id_company);
   });
 });
@@ -112,8 +102,21 @@ router.post('/update', security.authorize(), function (req, res, next) {
   inObj.address = req.body.address;
   inObj.bikou = req.body.bikou;
   m_person.update(inObj, (err, retObj) => {
-    if (err) { throw err; }
-    res.redirect('/company/' + inObj.id_company);
+    if (err) { next(err); }
+    if (retObj.changedRows === 0) {
+      m_company.findForSelect((err, retObj) => {
+        if (err) { next(err); }
+        res.render('personform', {
+          id_company: inObj.id_company,
+          person: inObj,
+          companies: retObj,
+          mode: 'update',
+          message: '更新対象はすでに削除されています'
+        });
+      });
+    } else {
+      res.redirect('/company/' + inObj.id_company);
+    }
   });
 });
 
@@ -123,7 +126,7 @@ router.post('/delete', security.authorize(), function (req, res, next) {
   inObj.id = req.body.id;
   inObj.id_company = req.body.id_company;
   m_person.remove(inObj.id, (err, retObj) => {
-    if (err) { throw err; }
+    if (err) { next(err); }
     res.redirect('/company/' + inObj.id_company);
   });
 });

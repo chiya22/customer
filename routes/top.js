@@ -36,12 +36,12 @@ router.post('/', security.authorize(), function (req, res, next) {
   const offset = (pagecount_target - 1) * count_perpage;
 
   connection.query('select count(*) as count_all from ((select "company" AS kubun, c.id, c.name, c.kana from companies as c where (c.name like "%' + searchvalue + '%") or (c.kana like "%' + searchvalue + '%")) union all (select "person" AS kubun, p.id, p.name, p.kana from persons as p where (p.name like "%' + searchvalue + '%") or (p.kana like "%' + searchvalue + '%")) union all (select "nyukyo" AS kubun, n.id, null, null from nyukyos as n where n.id like "%' + searchvalue + '%")) as total', function (error, results, fields) {
-    if (error) throw error;
+    if (error) { next(error) };
     let count_all;
     count_all = results[0].count_all;
     const pagecount_max = parseInt(count_all / count_perpage) + 1;
     connection.query('(select "company" AS kubun, c.id, c.name, c.kana from companies as c where (c.name like "%' + searchvalue + '%") or (c.kana like "%' + searchvalue + '%")) union all (select "person" AS kubun, p.id, p.name, p.kana from persons as p where (p.name like "%' + searchvalue + '%") or (p.kana like "%' + searchvalue + '%")) union all (select "nyukyo" AS kubun, n.id, null, null from nyukyos as n where n.id like "%' + searchvalue + '%") limit ' + count_perpage + ' offset ' + offset, function (error, results, fields) {
-      if (error) throw error;
+      if (error) { next(error) };
       res.render('top', {
         searchvalue: searchvalue,
         results: results,

@@ -7,6 +7,18 @@
 </head>
 
 <body>
+  <% if (company) { %>
+  <a href="/company/<%= company.id %>">戻る</a>
+  <% } else { %>
+  <a href="/top">戻る</a>
+  <% } %>
+  <hr>
+  <% if (message && message.length !== 0) { %>
+  <div class="alert alert-danger">
+    <%= message %>
+  </div>
+  <hr>
+  <% } %>
   <h1>会社（編集）</h1>
   <form name="companyform" method="POST">
     <!-- ◆登録モード -->
@@ -14,6 +26,7 @@
     ID:<input type="text" name="id" required>
     ID_NYUKYO:
     <select name="id_nyukyo">
+      <option value="" selected>--入居番号選択--</option>
       <% nyukyos.forEach(function (nyukyo) { %>
       <option value="<%= nyukyo.id %>"><%= nyukyo.kubun %><%=nyukyo.id %></option>
       <% }); %>

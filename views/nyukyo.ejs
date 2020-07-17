@@ -7,12 +7,13 @@
 </head>
 
 <body>
+  <a href="/top">TOPへ</a>
+  <hr>
   <h1>入居番号</h1>
   ID:<%= nyukyo.id %>
   YMD_START:<%= nyukyo.ymd_start %>
   YMD_END:<%= nyukyo.ymd_end %>
   <hr>
-  <a href="/company/insert/<%= nyukyo.id %>">会社登録</a>
   <ul>
     <% if (companies) { %>
     <%  companies.forEach( company => { %>
