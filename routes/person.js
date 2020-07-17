@@ -6,7 +6,7 @@ const m_company = require('../model/company');
 const m_person = require('../model/person');
 
 // TOPページから「個人登録」で個人（編集）ページへの遷移
-router.get('/insert', security.authorize(), function (req, res, next) {
+router.get('/', security.authorize(), function (req, res, next) {
   m_company.findForSelect((err, retObj) => {
     if (err) { next(err) };
     res.render('personform', {
@@ -29,7 +29,6 @@ router.get('/:id', security.authorize(), function (req, res, next) {
     });
   });
 });
-
 
 // 個人ページから「更新」リンクでの個人（編集）ページへの遷移
 router.get('/update/:id', security.authorize(), function (req, res, next) {

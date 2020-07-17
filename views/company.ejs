@@ -67,22 +67,26 @@
   <section>
     <h2>入居番号</h2>
     <p><%= nyukyo.id %></p>
+    <ul>
     <% nyukyocompanies.forEach( nyukyocompany  => { %>
-      <dl>
-        <dt>ID</dt>
-        <dd><a href="/company/<%= nyukyocompany.id %>" ><%= nyukyocompany.id %></a></dd>
-        <dt>ID_NYUKYO</dt>
-        <dd><%= nyukyocompany.id_nyukyo %></dd>
-        <dt>ID_KAIGI</dt>
-        <dd><%= nyukyocompany.id_kaigi %></dd>
-        <dt>NAME</dt>
-        <dd><%= nyukyocompany.name %></dd>
-        <dt>KANA</dt>
-        <dd><%= nyukyocompany.kana %></dd>
-        <dt>BIKOU</dt>
-        <dd><%= nyukyocompany.bikou %></dd>
-      </dl>
+      <li>
+        <dl>
+          <dt>ID</dt>
+          <dd><a href="/company/<%= nyukyocompany.id %>" ><%= nyukyocompany.id %></a></dd>
+          <dt>ID_NYUKYO</dt>
+          <dd><%= nyukyocompany.id_nyukyo %></dd>
+          <dt>ID_KAIGI</dt>
+          <dd><%= nyukyocompany.id_kaigi %></dd>
+          <dt>NAME</dt>
+          <dd><%= nyukyocompany.name %></dd>
+          <dt>KANA</dt>
+          <dd><%= nyukyocompany.kana %></dd>
+          <dt>BIKOU</dt>
+          <dd><%= nyukyocompany.bikou %></dd>
+        </dl>
+      </li>
     <% }) %>
+    </ul>
   </section>
   <hr>
   <section>
