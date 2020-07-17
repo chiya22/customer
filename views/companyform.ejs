@@ -22,26 +22,36 @@
   <% } %>
   <h1>会社（編集）</h1>
   <form name="companyform" method="POST">
+    <dl>
     <!-- ◆登録モード -->
     <% if (mode === 'insert') { %>
-    ID:<input type="text" name="id" required>
-    ID_NYUKYO:
+    <dt>ID</dt>
+    <dd><input type="text" name="id" required></dd>
+    <dt>ID_NYUKYO</dt>
+    <dd>
     <select name="id_nyukyo">
       <option value="" selected>--入居番号選択--</option>
       <% nyukyos.forEach(function (nyukyo) { %>
       <option value="<%= nyukyo.id %>"><%= nyukyo.kubun %><%=nyukyo.id %></option>
       <% }); %>
     </select>
-    ID_KAIGI:<input type="text" name="id_kaigi" required>
-    NAME:<input type="text" name="name" required>
-    KANA:<input type="text" name="kana" required>
-    BIKOU:<input type="text" name="bikou">
+    </dd>
+    <dt>ID_KAIGI</dt>
+    <dd><input type="text" name="id_kaigi" required></dd>
+    <dt>NAME</dt>
+    <dd><input type="text" name="name" required></dd>
+    <dt>KANA</dt>
+    <dd><input type="text" name="kana" required></dd>
+    <dt>BIKOU</dt>
+    <dd><input type="text" name="bikou"></dd>
     <input type="button" id="btn_insert" value="登録">
     <!-- ◆更新モード -->
     <% } else if (mode === 'update') { %>
-    ID:<%= company.id %>
+    <dt>ID</dt>
+    <dd><%= company.id %></dd>
     <input type="hidden" name="id" value="<%= company.id %>">
-    ID_NYUKYO:
+    <dt>ID_NYUKYO</dt>
+    <dd>
     <select name="id_nyukyo">
       <% nyukyos.forEach(function (nyukyo) { %>
       <% if (nyukyo.id === company.id_nyukyo) { %>
@@ -51,20 +61,31 @@
       <% } %>
       <% }); %>
     </select>
-    ID_KAIGI:<input type="text" name="id_kaigi" value="<%= company.id_kaigi %>" required>
-    NAME:<input type="text" name="name" value="<%= company.name %>" required>
-    KANA:<input type="text" name="kana" value="<%= company.kana %>" required>
-    BIKOU:<input type="text" name="bikou" value="<%= company.bikou %>">
+    </dd>
+    <dt>ID_KAIGI</dt>
+    <dd><input type="text" name="id_kaigi" value="<%= company.id_kaigi %>" required></dd>
+    <dt>NAME</dt>
+    <dd><input type="text" name="name" value="<%= company.name %>" required></dd>
+    <dt>KANA</dt>
+    <dd><input type="text" name="kana" value="<%= company.kana %>" required></dd>
+    <dt>BIKOU</dt>
+    <dd><input type="text" name="bikou" value="<%= company.bikou %>"></dd>
     <input type="button" id="btn_update" value="更新">
     <!-- ◆削除モード -->
     <% } else { %>
-    ID:<%= company.id %>
+    <dt>ID</dt>
+    <dd><%= company.id %></dd>
     <input type="hidden" name="id" value="<%= company.id %>">
-    ID_NYUKYO:<%= company.id_nyukyo %>
-    ID_KAIGI:<%= company.id_kaigi %>
-    NAME:<%= company.name %>
-    KANA:<%= company.kana %>
-    BIKOU:<%= company.bikou %>
+    <dt>ID_NYUKYO</dt>
+    <dd><%= company.id_nyukyo %></dd>
+    <dt>ID_KAIGI</dt>
+    <dd><%= company.id_kaigi %></dd>
+    <dt>NAME</dt>
+    <dd><%= company.name %></dd>
+    <dt>KANA</dt>
+    <dd><%= company.kana %></dd>
+    <dt>BIKOU</dt>
+    <dd><%= company.bikou %></dd>
     <input type="button" id="btn_delete" value="削除">
     <% } %>
     <input type="hidden" id="field_mode">

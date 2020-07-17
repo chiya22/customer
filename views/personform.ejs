@@ -22,34 +22,51 @@
   <% } %>
   <h1>個人（編集）</h1>
   <form name="personform" method="POST">
+    <dl>
     <!-- ◆登録モード -->
     <% if (mode === 'insert') { %>
-    ID:<input type="text" name="id" required>
+    <dt>ID<dt>
+    <dd><input type="text" name="id" required></dd>
     <% if (id_company) { %>
-    ID_COMPANY:<a href="/company/<%= id_company %>"><%= id_company %></a>
+    <dt>ID_COMPANY</dt>
+    <dd><a href="/company/<%= id_company %>"><%= id_company %></a></dd>
     <input type="hidden" name="id_company" value="<%= id_company %>">
     <% } else { %>
+    <dd>
     <select name="id_company">
       <option value="" selected>--会社選択--</option>
       <% companies.forEach(function (company) { %>
       <option value="<%= company.id %>"><%= company.name %></option>
       <% }); %>
     </select>
+    </dd>
     <% } %>
-    NAME:<input type="text" name="name" required>
-    KANA:<input type="text" name="kana">
-    TELNO:<input type="text" name="telno">
-    TELNO_MOBILE:<input type="text" name="telno_mobile">
-    EMAIL:<input type="text" name="email">
-    NO_YUBIN:<input type="text" name="no_yubin">
-    TODOUFUKEN:<input type="text" name="todoufuken">
-    ADDRESS:<input type="text" name="address">
-    BIKOU:<input type="text" name="bikou">
+    <dt>NAME</dt>
+    <dd><input type="text" name="name" required></dd>
+    <dt>KANA</dt>
+    <dd><input type="text" name="kana"></dd>
+    <dt>TELNO</dt>
+    <dd><input type="text" name="telno"></dd>
+    <dt>TELNO_MOBILE</dt>
+    <dd><input type="text" name="telno_mobile"></dd>
+    <dt>EMAIL</dt>
+    <dd><input type="text" name="email"></dd>
+    <dt>NO_YUBIN</dt>
+    <dd><input type="text" name="no_yubin"></dd>
+    <dt>TODOUFUKEN</dt>
+    <dd><input type="text" name="todoufuken"></dd>
+    <dt>ADDRESS</dt>
+    <dd><input type="text" name="address"></dd>
+    <dt>BIKOU</dt>
+    <dd><input type="text" name="bikou"></dd>
     <input type="button" id="btn_insert" value="登録">
     <!-- ◆更新モード -->
     <% } else if (mode === 'update') { %>
-    ID:<%= person.id %>
+    <dt>ID</dt>
+    <dd><%= person.id %></dd>
     <input type="hidden" name="id" value="<%= person.id %>">
+    <dt>ID_COMPANY</dt>
+    <dd>
     <select name="id_company">
       <% companies.forEach(function (company) { %>
       <% if (company.id === person.id_company) { %>
@@ -59,35 +76,56 @@
       <% } %>
       <% }); %>
     </select>
-    NAME:<input type="text" name="name" value="<%= person.name %>" required>
-    KANA:<input type="text" name="kana" value="<%= person.kana %>">
-    TELNO:<input type="text" name="telno" value="<%= person.telno %>">
-    TELNO_MOBILE:<input type="text" name="telno_mobile" value="<%= person.telno_mobile %>">
-    EMAIL:<input type="text" name="email" value="<%= person.email %>">
-    NO_YUBIN:<input type="text" name="no_yubin" value="<%= person.no_yubin %>">
-    TODOUFUKEN:<input type="text" name="todoufuken" value="<%= person.todoufuken %>">
-    ADDRESS:<input type="text" name="address" value="<%= person.address %>">
-    BIKOU:<input type="text" name="bikou" value="<%= person.bikou %>">
+    </dd>
+    <dt>NAME</dt>
+    <dd><input type="text" name="name" value="<%= person.name %>" required></dd>
+    <dt>KANA</dt>
+    <dd><input type="text" name="kana" value="<%= person.kana %>"></dd>
+    <dt>TELNO</dt>
+    <dd><input type="text" name="telno" value="<%= person.telno %>"></dd>
+    <dt>TELNO_MOBILE</dt>
+    <dd><input type="text" name="telno_mobile" value="<%= person.telno_mobile %>"></dd>
+    <dt>EMAIL</dt>
+    <dd><input type="text" name="email" value="<%= person.email %>"></dd>
+    <dt>NO_YUBIN</dt>
+    <dd><input type="text" name="no_yubin" value="<%= person.no_yubin %>"></dd>
+    <dt>TODOUFUKEN</dt>
+    <dd><input type="text" name="todoufuken" value="<%= person.todoufuken %>"></dd>
+    <dt>ADDRESS</dt>
+    <dd><input type="text" name="address" value="<%= person.address %>"></dd>
+    <dt>BIKOU</dt>
+    <dd><input type="text" name="bikou" value="<%= person.bikou %>"></dd>
     <input type="button" id="btn_update" value="更新">
     <!-- ◆削除モード -->
     <% } else { %>
-    ID:<%= person.id %>
+    <dt>ID</dt>
+    <dd><%= person.id %></dd>
     <input type="hidden" name="id" value="<%= person.id %>">
-    ID_COMPANY:<%= person.id_company %>
+    <dt>ID_COMPANY</dt>
+    <dd><%= person.id_company %></dd>
     <input type="hidden" name="id_company" value="<%= person.id_company %>">
-    NAME:<%= person.name %>
-    KANA:<%= person.kana %>
-    TELNO:<%= person.telno %>
-    TELNO_MOBILE:<%= person.telno_mobile %>
-    EMAIL:<%= person.email %>
-    NO_YUBIN:<%= person.no_yubin %>
-    TODOUFUKEN:<%= person.todoufuken %>
-    ADDRESS:<%= person.address %>
-    BIKOU:<%= person.bikou %>
+    <dt>NAME</dt>
+    <dd><%= person.name %></dd>
+    <dt>KANA</dt>
+    <dd><%= person.kana %></dd>
+    <dt>TELNO</dt>
+    <dd><%= person.telno %></dd>
+    <dt>TELNO_MOBILE</dt>
+    <dd><%= person.telno_mobile %></dd>
+    <dt>EMAIL</dt>
+    <dd><%= person.email %></dd>
+    <dt>NO_YUBIN</dt>
+    <dd><%= person.no_yubin %></dd>
+    <dt>TODOUFUKEN</dt>
+    <dd><%= person.todoufuken %></dd>
+    <dt>ADDRESS</dt>
+    <dd><%= person.address %></dd>
+    <dt>BIKOU</dt>
+    <dd><%= person.bikou %></dd>
     <input type="button" id="btn_delete" value="削除">
     <% } %>
-
     <input type="hidden" id="field_mode">
+    </dl>
   </form>
   <script>
     let insertbtn = document.getElementById("btn_insert");

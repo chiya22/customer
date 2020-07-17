@@ -12,19 +12,33 @@
   <a href="/company/<%= person.id_company %>">会社へ</a>
   <hr>
   <h1>個人</h1>
-    ID:<%= person.id %>
-    ID_COMPANY:<a href="/company/<%= person.id_company %>"><%= person.id_company %></a>
-    NAME:<%= person.name %>
-    KANA:<%= person.kana %>
-    TELNO:<%= person.telno %>
-    TELNO_MOBILE:<%= person.telno_mobile %>
-    EMAIL:<%= person.email %>
-    NO_YUBIN:<%= person.no_yubin %>
-    TODOUFUKEN:<%= person.todoufuken %>
-    ADDRESS:<%= person.address %>
-    BIKOU:<%= person.bikou %>
-    <a href="/person/update/<%= person.id %>">更新</a>
-    <a href="/person/delete/<%= person.id %>">削除</a>
-  </body>
+  <dl>
+    <dt>ID</dt>
+    <dd><%= person.id %></dd>
+    <dt>ID_COMPANY</dt>
+    <dd><a href="/company/<%= person.id_company %>"><%= person.id_company %></a></dd>
+    <dt>NAME</dt>
+    <dd><%= person.name %></dd>
+    <dt>KANA</dt>
+    <dd><%= person.kana %></dd>
+    <dt>TELNO</dt>
+    <dd><%= person.telno %></dd>
+    <dt>TELNO_MOBILE</dt>
+    <dd><%= person.telno_mobile %></dd>
+    <dt>EMAIL</dt>
+    <dd><%= person.email %></dd>
+    <dt>NO_YUBIN</dt>
+    <dd><%= person.no_yubin %></dd>
+    <dt>TODOUFUKEN</dt>
+    <dd><%= person.todoufuken %></dd>
+    <dt>ADDRESS</dt>
+    <dd><%= person.address %></dd>
+    <dt>BIKOU</dt>
+    <dd><%= person.bikou %></dd>
+  </dl>
+  <a href="/person/update/<%= person.id %>">更新</a>
+  <a href="/person/delete/<%= person.id %>">削除</a>
+</body>
 <%- include("./common/javascripts.ejs") %>
+
 </html>
