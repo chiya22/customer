@@ -3,10 +3,11 @@
 
 <head>
   <title>管理ページ</title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <%- include("../common/stylesheets.ejs") %>
 </head>
 
 <body>
+  <%- include("../common/header.ejs") %>
   <h1>管理ページ</h1>
   <p>様々なデータを管理する</p>
   <a href="/admin/users">ユーザ管理</a>
@@ -19,5 +20,5 @@
   </form>
   <% } %>
 </body>
-
+<%- include("../common/javascripts.ejs") %>
 </html>

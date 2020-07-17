@@ -3,10 +3,11 @@
 
 <head>
   <title>トップページ</title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <%- include("./common/stylesheets.ejs") %>
 </head>
 
 <body>
+  <%- include("./common/header.ejs") %>
   <h1>PLATFORM</h1>
   <a href="/">戻る</a>
   <hr>
@@ -71,5 +72,5 @@
     }
   </script>
 </body>
-
+<%- include("./common/javascripts.ejs") %>
 </html>

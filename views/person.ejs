@@ -3,10 +3,11 @@
 
 <head>
   <title>個人</title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <%- include("./common/stylesheets.ejs") %>
 </head>
 
 <body>
+  <%- include("./common/header.ejs") %>
   <a href="/top">TOPへ</a>
   <a href="/company/<%= person.id_company %>">会社へ</a>
   <hr>
@@ -25,5 +26,5 @@
     <a href="/person/update/<%= person.id %>">更新</a>
     <a href="/person/delete/<%= person.id %>">削除</a>
   </body>
-
+<%- include("./common/javascripts.ejs") %>
 </html>

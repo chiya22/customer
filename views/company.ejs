@@ -3,10 +3,11 @@
 
 <head>
   <title>会社</title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <%- include("./common/stylesheets.ejs") %>
 </head>
 
 <body>
+  <%- include("./common/header.ejs") %>
   <a href="/top">TOPへ</a>
   <hr>
   <section>
@@ -112,5 +113,5 @@
     </ul>
   </section>
 </body>
-
+<%- include("./common/javascripts.ejs") %>
 </html>

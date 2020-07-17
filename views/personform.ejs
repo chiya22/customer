@@ -3,10 +3,11 @@
 
 <head>
   <title>個人（編集）</title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <%- include("./common/stylesheets.ejs") %>
 </head>
 
 <body>
+  <%- include("./common/header.ejs") %>
   <% if (person) { %>
   <a href="/person/<%= person.id %>">戻る</a>
   <% } else { %>
@@ -112,5 +113,5 @@
     }
   </script>
 </body>
-
+<%- include("./common/javascripts.ejs") %>
 </html>

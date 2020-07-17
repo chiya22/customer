@@ -3,10 +3,11 @@
 
 <head>
   <title>入居番号管理</title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <%- include("../common/stylesheets.ejs") %>
 </head>
 
 <body>
+  <%- include("../common/header.ejs") %>
   <a href="/admin/nyukyos/insert">登録</a>
   <hr>
   <h1>入居番号管理</h1>
@@ -23,5 +24,5 @@
     <% } %>
   </ul>
 </body>
-
+<%- include("../common/javascripts.ejs") %>
 </html>

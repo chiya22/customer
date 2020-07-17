@@ -3,10 +3,11 @@
 
 <head>
   <title>フロントページ</title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <%- include("./common/stylesheets.ejs") %>
 </head>
 
 <body>
+  <%- include("./common/header.ejs") %>
   <h1>PLATFORM</h1>
   <p>フロントページ</p>
   <a href="top">トップページ</a>
@@ -17,5 +18,5 @@
   </form>
   <% } %>
 </body>
-
+<%- include("./common/javascripts.ejs") %>
 </html>

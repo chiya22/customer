@@ -3,10 +3,11 @@
 
 <head>
   <title>キャビネット管理</title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <%- include("../common/stylesheets.ejs") %>
 </head>
 
 <body>
+  <%- include("../common/header.ejs") %>
   <h1>キャビネット管理</h1>
   <ul>
     <% if (cabinets) { %>
@@ -21,5 +22,5 @@
   </ul>
   <a href="/admin/cabinets/insert">登録</a>
 </body>
-
+<%- include("../common/javascripts.ejs") %>
 </html>
