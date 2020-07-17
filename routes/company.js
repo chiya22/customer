@@ -6,6 +6,7 @@ const security = require('../util/security');
 const m_nyukyo = require('../model/nyukyos');
 const m_company = require('../model/company');
 const m_person = require('../model/person');
+const m_cabinet = require('../model/cabinet');
 const m_relation_comroom = require('../model/relation_comroom');
 
 // TOPページから「登録」ボタンでの遷移
@@ -27,23 +28,63 @@ router.get('/:id', security.authorize(), function (req, res, next) {
   const id_company = req.params.id;
   let company;
   let persons;
-  let freerooms;
+  let nyukyo;
+  let cabinets;
+  let freecabinets;
+  let rooms;
+  let nyukyocompanies;
+
+  //会社情報の取得
   m_company.findPKey(id_company, (err, retObj) => {
     if (err) { next(err); }
     company = retObj;
+
+    //個人情報の取得
     m_person.findByCompany(id_company, (err, retObj) => {
       if (err) { next(err); }
       persons = retObj;
-      m_relation_comroom.findFree((err,retObj) => {
-        if (err) { next(err);};
-        freerooms = retObj;
-        m_relation_comroom.findByCompany(id_company, (err, retObj) => {
+
+      //入居情報の取得
+      m_nyukyo.findPKey(company.id_nyukyo, (err, retObj) => {
+        if (err) { next(err) };
+        nyukyo = retObj;
+
+        //入居番号の会社
+        m_company.findByNyukyo(company.id_nyukyo, (err, retObj) => {
           if (err) { next(err); }
-          res.render('company', {
-            company: company,
-            persons: persons,
-            rooms: retObj,
-            freerooms: freerooms,
+          nyukyocompanies = retObj;
+
+          //部屋情報の取得
+          m_relation_comroom.findByCompany(id_company, (err, retObj) => {
+            if (err) { next(err); }
+            rooms = retObj;
+
+            //キャビネット情報の取得
+            m_cabinet.findByNyukyo(company.id_nyukyo, (err, retObj) => {
+              if (err) { next(err); }
+              cabinets = retObj;
+
+              //空いているキャビネット情報の取得
+              m_cabinet.findFree((err, retObj) => {
+                if (err) { next(err); }
+                freecabinets = retObj;
+
+                //空いている部屋情報の取得
+                m_relation_comroom.findFree((err, retObj) => {
+                  if (err) { next(err); };
+                  res.render('company', {
+                    company: company,
+                    persons: persons,
+                    nyukyo: nyukyo,
+                    nyukyocompanies: nyukyocompanies,
+                    cabinets: cabinets,
+                    freecabinets: freecabinets,
+                    rooms: rooms,
+                    freerooms: retObj,
+                  });
+                });
+              });
+            });
           });
         });
       });
@@ -153,7 +194,7 @@ router.post('/delete', security.authorize(), function (req, res, next) {
 });
 
 // 会社⇔部屋情報の追加
-router.post('/add', security.authorize(), function (req, res, next) {
+router.post('/addroom', security.authorize(), function (req, res, next) {
   const id_room = req.body.id_room;
   const id_company = req.body.id_company;
   let relation_comroom = {};
@@ -166,12 +207,40 @@ router.post('/add', security.authorize(), function (req, res, next) {
 });
 
 // 会社⇔部屋情報の削除
-router.get('/delete/:id_company/:id_room', security.authorize(), function (req, res, next) {
+router.get('/deleteroom/:id_company/:id_room', security.authorize(), function (req, res, next) {
   const id_company = req.params.id_company;
   const id_room = req.params.id_room;
   m_relation_comroom.remove(id_company, id_room, (err, retObj) => {
     if (err) { next(err); };
     res.redirect('/company/' + id_company);
+  });
+});
+
+// 「キャビネット追加」ボタン
+router.post('/addcabinet', security.authorize(), function (req, res, next) {
+  const id_company = req.body.id_company;
+  const id_nyukyo = req.body.id_nyukyo;
+  const id_cabinet = req.body.id_cabinet;
+  m_cabinet.findPKey(id_cabinet, (err, retObj) => {
+    if (err) { next(err) };
+    retObj.id_nyukyo = id_nyukyo;
+    m_cabinet.update(retObj, (err, retObj) => {
+      res.redirect('/company/' + id_company);
+    });
+  });
+});
+
+// 「キャビネット削除」ボタン
+router.get('/deletecabinet/:id_company/:id_cabinet', security.authorize(), function (req, res, next) {
+  const id_company = req.params.id_company;
+  const id_cabinet = req.params.id_cabinet;
+  m_cabinet.findPKey(id_cabinet, (err, retObj) => {
+    if (err) { next(err) };
+    // delete retObj.id_nyukyo;
+    retObj.id_nyukyo = "";
+    m_cabinet.update(retObj, (err, retObj) => {
+      res.redirect('/company/' + id_company);
+    });
   });
 });
 

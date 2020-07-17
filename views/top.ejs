@@ -34,12 +34,10 @@
     <% if (results) { %>
     <%  results.forEach( result => { %>
     <li>
-      <% if (result.kubun === 'company') { %>
-      <a href="./company/<%= result.id %>">
-        <% } else if (result.kubun === 'person') { %>
+      <% if (result.kubun === 'person') { %>
         <a href="./person/<%= result.id %>">
-          <% } else if (result.kubun === 'nyukyo') { %>
-          <a href="./nyukyo/<%= result.id %>">
+        <% } else { %>
+          <a href="./company/<%= result.id %>">
           <% } %>
           【<%= result.kubun %>】<%= result.name %>（<%= result.id %>）
         </a>
