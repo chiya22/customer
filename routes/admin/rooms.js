@@ -20,6 +20,7 @@ router.get('/insert', security.authorize(), function (req, res, next) {
   res.render('admin/roomform', {
     room: null,
     mode: 'insert',
+    message: null,
   });
 });
 
@@ -31,6 +32,7 @@ router.get('/update/:id', security.authorize(), function (req, res, next) {
     res.render('admin/roomform', {
       room: retObj,
       mode: 'update',
+      message: null,
     });
   });
 });

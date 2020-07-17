@@ -20,6 +20,7 @@ router.get('/insert', security.authorize(), function (req, res, next) {
   res.render('admin/cabinetform', {
     cabinet: null,
     mode: 'insert',
+    message: null,
   });
 });
 
@@ -31,6 +32,7 @@ router.get('/update/:id', security.authorize(), function (req, res, next) {
     res.render('admin/cabinetform', {
       cabinet: retObj,
       mode: 'update',
+      message: null,
     });
   });
 });

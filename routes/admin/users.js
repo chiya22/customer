@@ -74,7 +74,7 @@ router.post('/update/update', security.authorize(), function (req, res, next) {
   connection.query(query, function (err, results, fields) {
     if (err) { next(err) };
     //更新時に対象レコードが存在しない場合
-    if (retObj.changedRows === 0) {
+    if (results.changedRows === 0) {
       res.render('admin/userform', {
         user: inObj,
         mode: 'update',
