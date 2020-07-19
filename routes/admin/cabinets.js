@@ -4,6 +4,7 @@ var router = express.Router();
 const security = require('../../util/security');
 
 const m_cabinet = require('../../model/cabinet');
+const m_nyukyo = require('../../model/nyukyos');
 
 // TOPページ
 router.get('/', security.authorize(), function (req, res, next) {
@@ -17,22 +18,32 @@ router.get('/', security.authorize(), function (req, res, next) {
 
 // メニューから登録画面（cabinetForm）へ
 router.get('/insert', security.authorize(), function (req, res, next) {
-  res.render('admin/cabinetform', {
-    cabinet: null,
-    mode: 'insert',
-    message: null,
+  m_nyukyo.findForSelect((err, retObj) => {
+    if (err) { next(err) };
+    res.render('admin/cabinetform', {
+      nyukyos: retObj,
+      cabinet: null,
+      mode: 'insert',
+      message: null,
+    });
   });
 });
 
 //キャビネットIDを指定して更新画面（cabinetForm）へ
 router.get('/update/:id', security.authorize(), function (req, res, next) {
   const id = req.params.id;
+  let cabinet;
   m_cabinet.findPKey(id, (err, retObj) => {
     if (err) { next(err) };
-    res.render('admin/cabinetform', {
-      cabinet: retObj,
-      mode: 'update',
-      message: null,
+    cabinet = retObj;
+    m_nyukyo.findForSelect((err, retObj) => {
+      if (err) { next(err) };
+      res.render('admin/cabinetform', {
+        nyukyos: retObj,
+        cabinet: cabinet,
+        mode: 'update',
+        message: null,
+      });
     });
   });
 });
@@ -48,10 +59,14 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   m_cabinet.insert(inObj, (err, retObj) => {
     if (err) {
       if (err.errno === 1062) {
-        res.render('admin/cabinetform', {
-          cabinet: null,
-          mode: 'insert',
-          message: 'キャビネット【' + inObj.id + '】はすでに存在しています',
+        m_nyukyo.findForSelect((err, retObj) => {
+          if (err) { next(err) };
+          res.render('admin/cabinetform', {
+            nyukyos: retObj,
+            cabinet: null,
+            mode: 'insert',
+            message: 'キャビネット【' + inObj.id + '】はすでに存在しています',
+          });
         });
       } else {
         next(err)
@@ -73,10 +88,13 @@ router.post('/update', security.authorize(), function (req, res, next) {
     if (err) { next(err) };
     //更新時に対象レコードが存在しない場合
     if (retObj.changedRows === 0) {
-      res.render('admin/cabinetform', {
-        cabinet: inObj,
-        mode: 'update',
-        message: '更新対象がすでに削除されています',
+      m_nyukyo.findForSelect((err, retObj) => {
+        res.render('admin/cabinetform', {
+          nyukyos: retObj,
+          cabinet: inObj,
+          mode: 'update',
+          message: '更新対象がすでに削除されています',
+        });
       });
     } else {
       res.redirect(req.baseUrl);
@@ -87,16 +105,22 @@ router.post('/update', security.authorize(), function (req, res, next) {
 //キャビネット情報の削除
 router.post('/delete', security.authorize(), function (req, res, next) {
   const id = req.body.id;
+  let cabinet;
   m_cabinet.remove(id, (err, retObj) => {
     if (err) {
       // 外部制約参照エラーの場合
       if (err.errno === 1451) {
         m_cabinet.findPKey(id, (err, retObj) => {
-          if (err) { next(err)};
-          res.render('admin/cabinetform', {
-            cabinet: retObj,
-            mode: 'update',
-            message: '削除対象のキャビネットは使用されています',
+          cabinet = retObj;
+          if (err) { next(err) };
+          m_nyukyo.findForSelect((err, retObj) => {
+            if (err) { next(err) };
+            res.render('admin/cabinetform', {
+              nyukyos: retObj,
+              cabinet: cabinet,
+              mode: 'update',
+              message: '削除対象のキャビネットは使用されています',
+            });
           });
         });
       } else {

@@ -1,4 +1,5 @@
 var connection = require('../db/mysqlconfig.js');
+const tool = require('../util/tool');
 
 const findPKey = function (pkey, callback) {
     (async function () {
@@ -74,7 +75,7 @@ const findLikeForPaging = function (likevalue, percount, offset, callback) {
 
 const insert = function (inObj, callback) {
     (async function () {
-        const query = 'insert into companies values ("' + inObj.id + '","' + inObj.id_nyukyo + '","' + inObj.id_kaigi + '","' + inObj.name + '","' + inObj.kana + '", "20200701", "99991231", "' + inObj.bikou + '")';
+        const query = 'insert into companies values (' + tool.returnvalue(inObj.id) + ',' + tool.returnvalue(inObj.id_nyukyo) + ',' + tool.returnvalue(inObj.id_kaigi) + ',' + tool.returnvalue(inObj.name) + ',' + tool.returnvalue(inObj.kana) + ', "20200701", "99991231", ' + tool.returnvalue(inObj.bikou) + ')';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
@@ -87,7 +88,7 @@ const insert = function (inObj, callback) {
 
 const update = function (inObj, callback) {
     (async function () {
-        const query = 'update companies set id_nyukyo = "' + inObj.id_nyukyo + '", id_kaigi = "' + inObj.id_kaigi + '", name = "' + inObj.name + '", kana = "' + inObj.kana + '", bikou = "' + inObj.bikou + '" where id = "' + inObj.id + '"';
+        const query = 'update companies set id_nyukyo = ' + tool.returnvalue(inObj.id_nyukyo) + ', id_kaigi = ' + tool.returnvalue(inObj.id_kaigi) + ', name = ' + tool.returnvalue(inObj.name) + ', kana = ' + tool.returnvalue(inObj.kana) + ', bikou = ' + tool.returnvalue(inObj.bikou) + ' where id = ' + tool.returnvalue(inObj.id);
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);

@@ -1,4 +1,5 @@
 var connection = require('../db/mysqlconfig.js');
+const tool = require('../util/tool');
 
 const findPKey = function (pkey, callback) {
     (async function () {
@@ -38,7 +39,7 @@ const findFree = function (callback) {
 
 const findByNyukyo = function (id_nyukyo, callback) {
     (async function () {
-        await connection.query('select * from cabinets where id_nyukyo = "' + id_nyukyo + '" order by id asc', function (error, results, fields) {
+        await connection.query('select * from cabinets where id_nyukyo = ' + tool.returnvalue(id_nyukyo) + ' order by id asc', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -49,8 +50,8 @@ const findByNyukyo = function (id_nyukyo, callback) {
 };
 
 const insert = function (inObj, callback) {
-    (async function() {
-        const query = 'insert into cabinets values ("' + inObj.id + '","' + inObj.id_nyukyo + '","' + inObj.place + '","' + inObj.name + '", "20200701", "99991231")';
+    (async function () {
+        const query = 'insert into cabinets values (' + tool.returnvalue(inObj.id) + ',' + tool.returnvalue(inObj.id_nyukyo) + ',' + tool.returnvalue(inObj.place) + ',' + tool.returnvalue(inObj.name) + ', "20200701", "99991231")';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
@@ -62,8 +63,8 @@ const insert = function (inObj, callback) {
 };
 
 const update = function (inObj, callback) {
-    (async function() {
-        const query = 'update cabinets set id_nyukyo = ' + (inObj.id_nyukyo ? '"' + inObj.id_nyukyo + '"' : null) + ', place = "' + inObj.place + '", name = "' + inObj.name + '" where id = "' + inObj.id + '"';
+    (async function () {
+        const query = 'update cabinets set id_nyukyo = ' + tool.returnvalue(inObj.id_nyukyo)  + ', place = ' + tool.returnvalue(inObj.place) + ', name = ' + tool.returnvalue(inObj.name) + ' where id = ' + tool.returnvalue(inObj.id);
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
@@ -75,7 +76,7 @@ const update = function (inObj, callback) {
 };
 
 const remove = function (pkey, callback) {
-    (async function() {
+    (async function () {
         const query = 'delete from cabinets where id = "' + pkey + '"';
         connection.query(query, function (error, results, fields) {
             if (error) {

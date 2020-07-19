@@ -8,6 +8,8 @@
 
 <body>
   <%- include("../common/header.ejs") %>
+  <a href="/admin/cabinets/insert">登録</a>
+  <hr>
   <h1>キャビネット管理</h1>
   <ul>
     <% if (cabinets) { %>
@@ -20,7 +22,6 @@
     <%  }) %>
     <% } %>
   </ul>
-  <a href="/admin/cabinets/insert">登録</a>
 </body>
 <%- include("../common/javascripts.ejs") %>
 </html>

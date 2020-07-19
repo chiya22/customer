@@ -1,4 +1,6 @@
 var connection = require('../db/mysqlconfig.js');
+const tool = require('../util/tool');
+const { PayloadTooLarge } = require('http-errors');
 
 const findPKey = function (pkey, callback) {
     (async function () {
@@ -26,7 +28,7 @@ const find = function (callback) {
 
 const findByCompany = function (id_company, callback) {
     (async function () {
-        await connection.query('select * from persons where id_company = "' + id_company + '"', function (error, results, fields) {
+        await connection.query('select * from persons where id_company = ' + tool.returnvalue(id_company), function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -61,8 +63,8 @@ const findLikeForPaging = function (likevalue, percount, offset, callback) {
 };
 
 const insert = function (inObj, callback) {
-    (async function() {
-        const query = 'insert into persons values ("' + inObj.id + '","' + inObj.id_company + '","' + inObj.name + '","' + inObj.kana + '", "' + inObj.telno + '", "' + inObj.telno_mobile + '", "' + inObj.email + '", "' + inObj.no_yubin + '", "' + inObj.todoufuken + '", "' + inObj.address + '", "20200701", "99991231", "' + inObj.bikou + '")';
+    (async function () {
+        const query = 'insert into persons values (' + tool.returnvalue(inObj.id) + ',' + tool.returnvalue(inObj.id_company) + ',' + tool.returnvalue(inObj.name) + ',' + tool.returnvalue(inObj.kana) + ',' + tool.returnvalue(inObj.telno) + ',' + tool.returnvalue(inObj.telno_mobile) + ',' + tool.returnvalue(inObj.email) + ',' + tool.returnvalue(inObj.no_yubin) + ',' + tool.returnvalue(inObj.todoufuken) + ',' + tool.returnvalue(inObj.address) + ',"20200701", "99991231", ' + tool.returnvalue(inObj.bikou) + ')';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
@@ -74,8 +76,8 @@ const insert = function (inObj, callback) {
 };
 
 const update = function (inObj, callback) {
-    (async function() {
-        const query = 'update persons set id_company = "' + inObj.id_company + '", name = "' + inObj.name + '", kana = "' + inObj.kana + '", telno = "' + inObj.telno + '", telno_mobile = "' + inObj.telno_mobile + '", email = "' + inObj.email + '", no_yubin = "' + inObj.no_yubin + '", todoufuken = "' + inObj.todoufuken + '", address = "' + inObj.address + '", bikou = "' + inObj.bikou + '" where id = "' + inObj.id + '"';
+    (async function () {
+        const query = 'update persons set id_company = ' + tool.returnvalue(inObj.id_company) + ', name = ' + tool.returnvalue(inObj.name) + ', kana = ' + tool.returnvalue(inObj.kana) + ', telno = ' + tool.returnvalue(inObj.telno) + ', telno_mobile = ' + tool.returnvalue(inObj.telno_mobile) + ', email = ' + tool.returnvalue(inObj.email) + ', no_yubin = ' + tool.returnvalue(inObj.no_yubin) + ', todoufuken = ' + tool.returnvalue(inObj.todoufuken) + ', address = ' + tool.returnvalue(inObj.address) + ', bikou = ' + tool.returnvalue(inObj.bikou) + ' where id = ' + tool.returnvalue(inObj.id);
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
@@ -87,7 +89,7 @@ const update = function (inObj, callback) {
 };
 
 const remove = function (pkey, callback) {
-    (async function() {
+    (async function () {
         const query = 'delete from persons where id = "' + pkey + '"';
         connection.query(query, function (error, results, fields) {
             if (error) {
