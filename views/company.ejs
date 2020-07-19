@@ -111,7 +111,7 @@
       <% if (cabinets) { %>
       <%  cabinets.forEach( cabinet => { %>
       <li>
-        <%= cabinet.name %>（<%= cabinet.id %>）<%= cabinet.place %> <a href="/company/deletecabinet/<%= company.id %>/<%= cabinet.id %>">削除</a>
+        <%= cabinet.name %>（<%= cabinet.id %>）<%= cabinet.place %> <a href="/company/deletecabinet/<%= company.id %>/<%= nyukyo.id %>/<%= cabinet.id %>">削除</a>
       </li>
       <%  }) %>
       <% } %>

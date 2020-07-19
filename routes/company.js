@@ -8,6 +8,7 @@ const m_company = require('../model/company');
 const m_person = require('../model/person');
 const m_cabinet = require('../model/cabinet');
 const m_relation_comroom = require('../model/relation_comroom');
+const m_relation_nyucabi = require('../model/relation_nyucabi');
 
 // TOPページから「登録」ボタンでの遷移
 router.get('/', security.authorize(), function (req, res, next) {
@@ -54,20 +55,20 @@ router.get('/:id', security.authorize(), function (req, res, next) {
           if (err) { next(err); }
           nyukyocompanies = retObj;
 
-          //部屋情報の取得
-          m_relation_comroom.findByCompany(id_company, (err, retObj) => {
+          //キャビネット情報の取得
+          m_relation_nyucabi.findByNyukyo(company.id_nyukyo, (err, retObj) => {
             if (err) { next(err); }
-            rooms = retObj;
+            cabinets = retObj;
 
-            //キャビネット情報の取得
-            m_cabinet.findByNyukyo(company.id_nyukyo, (err, retObj) => {
+            //空いているキャビネット情報の取得
+            m_relation_nyucabi.findFree((err, retObj) => {
               if (err) { next(err); }
-              cabinets = retObj;
+              freecabinets = retObj;
 
-              //空いているキャビネット情報の取得
-              m_cabinet.findFree((err, retObj) => {
+              //部屋情報の取得
+              m_relation_comroom.findByCompany(id_company, (err, retObj) => {
                 if (err) { next(err); }
-                freecabinets = retObj;
+                rooms = retObj;
 
                 //空いている部屋情報の取得
                 m_relation_comroom.findFree((err, retObj) => {
@@ -195,11 +196,9 @@ router.post('/delete', security.authorize(), function (req, res, next) {
 
 // 会社⇔部屋情報の追加
 router.post('/addroom', security.authorize(), function (req, res, next) {
-  const id_room = req.body.id_room;
-  const id_company = req.body.id_company;
   let relation_comroom = {};
-  relation_comroom.id_company = id_company;
-  relation_comroom.id_room = id_room;
+  relation_comroom.id_company = req.body.id.company;
+  relation_comroom.id_room = req.body.id_room;
   m_relation_comroom.insert(relation_comroom, (err, retObj) => {
     if (err) { next(err); };
     res.redirect('/company/' + id_company);
@@ -216,31 +215,26 @@ router.get('/deleteroom/:id_company/:id_room', security.authorize(), function (r
   });
 });
 
-// 「キャビネット追加」ボタン
+// 入居番号⇔キャビネットの追加
 router.post('/addcabinet', security.authorize(), function (req, res, next) {
   const id_company = req.body.id_company;
-  const id_nyukyo = req.body.id_nyukyo;
-  const id_cabinet = req.body.id_cabinet;
-  m_cabinet.findPKey(id_cabinet, (err, retObj) => {
+  let relation_nyucabi = {};
+  relation_nyucabi.id_nyukyo = req.body.id_nyukyo;
+  relation_nyucabi.id_cabinet = req.body.id_cabinet;
+  m_relation_nyucabi.insert(relation_nyucabi, (err, retObj) => {
     if (err) { next(err) };
-    retObj.id_nyukyo = id_nyukyo;
-    m_cabinet.update(retObj, (err, retObj) => {
-      res.redirect('/company/' + id_company);
-    });
+    res.redirect('/company/' + id_company);
   });
 });
 
-// 「キャビネット削除」ボタン
-router.get('/deletecabinet/:id_company/:id_cabinet', security.authorize(), function (req, res, next) {
+// 入居番号⇔キャビネットの削除
+router.get('/deletecabinet/:id_company/:id_nyukyo/:id_cabinet', security.authorize(), function (req, res, next) {
   const id_company = req.params.id_company;
+  const id_nyukyo = req.params.id_nyukyo;
   const id_cabinet = req.params.id_cabinet;
-  m_cabinet.findPKey(id_cabinet, (err, retObj) => {
+  m_relation_nyucabi.remove(id_nyukyo, id_cabinet, (err, retObj) => {
     if (err) { next(err) };
-    // delete retObj.id_nyukyo;
-    retObj.id_nyukyo = "";
-    m_cabinet.update(retObj, (err, retObj) => {
-      res.redirect('/company/' + id_company);
-    });
+    res.redirect('/company/' + id_company);
   });
 });
 
