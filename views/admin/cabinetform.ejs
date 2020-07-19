@@ -17,32 +17,12 @@
   <form name="cabinetform" method="POST">
     <% if (mode === 'insert') { %>
     ID:<input type="text" name="id" required>
-    ID_NYUKYO:
-    <select name="id_nyukyo">
-      <option value="" selected>--入居番号選択--</option>
-      <% nyukyos.forEach(function (nyukyo) { %>
-      <option value="<%= nyukyo.id %>"><%= nyukyo.kubun %><%=nyukyo.id %></option>
-      <% }); %>
-    </select>
     PLACE:<input type="text" name="place" required>
     NAME:<input type="text" name="name" required>
     <input type="button" id="btn_insert" value="登録">
     <% } else { %>
     ID:<%= cabinet.id %>
     <input type="hidden" name="id" value="<%= cabinet.id %>">
-    ID_NYUKYO:
-    <select name="id_nyukyo">
-      <% if (!cabinet.id_nyukyo) { %>
-      <option value="" selected>--入居番号選択--</option>
-      <% } %>
-      <% nyukyos.forEach(function (nyukyo) { %>
-      <% if (nyukyo.id === cabinet.id_nyukyo) { %>
-      <option value="<%= nyukyo.id %>" selected><%= nyukyo.kubun %><%=nyukyo.id %></option>
-      <% } else { %>
-      <option value="<%= nyukyo.id %>"><%= nyukyo.kubun %><%=nyukyo.id %></option>
-      <% } %>
-      <% }); %>
-    </select>
     PLACE:<input type="text" name="place" value="<%= cabinet.place %>" required>
     NAME:<input type="text" name="name" value="<%= cabinet.name %>" required>
     <input type="button" id="btn_update" value="更新">
