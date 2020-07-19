@@ -53,6 +53,9 @@
     <dt>ID_NYUKYO</dt>
     <dd>
     <select name="id_nyukyo">
+      <% if (!company.id_nyukyo) { %>
+      <option value="" selected>--入居番号選択--</option>
+      <% } %>
       <% nyukyos.forEach(function (nyukyo) { %>
       <% if (nyukyo.id === company.id_nyukyo) { %>
       <option value="<%= nyukyo.id %>" selected><%= nyukyo.kubun %><%=nyukyo.id %></option>

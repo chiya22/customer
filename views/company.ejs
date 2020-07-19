@@ -48,6 +48,7 @@
     <form name="roomForm" method="POST" action="/company/addroom">
       <input type="submit" value="部屋追加">
       <select name="id_room">
+        <option value="" selected>--部屋選択--</option>
         <% freerooms.forEach( freeroom => { %>
         <option value="<%= freeroom.id %>"><%= freeroom.name %>（<%= freeroom.id %>）<%= freeroom.place %> / <%= freeroom.floor %></option>
         <% }) %>
@@ -67,6 +68,7 @@
   <hr>
   <section>
     <h2>入居番号</h2>
+    <% if (nyukyo) { %>
     <p><%= nyukyo.id %></p>
     <ul>
     <% nyukyocompanies.forEach( nyukyocompany  => { %>
@@ -88,13 +90,16 @@
       </li>
     <% }) %>
     </ul>
+    <% } %>
   </section>
   <hr>
   <section>
     <h2>キャビネット</h2>
+    <% if (nyukyo) { %>
     <form name="cabinetForm" method="POST" action="/company/addcabinet">
       <input type="submit" value="キャビネット追加">
       <select name="id_cabinet">
+        <option value="" selected>--キャビネット選択--</option>
         <% freecabinets.forEach(function (freecabinet) { %>
         <option value="<%= freecabinet.id %>"><%= freecabinet.name %>（<%= freecabinet.id %>）<%= freecabinet.place %></option>
         <% }) %>
@@ -111,6 +116,7 @@
       <%  }) %>
       <% } %>
     </ul>
+    <% } %>
   </section>
 </body>
 <%- include("./common/javascripts.ejs") %>

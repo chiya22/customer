@@ -32,7 +32,7 @@
     <input type="hidden" name="id" value="<%= cabinet.id %>">
     ID_NYUKYO:
     <select name="id_nyukyo">
-      <% if (cabinet.id_nyukyo) {} else { %>
+      <% if (!cabinet.id_nyukyo) { %>
       <option value="" selected>--入居番号選択--</option>
       <% } %>
       <% nyukyos.forEach(function (nyukyo) { %>

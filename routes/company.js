@@ -164,7 +164,7 @@ router.post('/update', security.authorize(), function (req, res, next) {
         });
       });
     } else {
-      res.redirect('/top');
+      res.redirect('/company/' + inObj.id);
     }
   });
 });

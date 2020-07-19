@@ -82,7 +82,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   m_person.insert(inObj, (err, retObj) => {
     //個人のidは自動採番とするため、Duplicateエラーは考慮不要
     if (err) { next(err); }
-    res.redirect('/company/' + inObj.id_company);
+    res.redirect('/top');
   });
 });
 

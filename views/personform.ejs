@@ -68,6 +68,9 @@
     <dt>ID_COMPANY</dt>
     <dd>
     <select name="id_company">
+      <% if (!person.id_company) { %>
+      <option value="" selected>--会社選択--</option>
+      <% } %>
       <% companies.forEach(function (company) { %>
       <% if (company.id === person.id_company) { %>
       <option value="<%= company.id %>" selected><%= company.name %></option>
