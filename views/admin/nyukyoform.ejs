@@ -21,8 +21,8 @@
     <input type="button" id="btn_insert" value="登録">
     <% } else { %>
     ID:<%= nyukyo.id %>
-    YMD_START:<input type="text" name="ymd_start" value="<%= nyukyo.ymd_start %>">
-    YMD_END:<input type="text" name="ymd_end" value="<%= nyukyo.ymd_end %>">
+    <input type="hidden" name="ymd_start" value="<%= nyukyo.ymd_start %>">
+    <input type="hidden" name="ymd_end" value="<%= nyukyo.ymd_end %>">
     <input type="hidden" name="id" value="<%= nyukyo.id %>">
     <input type="button" id="btn_update" value="更新">
     <input type="button" id="btn_delete" value="削除">

@@ -2,11 +2,11 @@ var express = require('express');
 var router = express.Router();
 
 const security = require('../util/security');
+const tool = require('../util/tool');
 
 const m_nyukyo = require('../model/nyukyos');
 const m_company = require('../model/company');
 const m_person = require('../model/person');
-const m_cabinet = require('../model/cabinet');
 const m_relation_comroom = require('../model/relation_comroom');
 const m_relation_nyucabi = require('../model/relation_nyucabi');
 
@@ -136,6 +136,9 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   inObj.name = req.body.name;
   inObj.kana = req.body.kana;
   inObj.bikou = req.body.bikou;
+  inObj.ymd_start = tool.getToday();
+  inObj.ymd_upd = tool.getToday();
+  inObj.id_upd = 'yoshida';
   m_company.insert(inObj, (err, retObj) => {
     //会社のidは自動採番とするため、Duplicateエラーは考慮不要
     if (err) { next(err); }
@@ -152,6 +155,10 @@ router.post('/update', security.authorize(), function (req, res, next) {
   inObj.name = req.body.name;
   inObj.kana = req.body.kana;
   inObj.bikou = req.body.bikou;
+  inObj.ymd_start = req.body.ymd_start;
+  inObj.ymd_end = req.body.ymd_end;
+  inObj.ymd_upd = tool.getToday();
+  inObj.id_upd = 'yoshida';
   m_company.update(inObj, (err, retObj) => {
     if (err) { next(err); }
     if (retObj.changedRows === 0) {
@@ -197,11 +204,14 @@ router.post('/delete', security.authorize(), function (req, res, next) {
 // 会社⇔部屋情報の追加
 router.post('/addroom', security.authorize(), function (req, res, next) {
   let relation_comroom = {};
-  relation_comroom.id_company = req.body.id.company;
+  relation_comroom.id_company = req.body.id_company;
   relation_comroom.id_room = req.body.id_room;
+  relation_comroom.ymd_start = tool.getToday();
+  relation_comroom.ymd_upd = tool.getToday();
+  relation_comroom.id_upd = 'yoshida';
   m_relation_comroom.insert(relation_comroom, (err, retObj) => {
     if (err) { next(err); };
-    res.redirect('/company/' + id_company);
+    res.redirect('/company/' + relation_comroom.id_company);
   });
 });
 
@@ -221,6 +231,9 @@ router.post('/addcabinet', security.authorize(), function (req, res, next) {
   let relation_nyucabi = {};
   relation_nyucabi.id_nyukyo = req.body.id_nyukyo;
   relation_nyucabi.id_cabinet = req.body.id_cabinet;
+  relation_nyucabi.ymd_start = tool.getToday();
+  relation_nyucabi.ymd_upd = tool.getToday();
+  relation_nyucabi.id_upd = 'yoshida';
   m_relation_nyucabi.insert(relation_nyucabi, (err, retObj) => {
     if (err) { next(err) };
     res.redirect('/company/' + id_company);

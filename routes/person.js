@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 const security = require('../util/security');
+const tool = require('../util/tool');
+
 const m_company = require('../model/company');
 const m_person = require('../model/person');
 
@@ -79,6 +81,9 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   inObj.todoufuken = req.body.todoufuken;
   inObj.address = req.body.address;
   inObj.bikou = req.body.bikou;
+  inObj.ymd_start = tool.getToday();
+  inObj.ymd_upd = tool.getToday();
+  inObj.id_upd = 'yoshida';
   m_person.insert(inObj, (err, retObj) => {
     //個人のidは自動採番とするため、Duplicateエラーは考慮不要
     if (err) { next(err); }
@@ -100,6 +105,10 @@ router.post('/update', security.authorize(), function (req, res, next) {
   inObj.todoufuken = req.body.todoufuken;
   inObj.address = req.body.address;
   inObj.bikou = req.body.bikou;
+  inObj.ymd_start = req.body.ymd_start;
+  inObj.ymd_end = req.body.ymd_end;
+  inObj.ymd_upd = tool.getToday();
+  inObj.id_upd = 'yoshida';
   m_person.update(inObj, (err, retObj) => {
     if (err) { next(err); }
     if (retObj.changedRows === 0) {

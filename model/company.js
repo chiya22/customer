@@ -3,7 +3,7 @@ const tool = require('../util/tool');
 
 const findPKey = function (pkey, callback) {
     (async function () {
-        await connection.query('select * from companies where id = "' + pkey + '"', function (error, results, fields) {
+        await connection.query('select * from companies where id = "' + pkey + '" and ymd_end = "99991231" order by id asc', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -15,7 +15,7 @@ const findPKey = function (pkey, callback) {
 
 const find = function (callback) {
     (async function () {
-        await connection.query('select * from companies', function (error, results, fields) {
+        await connection.query('select * from companies where ymd_end = "99991231" order by id asc', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -27,7 +27,7 @@ const find = function (callback) {
 
 const findForSelect = function (callback) {
     (async function () {
-        await connection.query('select companies.id, companies.name from companies order by companies.id asc ', function (error, results, fields) {
+        await connection.query('select id, name from companies where ymd_end = "99991231" order by id asc ', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -39,7 +39,7 @@ const findForSelect = function (callback) {
 
 const findByNyukyo = function (id_nyukyo, callback) {
     (async function () {
-        await connection.query('select * from companies where id_nyukyo = "' + id_nyukyo + '" order by id asc', function (error, results, fields) {
+        await connection.query('select * from companies where id_nyukyo = "' + id_nyukyo + '" and ymd_end = "99991231" order by id asc', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -51,7 +51,7 @@ const findByNyukyo = function (id_nyukyo, callback) {
 
 const findLikeCount = function (likevalue, callback) {
     (async function () {
-        await connection.query('select count(*) as count_all from companies where (name like "%' + likevalue + '%") or (kana like "%' + likevalue + '%")', function (error, results, fields) {
+        await connection.query('select count(*) as count_all from companies where ((name like "%' + likevalue + '%") or (kana like "%' + likevalue + '%")) and ymd_end = "99991231"', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -63,7 +63,7 @@ const findLikeCount = function (likevalue, callback) {
 
 const findLikeForPaging = function (likevalue, percount, offset, callback) {
     (async function () {
-        await connection.query('select * from companies where (name like "%' + likevalue + '%") or (kana like "%' + likevalue + '%") limit ' + percount + ' offset ' + offset, function (error, results, fields) {
+        await connection.query('select * from companies where ((name like "%' + likevalue + '%") or (kana like "%' + likevalue + '%")) and ymd_end = "99991231" limit ' + percount + ' offset ' + offset + ' order by id asc', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -75,7 +75,7 @@ const findLikeForPaging = function (likevalue, percount, offset, callback) {
 
 const insert = function (inObj, callback) {
     (async function () {
-        const query = 'insert into companies values (' + tool.returnvalue(inObj.id) + ',' + tool.returnvalue(inObj.id_nyukyo) + ',' + tool.returnvalue(inObj.id_kaigi) + ',' + tool.returnvalue(inObj.name) + ',' + tool.returnvalue(inObj.kana) + ', "20200701", "99991231", ' + tool.returnvalue(inObj.bikou) + ')';
+        const query = 'insert into companies values (' + tool.returnvalue(inObj.id) + ',' + tool.returnvalue(inObj.id_nyukyo) + ',' + tool.returnvalue(inObj.id_kaigi) + ',' + tool.returnvalue(inObj.name) + ',' + tool.returnvalue(inObj.kana) + ',"' + inObj.ymd_start + '","99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '", ' + tool.returnvalue(inObj.bikou) + ')';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
@@ -88,7 +88,7 @@ const insert = function (inObj, callback) {
 
 const update = function (inObj, callback) {
     (async function () {
-        const query = 'update companies set id_nyukyo = ' + tool.returnvalue(inObj.id_nyukyo) + ', id_kaigi = ' + tool.returnvalue(inObj.id_kaigi) + ', name = ' + tool.returnvalue(inObj.name) + ', kana = ' + tool.returnvalue(inObj.kana) + ', bikou = ' + tool.returnvalue(inObj.bikou) + ' where id = ' + tool.returnvalue(inObj.id);
+        const query = 'update companies set id_nyukyo = ' + tool.returnvalue(inObj.id_nyukyo) + ', id_kaigi = ' + tool.returnvalue(inObj.id_kaigi) + ', name = ' + tool.returnvalue(inObj.name) + ', kana = ' + tool.returnvalue(inObj.kana) + ', bikou = ' + tool.returnvalue(inObj.bikou) + ', ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id = ' + tool.returnvalue(inObj.id) + ' and ymd_end = "99991231"';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
@@ -99,9 +99,10 @@ const update = function (inObj, callback) {
     })();
 };
 
+//TODO 解約処理となるため、処理内容を見直す必要がある
 const remove = function (pkey, callback) {
     (async function () {
-        const query = 'delete from companies where id = "' + pkey + '"';
+        const query = 'delete from companies where id = "' + pkey + '" and ymd_end ="99991231"';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);

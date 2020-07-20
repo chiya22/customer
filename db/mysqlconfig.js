@@ -5,7 +5,7 @@ const dbConfig = {
   user     : 'pfs',
   password : 'ps10001sp',
   database : 'pfs',
-  port     : 58020,
+//   port     : 58020,
 };
 
 // create table users (

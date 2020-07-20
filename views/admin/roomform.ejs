@@ -28,6 +28,8 @@
     FLOOR:<input type="text" name="floor" value="<%= room.floor %>" required>
     PLACE:<input type="text" name="place" value="<%= room.place %>" required>
     NAME:<input type="text" name="name" value="<%= room.name %>" required>
+    <input type="hidden" name="ymd_start" value="<%= room.ymd_start %>">
+    <input type="hidden" name="ymd_end" value="<%= room.ymd_end %>">
     <input type="button" id="btn_update" value="更新">
     <input type="button" id="btn_delete" value="削除">
     <% } %>

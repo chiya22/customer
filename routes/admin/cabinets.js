@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const security = require('../../util/security');
+const tool = require('../../util/tool');
 
 const m_cabinet = require('../../model/cabinet');
 
@@ -46,6 +47,9 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   inObj.id_nyukyo = req.body.id_nyukyo;
   inObj.place = req.body.place;
   inObj.name = req.body.name;
+  inObj.ymd_start = tool.getToday();
+  inObj.ymd_upd = tool.getToday();
+  inObj.id_upd = 'yoshida';
   m_cabinet.insert(inObj, (err, retObj) => {
     if (err) {
       if (err.errno === 1062) {
@@ -67,9 +71,10 @@ router.post('/insert', security.authorize(), function (req, res, next) {
 router.post('/update', security.authorize(), function (req, res, next) {
   let inObj = {};
   inObj.id = req.body.id;
-  inObj.id_nyukyo = req.body.id_nyukyo;
   inObj.place = req.body.place;
   inObj.name = req.body.name;
+  inObj.ymd_upd = tool.getToday();
+  inObj.id_upd = 'yoshida';
   m_cabinet.update(inObj, (err, retObj) => {
     if (err) { next(err) };
     //更新時に対象レコードが存在しない場合

@@ -2,7 +2,7 @@ var connection = require('../db/mysqlconfig');
 
 const findPKey = function (id_nyukyo, id_cabinet, callback) {
     (async function () {
-        await connection.query('select * from relation_nyucabi where id_nyukyo = "' + id_nyukyo + '" and id_cabinet = "' + id_cabinet + '"', function (error, results, fields) {
+        await connection.query('select * from relation_nyucabi where id_nyukyo = "' + id_nyukyo + '" and id_cabinet = "' + id_cabinet + '" and ymd_end = "99991231" order by id_nyukyo asc', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -14,7 +14,7 @@ const findPKey = function (id_nyukyo, id_cabinet, callback) {
 
 const findByNyukyo = function (id_nyukyo, callback) {
     (async function () {
-        await connection.query('select b.id as id, b.place as place, b.name as name, b.ymd_start as ymd_start, b.ymd_end as ymd_end from relation_nyucabi AS a INNER JOIN cabinets AS b ON a.id_cabinet = b.id where a.id_nyukyo = "' + id_nyukyo + '"', function ( error, results, fields) {
+        await connection.query('select b.id as id, b.place as place, b.name as name, b.ymd_start as ymd_start, b.ymd_end as ymd_end from relation_nyucabi AS a INNER JOIN cabinets AS b ON a.id_cabinet = b.id where a.id_nyukyo = "' + id_nyukyo + '" and a.ymd_end = "99991231" and b.ymd_end = "99991231" order by b.id asc', function ( error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -26,7 +26,7 @@ const findByNyukyo = function (id_nyukyo, callback) {
 
 const find = function (callback) {
     (async function () {
-        await connection.query('select * from relation_nyucabi order by id_nyukyo asc, id_cabinet asc', function (error, results, fields) {
+        await connection.query('select * from relation_nyucabi where ymd_end = "99991231" order by id_nyukyo asc, id_cabinet asc', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -38,7 +38,7 @@ const find = function (callback) {
 
 const findFree = function (callback) {
     (async function () {
-        await connection.query('SELECT c.id, c.place, c.name, c.ymd_start, c.ymd_end FROM cabinets AS c WHERE NOT EXISTS ( SELECT * FROM relation_nyucabi AS re WHERE c.id = re.id_cabinet )', function (error, results, fields) {
+        await connection.query('SELECT c.id, c.place, c.name, c.ymd_start, c.ymd_end FROM cabinets AS c WHERE c.ymd_end = "99991231" and NOT EXISTS ( SELECT * FROM relation_nyucabi AS re WHERE c.id = re.id_cabinet and re.ymd_end = "99991231" ) order by c.id asc', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -51,7 +51,7 @@ const findFree = function (callback) {
 
 const insert = function (inObj, callback) {
     (async function() {
-        const query = 'insert into relation_nyucabi values ("' + inObj.id_nyukyo + '","' + inObj.id_cabinet + '", "20200701", "99991231")';
+        const query = 'insert into relation_nyucabi values ("' + inObj.id_nyukyo + '","' + inObj.id_cabinet + '", "' + inObj.ymd_start + '", "99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '")';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
@@ -64,7 +64,7 @@ const insert = function (inObj, callback) {
 
 const update = function (inObj, callback) {
     (async function() {
-        const query = 'update relation_nyucabi set id_nyukyo = "' + inObj.id_nyukyo + '", id_cabinet = "' + inObj.id_cabinet + '" where id_nyukyo = "' + inObj.id_nyukyo + '" and id_cabinet = "' + inObj.id_cabinet + '"';
+        const query = 'update relation_nyucabi set id_nyukyo = "' + inObj.id_nyukyo + '", id_cabinet = "' + inObj.id_cabinet + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_nyukyo = "' + inObj.id_nyukyo + '" and id_cabinet = "' + inObj.id_cabinet + '" and ymd_end = "99991231"';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
@@ -77,7 +77,7 @@ const update = function (inObj, callback) {
 
 const remove = function (id_nyukyo, id_cabinet, callback) {
     (async function() {
-        const query = 'delete from relation_nyucabi where id_nyukyo = "' + id_nyukyo+ '" and id_cabinet = "' + id_cabinet + '"';
+        const query = 'delete from relation_nyucabi where id_nyukyo = "' + id_nyukyo+ '" and id_cabinet = "' + id_cabinet + '" and ymd_end = "99991231"';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);

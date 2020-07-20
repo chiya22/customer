@@ -26,6 +26,8 @@
     <input type="hidden" name="id" value="<%= cabinet.id %>">
     PLACE:<input type="text" name="place" value="<%= cabinet.place %>" required>
     NAME:<input type="text" name="name" value="<%= cabinet.name %>" required>
+    <input type="hidden" name="ymd_start" value="<%= cabinet.ymd_start %>">
+    <input type="hidden" name="ymd_end" value="<%= cabinet.ymd_end %>">
     <input type="button" id="btn_update" value="更新">
     <input type="button" id="btn_delete" value="削除">
     <% } %>
