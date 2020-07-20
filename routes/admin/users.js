@@ -47,7 +47,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   inObj.role = req.body.role;
   inObj.ymd_start = tool.getToday();
   inObj.ymd_upd = tool.getToday();
-  imObj.id_upd = res.locals.user;
+  imObj.id_upd = req.user;
 
   const query = 'insert into users values ("' + inObj.id + '","' + inObj.name + '","' + inObj.pwd + '","' + inObj.role + '", "' + inObj.ymd_start + '", "99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '")';
   connection.query(query, function (err, results, fields) {
@@ -75,7 +75,7 @@ router.post('/update/update', security.authorize(), function (req, res, next) {
   inObj.password = hash(req.body.password);
   inObj.role = req.body.role;
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = res.locals.user;
+  inObj.id_upd = req.user;
   const query = 'update users set name = "' + inObj.name + '", password = "' + inObj.password + '", role = "' + inObj.role + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_ymd + '" where id = "' + inObj.id + '" and ymd_end = "99991231"';
   connection.query(query, function (err, results, fields) {
     if (err) { next(err) };

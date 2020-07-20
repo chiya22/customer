@@ -83,7 +83,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   inObj.bikou = req.body.bikou;
   inObj.ymd_start = tool.getToday();
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = res.locals.user;
+  inObj.id_upd = req.user;
   m_person.insert(inObj, (err, retObj) => {
     //個人のidは自動採番とするため、Duplicateエラーは考慮不要
     if (err) { next(err); }
@@ -108,7 +108,7 @@ router.post('/update', security.authorize(), function (req, res, next) {
   inObj.ymd_start = req.body.ymd_start;
   inObj.ymd_end = req.body.ymd_end;
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = res.locals.user;
+  inObj.id_upd = req.user;
   m_person.update(inObj, (err, retObj) => {
     if (err) { next(err); }
     if (retObj.changedRows === 0) {
