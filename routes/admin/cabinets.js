@@ -49,7 +49,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   inObj.name = req.body.name;
   inObj.ymd_start = tool.getToday();
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = 'yoshida';
+  inObj.id_upd = res.locals.user;
   m_cabinet.insert(inObj, (err, retObj) => {
     if (err) {
       if (err.errno === 1062) {
@@ -74,7 +74,7 @@ router.post('/update', security.authorize(), function (req, res, next) {
   inObj.place = req.body.place;
   inObj.name = req.body.name;
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = 'yoshida';
+  inObj.id_upd = res.locals.user;
   m_cabinet.update(inObj, (err, retObj) => {
     if (err) { next(err) };
     //更新時に対象レコードが存在しない場合

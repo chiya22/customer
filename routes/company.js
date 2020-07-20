@@ -138,7 +138,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   inObj.bikou = req.body.bikou;
   inObj.ymd_start = tool.getToday();
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = 'yoshida';
+  inObj.id_upd = res.locals.user;
   m_company.insert(inObj, (err, retObj) => {
     //会社のidは自動採番とするため、Duplicateエラーは考慮不要
     if (err) { next(err); }
@@ -158,7 +158,7 @@ router.post('/update', security.authorize(), function (req, res, next) {
   inObj.ymd_start = req.body.ymd_start;
   inObj.ymd_end = req.body.ymd_end;
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = 'yoshida';
+  inObj.id_upd = res.locals.user;
   m_company.update(inObj, (err, retObj) => {
     if (err) { next(err); }
     if (retObj.changedRows === 0) {
@@ -208,7 +208,7 @@ router.post('/addroom', security.authorize(), function (req, res, next) {
   relation_comroom.id_room = req.body.id_room;
   relation_comroom.ymd_start = tool.getToday();
   relation_comroom.ymd_upd = tool.getToday();
-  relation_comroom.id_upd = 'yoshida';
+  relation_comroom.id_upd = res.locals.user;
   m_relation_comroom.insert(relation_comroom, (err, retObj) => {
     if (err) { next(err); };
     res.redirect('/company/' + relation_comroom.id_company);
@@ -233,7 +233,7 @@ router.post('/addcabinet', security.authorize(), function (req, res, next) {
   relation_nyucabi.id_cabinet = req.body.id_cabinet;
   relation_nyucabi.ymd_start = tool.getToday();
   relation_nyucabi.ymd_upd = tool.getToday();
-  relation_nyucabi.id_upd = 'yoshida';
+  relation_nyucabi.id_upd = res.locals.user;
   m_relation_nyucabi.insert(relation_nyucabi, (err, retObj) => {
     if (err) { next(err) };
     res.redirect('/company/' + id_company);
