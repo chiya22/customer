@@ -14,9 +14,11 @@
   <a href="/top">戻る</a>
   <% } %>
   <hr>
-  <% if (message && message.length !== 0) { %>
+  <% if (errors) { %>
   <div class="alert alert-danger">
-    <%= message %>
+    <%  for (let key in errors) { %>
+    <div><%= errors[key] %></div>
+    <% } %>
   </div>
   <hr>
   <% } %>
@@ -26,7 +28,7 @@
     <!-- ◆登録モード -->
     <% if (mode === 'insert') { %>
     <dt>ID<dt>
-    <dd><input type="text" name="id" required></dd>
+    <dd></dd>
     <% if (id_company) { %>
     <dt>ID_COMPANY</dt>
     <dd><a href="/company/<%= id_company %>"><%= id_company %></a></dd>

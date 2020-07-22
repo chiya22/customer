@@ -9,6 +9,7 @@ const m_company = require('../model/company');
 const m_person = require('../model/person');
 const m_relation_comroom = require('../model/relation_comroom');
 const m_relation_nyucabi = require('../model/relation_nyucabi');
+const m_sq = require('../model/sq');
 
 // TOPページから「登録」ボタンでの遷移
 router.get('/', security.authorize(), function (req, res, next) {
@@ -17,9 +18,8 @@ router.get('/', security.authorize(), function (req, res, next) {
     res.render('companyform', {
       company: null,
       nyukyos: retObj,
-      id_nyukyo: null,
       mode: 'insert',
-      message: null,
+      errors: null,
     });
   })
 });
@@ -105,9 +105,8 @@ router.get('/update/:id', security.authorize(), function (req, res, next) {
       res.render('companyform', {
         company: company,
         nyukyos: retObj,
-        id_nyukyo: null,
         mode: 'update',
-        message: null,
+        errors: null,
       });
     });
   });
@@ -120,55 +119,79 @@ router.get('/delete/:id', security.authorize(), function (req, res, next) {
     if (err) { next(err); }
     res.render('companyform', {
       company: retObj,
-      id_nyukyo: null,
       mode: 'delete',
-      message: null,
+      errors: null,
     });
   });
 });
 
 // 会社情報の登録
 router.post('/insert', security.authorize(), function (req, res, next) {
-  let inObj = {};
-  inObj.id = req.body.id;
-  inObj.id_nyukyo = req.body.id_nyukyo;
-  inObj.id_kaigi = req.body.id_kaigi;
-  inObj.name = req.body.name;
-  inObj.kana = req.body.kana;
-  inObj.bikou = req.body.bikou;
+
+  let inObj = getCompanyData(req.body);
   inObj.ymd_start = tool.getToday();
   inObj.ymd_upd = tool.getToday();
   inObj.id_upd = req.user;
-  m_company.insert(inObj, (err, retObj) => {
-    //会社のidは自動採番とするため、Duplicateエラーは考慮不要
+
+  //入力チェック
+  const errors = validateData(req.body);
+  if (errors) {
+    m_nyukyo.findForSelect((err, retObj) => {
+      if (err) { next(err) };
+      res.render('companyform', {
+        company: inObj,
+        nyukyos: retObj,
+        mode: 'insert',
+        errors: errors,
+      });
+    });
+    return;
+  }
+
+  //会社IDの採番号
+  m_sq.getSqCompany((err, retObj) => {
     if (err) { next(err); }
-    res.redirect('/top');
+    inObj.id = 'C' + ('00000' + retObj.no).slice(-5);
+    m_company.insert(inObj, (err, retObj) => {
+      //会社のidは自動採番とするため、Duplicateエラーは考慮不要
+      if (err) { next(err); }
+      res.redirect('/top');
+    });
   });
 });
 
 //会社情報の更新
 router.post('/update', security.authorize(), function (req, res, next) {
-  let inObj = {};
-  inObj.id = req.body.id;
-  inObj.id_nyukyo = req.body.id_nyukyo;
-  inObj.id_kaigi = req.body.id_kaigi;
-  inObj.name = req.body.name;
-  inObj.kana = req.body.kana;
-  inObj.bikou = req.body.bikou;
-  inObj.ymd_start = req.body.ymd_start;
-  inObj.ymd_end = req.body.ymd_end;
+  let inObj = getCompanyData(req.body);
   inObj.ymd_upd = tool.getToday();
   inObj.id_upd = req.user;
+
+  //入力チェック
+  const errors = validateData(req.body);
+  if (errors) {
+    m_nyukyo.findForSelect((err, retObj) => {
+      if (err) { next(err) };
+      res.render('companyform', {
+        company: inObj,
+        nyukyos: retObj,
+        mode: 'update',
+        errors: errors,
+      });
+    });
+    return;
+  }
+
   m_company.update(inObj, (err, retObj) => {
     if (err) { next(err); }
     if (retObj.changedRows === 0) {
       m_nyukyo.findForSelect((err, retObj) => {
+        let errors = {};
+        errors.common = '更新対象がすでに削除されています';
         res.render('companyform', {
           company: inObj,
           nyukyos: retObj,
-          id_nyukyo: null,
           mode: 'update',
-          message: '更新対象がすでに削除されています',
+          errors: errors,
         });
       });
     } else {
@@ -185,11 +208,12 @@ router.post('/delete', security.authorize(), function (req, res, next) {
       if (err.errno === 1451) {
         m_company.findPKey(id, (err, retObj) => {
           if (err) { next(err) };
-          res.render('companyform', {
+          let errors = {};
+          errors.common = '削除対象の会社は使用されています';
+            res.render('companyform', {
             company: retObj,
-            id_nyukyo: null,
             mode: 'delete',
-            message: '削除対象の会社は使用されています',
+            errors: errors,
           });
         })
       } else {
@@ -251,5 +275,55 @@ router.get('/deletecabinet/:id_company/:id_nyukyo/:id_cabinet', security.authori
   });
 });
 
+function validateData(body) {
+
+  let isValidated = true;
+  let errors = {};
+
+  if (!body.name) {
+    isValidated = false;
+    errors.name = "名前が未入力です。";
+  } else {
+    if (body.name.length > 100) {
+      isValidated = false;
+      errors.name = "名前は100桁以下で入力してください。";
+    }
+  }
+  if (body.id_kaigi) {
+    if (body.id_kaigi.length > 5) {
+      isValidated = false;
+      errors.id_kaigi = "会議室IDは5桁以下で入力してください。";
+    }
+  }
+  if (body.kana) {
+    if (body.kana.length > 100) {
+      isValidated = false;
+      errors.kana = "カナは100桁以下で入力してください。";
+    }
+  }
+  if (body.bikou) {
+    if (body.bikou.length > 100) {
+      isValidated = false;
+      errors.bikou = "備考は1000桁以下で入力してください。";
+    }
+  }
+
+  return isValidated ? undefined : errors;
+}
+
+function getCompanyData(body) {
+  let inObj = {};
+  inObj.id = body.id;
+  inObj.id_nyukyo = body.id_nyukyo;
+  inObj.id_kaigi = body.id_kaigi;
+  inObj.name = body.name;
+  inObj.kana = body.kana;
+  inObj.ymd_start = body.ymd_start;
+  inObj.ymd_end = body.ymd_end;
+  inObj.ymd_upd = body.ymd_upd;
+  inObj.id_upd = body.id_upd;
+  inObj.bikou = body.bikou;
+  return inObj;
+}
 
 module.exports = router;

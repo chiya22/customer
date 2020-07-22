@@ -8,15 +8,17 @@
 
 <body>
   <%- include("./common/header.ejs") %>
-  <% if (company) { %>
+  <% if ((company) && (company.id)) { %>
   <a href="/company/<%= company.id %>">戻る</a>
   <% } else { %>
   <a href="/top">戻る</a>
   <% } %>
   <hr>
-  <% if (message && message.length !== 0) { %>
+  <% if (errors) { %>
   <div class="alert alert-danger">
-    <%= message %>
+    <%  for (let key in errors) { %>
+    <div><%= errors[key] %></div>
+    <% } %>
   </div>
   <hr>
   <% } %>
@@ -26,7 +28,7 @@
     <!-- ◆登録モード -->
     <% if (mode === 'insert') { %>
     <dt>ID</dt>
-    <dd><input type="text" name="id" required></dd>
+    <dd></dd>
     <dt>ID_NYUKYO</dt>
     <dd>
     <select name="id_nyukyo">
