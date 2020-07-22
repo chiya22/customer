@@ -13,7 +13,6 @@ router.get('/', security.authorize(), function (req, res, next) {
   m_company.findForSelect((err, retObj) => {
     if (err) { next(err) };
     res.render('personform', {
-      id_company: null,
       person: null,
       companies: retObj,
       mode: 'insert',
@@ -43,7 +42,6 @@ router.get('/update/:id', security.authorize(), function (req, res, next) {
     m_person.findPKey(id_person, (err, retObj) => {
       if (err) { next(err); }
       res.render('personform', {
-        id_company: retObj.id_company,
         person: retObj,
         companies: companies,
         mode: 'update',
@@ -59,7 +57,6 @@ router.get('/delete/:id', security.authorize(), function (req, res, next) {
   m_person.findPKey(id_person, (err, retObj) => {
     if (err) { next(err); }
     res.render('personform', {
-      id_company: retObj.id_company,
       person: retObj,
       companies: null,
       mode: 'delete',
@@ -81,8 +78,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
     m_company.findForSelect((err, retObj) => {
       if (err) { next(err) };
       res.render('personform', {
-        id_company: null,
-        person: null,
+        person: inObj,
         companies: retObj,
         mode: 'insert',
         errors: errors,
@@ -115,7 +111,6 @@ router.post('/update', security.authorize(), function (req, res, next) {
     m_company.findForSelect((err, retObj) => {
       if (err) { next(err) };
       res.render('personform', {
-        id_company: inObj.id_company,
         person: inObj,
         companies: retObj,
         mode: 'update',
@@ -132,8 +127,7 @@ router.post('/update', security.authorize(), function (req, res, next) {
         if (err) { next(err); }
         let errors = {};
         errors.common = '更新対象はすでに削除されています';
-      res.render('personform', {
-          id_company: inObj.id_company,
+        res.render('personform', {
           person: inObj,
           companies: retObj,
           mode: 'update',
@@ -141,7 +135,11 @@ router.post('/update', security.authorize(), function (req, res, next) {
         });
       });
     } else {
-      res.redirect('/company/' + inObj.id_company);
+      if (inObj.id_company) {
+        res.redirect('/company/' + inObj.id_company);
+      } else {
+        res.redirect('/top');
+      }
     }
   });
 });
@@ -153,9 +151,33 @@ router.post('/delete', security.authorize(), function (req, res, next) {
   inObj.id_company = req.body.id_company;
   m_person.remove(inObj.id, (err, retObj) => {
     if (err) { next(err); }
-    res.redirect('/company/' + inObj.id_company);
+    if (inObj.id_company) {
+      res.redirect('/company/' + inObj.id_company);
+    } else {
+      res.redirect('/top');
+    }
   });
 });
+
+//個人情報の解約
+router.get('/cancel/:id_person', security.authorize(), function (req, res, next) {
+
+  let inObj = {};
+  inObj.id = req.params.id_person;
+  inObj.ymd_end = tool.getToday();
+  inObj.ymd_upd = tool.getToday();
+  inObj.id_upd = req.user;
+
+  m_person.cancel(inObj, (err, retObj) => {
+    if (err) { next(err) }
+    if (inObj.id_company) {
+      res.redirect('/company/' + inObj.id_company);
+    } else {
+      res.redirect('/top');
+    }
+  });
+});
+
 
 function validateData(body) {
 

@@ -12,6 +12,7 @@
   <hr>
   <section>
     <h2>会社</h2>
+    <a href="/company/cancel/<%= company.id %>">解約</a>
     <dl>
       <dt>ID</dt>
       <dd><%= company.id %></dd>
@@ -50,7 +51,7 @@
       <select name="id_room">
         <option value="" selected>--部屋選択--</option>
         <% freerooms.forEach( freeroom => { %>
-        <option value="<%= freeroom.id %>"><%= freeroom.name %>（<%= freeroom.id %>）<%= freeroom.place %> / <%= freeroom.floor %></option>
+        <option value="<%= freeroom.id %>"><%= freeroom.kubun %><%= freeroom.name %>（<%= freeroom.id %>）<%= freeroom.place %> / <%= freeroom.floor %></option>
         <% }) %>
       </select>
       <input type="hidden" name="id_company" value="<%= company.id %>">

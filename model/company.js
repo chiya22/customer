@@ -39,7 +39,8 @@ const findForSelect = function (callback) {
 
 const findByNyukyo = function (id_nyukyo, callback) {
     (async function () {
-        await connection.query('select * from companies where id_nyukyo = "' + id_nyukyo + '" and ymd_end = "99991231" order by id asc', function (error, results, fields) {
+        const query = 'select * from companies where id_nyukyo = "' + id_nyukyo + '" and ymd_end = "99991231" order by id asc';
+        await connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -99,7 +100,6 @@ const update = function (inObj, callback) {
     })();
 };
 
-//TODO 解約処理となるため、処理内容を見直す必要がある
 const remove = function (pkey, callback) {
     (async function () {
         const query = 'delete from companies where id = "' + pkey + '" and ymd_end ="99991231"';
@@ -113,6 +113,19 @@ const remove = function (pkey, callback) {
     })();
 };
 
+const cancel = function (inObj, callback) {
+    (async function () {
+        const query = 'update companies set ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id = ' + tool.returnvalue(inObj.id) + ' and ymd_end = "99991231"';
+        connection.query(query, function (error, results, fields) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+        });
+    })();
+}
+
 module.exports = {
     find,
     findPKey,
@@ -123,4 +136,5 @@ module.exports = {
     insert,
     update,
     remove,
+    cancel,
 };

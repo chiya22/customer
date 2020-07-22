@@ -101,6 +101,32 @@ const remove = function (pkey, callback) {
     })();
 };
 
+const cancel = function (inObj, callback) {
+    (async function () {
+        const query = 'update persons set ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id = ' + tool.returnvalue(inObj.id) + ' and ymd_end = "99991231"';
+        connection.query(query, function (error, results, fields) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+        });
+    })();
+};
+
+const cancelByCompany = function (inObj, callback) {
+    (async function () {
+        const query = 'update persons set ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_company = ' + tool.returnvalue(inObj.id_company) + ' and ymd_end = "99991231"';
+        connection.query(query, function (error, results, fields) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+        });
+    })();
+};
+
 module.exports = {
     find,
     findPKey,
@@ -110,4 +136,6 @@ module.exports = {
     insert,
     update,
     remove,
+    cancel,
+    cancelByCompany,
 };

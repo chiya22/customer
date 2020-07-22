@@ -26,7 +26,7 @@ const find = function (callback) {
 
 const findForSelect = function (callback) {
     (async function () {
-        await connection.query('(select "" AS kubun, nyukyos.id AS id FROM nyukyos WHERE ymd_end = "99991231" and EXISTS (SELECT * FROM companies WHERE companies.ymd_end = "99991231" and companies.id_nyukyo = nyukyos.id)) UNION ALL (SELECT "【未使用】" AS kubun, nyukyos.id AS id FROM nyukyos WHERE nyukyos.ymd_end = "99991231" and NOT EXISTS (SELECT * FROM companies WHERE companies.ymd_end = "99991231" and companies.id_nyukyo = nyukyos.id)) ORDER BY kubun DESC, id asc', function (error, results, fields) {
+        await connection.query('(select "【使用中】" AS kubun, nyukyos.id AS id FROM nyukyos WHERE ymd_end = "99991231" and EXISTS (SELECT * FROM companies WHERE companies.ymd_end = "99991231" and companies.id_nyukyo = nyukyos.id)) UNION ALL (SELECT "【未使用】" AS kubun, nyukyos.id AS id FROM nyukyos WHERE nyukyos.ymd_end = "99991231" and NOT EXISTS (SELECT * FROM companies WHERE companies.ymd_end = "99991231" and companies.id_nyukyo = nyukyos.id)) ORDER BY kubun DESC, id asc', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {

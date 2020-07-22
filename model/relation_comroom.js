@@ -48,6 +48,18 @@ const findFree = function (callback) {
     })();
 }
 
+const findForSelect = function (callback) {
+    (async function () {
+        await connection.query('(SELECT "【未使用】" as kubun, r.id, r.place, r.floor, r.name FROM rooms AS r WHERE r.ymd_end = "99991231" and NOT EXISTS ( SELECT * FROM relation_comroom AS re WHERE r.id = re.id_room and re.ymd_end = "99991231" )) UNION ALL (SELECT "【使用中】" as kubun, r.id, r.place, r.floor, r.name FROM rooms AS r WHERE r.ymd_end = "99991231" and EXISTS ( SELECT * FROM relation_comroom AS re WHERE r.id = re.id_room and re.ymd_end = "99991231" ))', function (error, results, fields) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+        });
+    })();
+}
+
 
 const insert = function (inObj, callback) {
     (async function() {
@@ -88,12 +100,27 @@ const remove = function (id_company, id_room, callback) {
     })();
 };
 
+const cancelByCompany = function (inObj, callback) {
+    (async function() {
+        const query = 'update relation_comroom set ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_company = "' + inObj.id_company + '" and ymd_end = "99991231"';
+        connection.query(query, function (error, results, fields) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+        });
+    })();
+};
+
 module.exports = {
     find,
     findFree,
     findPKey,
     findByCompany,
+    findForSelect,
     insert,
     update,
     remove,
+    cancelByCompany,
 };

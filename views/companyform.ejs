@@ -27,71 +27,103 @@
     <dl>
     <!-- ◆登録モード -->
     <% if (mode === 'insert') { %>
-    <dt>ID</dt>
-    <dd></dd>
-    <dt>ID_NYUKYO</dt>
-    <dd>
-    <select name="id_nyukyo">
-      <option value="" selected>--入居番号選択--</option>
-      <% nyukyos.forEach(function (nyukyo) { %>
-      <option value="<%= nyukyo.id %>"><%= nyukyo.kubun %><%=nyukyo.id %></option>
-      <% }); %>
-    </select>
-    </dd>
-    <dt>ID_KAIGI</dt>
-    <dd><input type="text" name="id_kaigi" required></dd>
-    <dt>NAME</dt>
-    <dd><input type="text" name="name" required></dd>
-    <dt>KANA</dt>
-    <dd><input type="text" name="kana" required></dd>
-    <dt>BIKOU</dt>
-    <dd><input type="text" name="bikou"></dd>
-    <input type="button" id="btn_insert" value="登録">
+      <!-- 新規登録時の初期表示 -->
+      <% if (!company) { %>
+        <dt>ID_NYUKYO</dt>
+        <dd>
+        <select name="id_nyukyo">
+          <option value="" selected>--入居番号選択--</option>
+          <% nyukyos.forEach(function (nyukyo) { %>
+          <option value="<%= nyukyo.id %>"><%= nyukyo.kubun %><%=nyukyo.id %></option>
+          <% }); %>
+        </select>
+        </dd>
+        <dt>ID_KAIGI</dt>
+        <dd><input type="text" name="id_kaigi" required></dd>
+        <dt>NAME</dt>
+        <dd><input type="text" name="name" required></dd>
+        <dt>KANA</dt>
+        <dd><input type="text" name="kana" required></dd>
+        <dt>BIKOU</dt>
+        <dd><input type="text" name="bikou"></dd>
+      <!-- 新規登録時エラー発生 -->
+      <% } else  { %>
+        <dt>ID_NYUKYO</dt>
+        <dd>
+        <select name="id_nyukyo">
+          <% if (!company.id_nyukyo) { %>
+          <option value="" selected>--入居番号選択--</option>
+          <% } else { %>
+          <option value="">--入居番号選択--</option>
+          <% } %>
+          <% nyukyos.forEach(function (nyukyo) { %>
+          <% if (nyukyo.id === company.id_nyukyo) { %>
+          <option value="<%= nyukyo.id %>" selected><%= nyukyo.kubun %><%=nyukyo.id %></option>
+          <% } else { %>
+          <option value="<%= nyukyo.id %>"><%= nyukyo.kubun %><%=nyukyo.id %></option>
+          <% } %>
+          <% }); %>
+        </select>
+        </dd>
+        <dt>ID_KAIGI</dt>
+        <dd><input type="text" name="id_kaigi" value="<%= company.id_kaigi %>" required></dd>
+        <dt>NAME</dt>
+        <dd><input type="text" name="name" value="<%= company.name %>" required></dd>
+        <dt>KANA</dt>
+        <dd><input type="text" name="kana" value="<%= company.kana %>" required></dd>
+        <dt>BIKOU</dt>
+        <dd><input type="text" name="bikou" value="<%= company.bikou %>"></dd>
+      <% } %>
+      <input type="button" id="btn_insert" value="登録">
+
     <!-- ◆更新モード -->
     <% } else if (mode === 'update') { %>
-    <dt>ID</dt>
-    <dd><%= company.id %></dd>
-    <input type="hidden" name="id" value="<%= company.id %>">
-    <dt>ID_NYUKYO</dt>
-    <dd>
-    <select name="id_nyukyo">
-      <% if (!company.id_nyukyo) { %>
-      <option value="" selected>--入居番号選択--</option>
-      <% } %>
-      <% nyukyos.forEach(function (nyukyo) { %>
-      <% if (nyukyo.id === company.id_nyukyo) { %>
-      <option value="<%= nyukyo.id %>" selected><%= nyukyo.kubun %><%=nyukyo.id %></option>
-      <% } else { %>
-      <option value="<%= nyukyo.id %>"><%= nyukyo.kubun %><%=nyukyo.id %></option>
-      <% } %>
-      <% }); %>
-    </select>
-    </dd>
-    <dt>ID_KAIGI</dt>
-    <dd><input type="text" name="id_kaigi" value="<%= company.id_kaigi %>" required></dd>
-    <dt>NAME</dt>
-    <dd><input type="text" name="name" value="<%= company.name %>" required></dd>
-    <dt>KANA</dt>
-    <dd><input type="text" name="kana" value="<%= company.kana %>" required></dd>
-    <dt>BIKOU</dt>
-    <dd><input type="text" name="bikou" value="<%= company.bikou %>"></dd>
-    <input type="button" id="btn_update" value="更新">
+      <dt>ID</dt>
+      <dd><%= company.id %></dd>
+      <input type="hidden" name="id" value="<%= company.id %>">
+      <dt>ID_NYUKYO</dt>
+      <dd>
+      <select name="id_nyukyo">
+        <% if (!company.id_nyukyo) { %>
+        <option value="" selected>--入居番号選択--</option>
+        <% } else { %>
+        <option value="">--入居番号選択--</option>
+        <% } %>
+        <% nyukyos.forEach(function (nyukyo) { %>
+        <% if (nyukyo.id === company.id_nyukyo) { %>
+        <option value="<%= nyukyo.id %>" selected><%= nyukyo.kubun %><%=nyukyo.id %></option>
+        <% } else { %>
+        <option value="<%= nyukyo.id %>"><%= nyukyo.kubun %><%=nyukyo.id %></option>
+        <% } %>
+        <% }); %>
+      </select>
+      </dd>
+      <dt>ID_KAIGI</dt>
+      <dd><input type="text" name="id_kaigi" value="<%= company.id_kaigi %>" required></dd>
+      <dt>NAME</dt>
+      <dd><input type="text" name="name" value="<%= company.name %>" required></dd>
+      <dt>KANA</dt>
+      <dd><input type="text" name="kana" value="<%= company.kana %>" required></dd>
+      <dt>BIKOU</dt>
+      <dd><input type="text" name="bikou" value="<%= company.bikou %>"></dd>
+      <input type="button" id="btn_update" value="更新">
+
     <!-- ◆削除モード -->
     <% } else { %>
-    <dt>ID</dt>
-    <dd><%= company.id %></dd>
-    <input type="hidden" name="id" value="<%= company.id %>">
-    <dt>ID_NYUKYO</dt>
-    <dd><%= company.id_nyukyo %></dd>
-    <dt>ID_KAIGI</dt>
-    <dd><%= company.id_kaigi %></dd>
-    <dt>NAME</dt>
-    <dd><%= company.name %></dd>
-    <dt>KANA</dt>
-    <dd><%= company.kana %></dd>
-    <dt>BIKOU</dt>
-    <dd><%= company.bikou %></dd>
-    <input type="button" id="btn_delete" value="削除">
+      <dt>ID</dt>
+      <dd><%= company.id %></dd>
+      <input type="hidden" name="id" value="<%= company.id %>">
+      <dt>ID_NYUKYO</dt>
+      <dd><%= company.id_nyukyo %></dd>
+      <dt>ID_KAIGI</dt>
+      <dd><%= company.id_kaigi %></dd>
+      <dt>NAME</dt>
+      <dd><%= company.name %></dd>
+      <dt>KANA</dt>
+      <dd><%= company.kana %></dd>
+      <dt>BIKOU</dt>
+      <dd><%= company.bikou %></dd>
+      <input type="button" id="btn_delete" value="削除">
     <% } %>
     <input type="hidden" id="field_mode">
   </form>
