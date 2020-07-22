@@ -12,7 +12,11 @@
   <hr>
   <section>
     <h2>会社</h2>
-    <a href="/company/cancel/<%= company.id %>">解約</a>
+    <form name="cacelForm" method="POST" action="/company/cancel">
+      <input type="hidden" name="id_company" value="<%= company.id %>">
+      <input type="hidden" name="id_nyukyo" value="<%= company.id_nyukyo %>">
+      <input type="submit" value="解約">
+    </form>
     <dl>
       <dt>ID</dt>
       <dd><%= company.id %></dd>

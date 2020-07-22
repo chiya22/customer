@@ -160,18 +160,18 @@ router.post('/delete', security.authorize(), function (req, res, next) {
 });
 
 //個人情報の解約
-router.get('/cancel/:id_person', security.authorize(), function (req, res, next) {
+router.post('/cancel', security.authorize(), function (req, res, next) {
 
   let inObj = {};
-  inObj.id = req.params.id_person;
+  inObj.id = req.body.id_person;
   inObj.ymd_end = tool.getToday();
   inObj.ymd_upd = tool.getToday();
   inObj.id_upd = req.user;
 
   m_person.cancel(inObj, (err, retObj) => {
     if (err) { next(err) }
-    if (inObj.id_company) {
-      res.redirect('/company/' + inObj.id_company);
+    if (req.body.id_company) {
+      res.redirect('/company/' + req.body.id_company);
     } else {
       res.redirect('/top');
     }

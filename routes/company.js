@@ -227,55 +227,52 @@ router.post('/delete', security.authorize(), function (req, res, next) {
 });
 
 //会社情報の解約
-router.get('/cancel/:id_company', security.authorize(), function (req, res, next) {
+router.post('/cancel', security.authorize(), function (req, res, next) {
 
-  const id_company = req.params.id_company
+  const id_company = req.body.id_company
+  const id_nyukyo = req.body.id_nyukyo
   let objCompany = {};
-  m_company.findPKey(id_company, (err, retObj) => {
-    if (err) { next(err) }
-    objCompany = retObj;
 
-    let inObj = {};
-    inObj.id = id_company;
-    inObj.ymd_end = tool.getToday();
-    inObj.ymd_upd = tool.getToday();
-    inObj.id_upd = req.user;
-    //会社情報の解約
-    m_company.cancel(inObj, (err, retObj) => {
+  let inObj = {};
+  inObj.id = id_company;
+  inObj.ymd_end = tool.getToday();
+  inObj.ymd_upd = tool.getToday();
+  inObj.id_upd = req.user;
+  //会社情報の解約
+  m_company.cancel(inObj, (err, retObj) => {
+    if (err) { next(err) }
+
+    let inPObj = {};
+    inPObj.id_company = id_company;
+    inPObj.ymd_end = tool.getToday();
+    inPObj.ymd_upd = tool.getToday();
+    inPObj.id_upd = req.user;
+    //個人情報の解約
+    m_person.cancelByCompany(inPObj, (err, retObj) => {
       if (err) { next(err) }
 
-      let inPObj = {};
-      inPObj.id_company = id_company;
-      inPObj.ymd_end = tool.getToday();
-      inPObj.ymd_upd = tool.getToday();
-      inPObj.id_upd = req.user;
-      //個人情報の解約
-      m_person.cancelByCompany(inPObj, (err, retObj) => {
+      //会社⇔部屋情報の解約
+      m_relation_comroom.cancelByCompany(inPObj, (err, retObj) => {
         if (err) { next(err) }
 
-        //会社⇔部屋情報の解約
-        m_relation_comroom.cancelByCompany(inPObj, (err, retObj) => {
+        //入居番号に紐づく会社情報が他に存在するかを確認する
+        m_company.findByNyukyo(id_nyukyo, (err, retObj) => {
           if (err) { next(err) }
+          if (retObj.length === 0) {
 
-          //入居番号に紐づく会社情報が他に存在するかを確認する
-          m_company.findByNyukyo(objCompany.id_nyukyo, (err, retObj) => {
-            if (err) { next(err) }
-            if (retObj.length === 0) {
-
-              let inRObj = {};
-              inRObj.id_nyukyo = objCompany.id_nyukyo;
-              inRObj.ymd_end = tool.getToday();
-              inRObj.ymd_upd = tool.getToday();
-              inRObj.id_upd = req.user;
-              //入居番号⇔キャビネットの解約
-              m_relation_nyucabi.cancelByNyukyo(inRObj, (err, retObj) => {
-                if (err) { next(err) }
-                res.redirect('/top');
-              });
-            } else {
+            let inRObj = {};
+            inRObj.id_nyukyo = id_nyukyo;
+            inRObj.ymd_end = tool.getToday();
+            inRObj.ymd_upd = tool.getToday();
+            inRObj.id_upd = req.user;
+            //入居番号⇔キャビネットの解約
+            m_relation_nyucabi.cancelByNyukyo(inRObj, (err, retObj) => {
+              if (err) { next(err) }
               res.redirect('/top');
-            }
-          });
+            });
+          } else {
+            res.redirect('/top');
+          }
         });
       });
     });
