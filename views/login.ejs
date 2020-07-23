@@ -7,24 +7,26 @@
 </head>
 
 <body>
-  <form action="/login" method="post">
-    <dl>
-      <dt>ユーザーID：</dt>
-      <dd>
-      <input type="text" name="username" />
-      </dd>
-      <dt>パスワード：</dt>
-      <dd>
-      <input type="password" name="password" />
-      </dd>
-      <input type="submit" value="ログイン" />
-    </dl>
-    <% if (message && message.length !== 0) { %>
-    <div class="alert alert-danger">
-      <%= message %>
+  <section class="main">
+    <div class="main__wrapper">
+      <form action="/login" method="post">
+        <% if (message && message.length !== 0) { %>
+        <div class="alert alert-danger">
+          <%= message %>
+        </div>
+        <% } %>
+        <div class="form__item">
+          <input type="text" name="username" class="form__item-style" placeholder="ID" />
+        </div>
+        <div class="form__item">
+          <input type="password" name="password" class="form__item-style" placeholder="パスワード">
+        </div>
+        <input type="submit" class="btn__login" value="ログイン" />
+      </form>
     </div>
-    <% } %>
-  </form>
+  </section>
+
 </body>
 <%- include("./common/javascripts.ejs") %>
+
 </html>

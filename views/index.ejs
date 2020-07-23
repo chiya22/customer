@@ -8,15 +8,14 @@
 
 <body>
   <%- include("./common/header.ejs") %>
-  <h1>PLATFORM</h1>
-  <p>フロントページ</p>
-  <a href="top">トップページ</a>
-  <a href="admin">管理ページ</a>
-  <% if (locals.user){ %>
-  <form method="POST" action="/logout">
-    <input type="submit" button value="ログアウト" />
-  </form>
-  <% } %>
+  <h1 class="main__title">ポータルページ</h1>
+  <ul>
+  <li>
+  <a href="">勤怠管理</a>
+  </li>
+  <li>
+  <a href="top">入居者管理</a>
+  </li>
 </body>
 <%- include("./common/javascripts.ejs") %>
 </html>
