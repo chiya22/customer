@@ -1,17 +1,20 @@
-<head class="header">
-    <div class="header-wrapper">
-        <ul>
-        <li><a class="btn-header" href="/">ポータルTOPへ</a></li>
-        <li><a class="btn-header" href="/top">TOP</a></li>
-        <li><a class="btn-header" href="/admin">マスタ管理</a></li>
-        <% if (locals.user){ %>
-        <li>
-        <form method="POST" action="/logout">
-            <input class="btn-header" type="submit" button value="ログアウト" />
-        </form>
-        </li>
-        <% } %>
-        </ul>
+<head>
+    <div class="header">
+        <div class="header-wrapper">
+            <ul>
+            <li><a class="btn-base" href="/">ポータルTOPへ</a></li>
+            <li><a class="btn-base" href="/top">TOP</a></li>
+            <li><a class="btn-base" href="/admin">マスタ管理</a></li>
+            <% if (locals.user){ %>
+            <li>
+            <form method="POST" action="/logout">
+                <input class="btn-base" type="submit" button value="ログアウト" />
+            </form>
+            </li>
+            <% } %>
+            </ul>
+        </div>
+        <!-- /.header-wrapper -->
     </div>
-    <!-- /.header-wrapper -->
+    <!-- /.header -->
 </head>

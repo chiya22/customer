@@ -4,7 +4,7 @@ var router = express.Router();
 var connection = require('../db/mysqlconfig.js');
 const security = require('../util/security');
 
-const count_perpage = 10;
+const count_perpage = 4;
 
 // TOPページ
 router.get('/', security.authorize(), function (req, res, next) {

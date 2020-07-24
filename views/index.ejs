@@ -8,14 +8,21 @@
 
 <body>
   <%- include("./common/header.ejs") %>
-  <h1 class="main__title">ポータルページ</h1>
-  <ul>
-  <li>
-  <a href="">勤怠管理</a>
-  </li>
-  <li>
-  <a href="top">入居者管理</a>
-  </li>
+  <section class="main">
+    <div class="main__wrapper">
+      <div class="select__items">
+        <div class="select__item">
+          <a href="" class="btn-link">勤怠管理</a>
+        </div>
+        <!-- /.select__item -->
+        <div class="select__item">
+          <a href="top" class="btn-link">入居者管理</a>
+        </div>
+        <!-- /.select__item -->
+      </div>
+    </div>
+  </section>
 </body>
 <%- include("./common/javascripts.ejs") %>
+
 </html>

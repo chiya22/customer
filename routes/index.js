@@ -11,7 +11,7 @@ router.get('/', security.authorize(), function (req, res, next) {
 
 //認証画面の初期表示
 router.get('/login', function (req, res) {
-  res.render("./login.ejs", { errors: req.flash("message") });
+  res.render("./login.ejs", { message: req.flash("message") });
 });
 
 //認証画面の入力

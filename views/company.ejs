@@ -10,65 +10,93 @@
   <%- include("./common/header.ejs") %>
   <a href="/top">TOPへ</a>
   <hr>
-  <section>
-    <h2>会社</h2>
-    <form name="cacelForm" method="POST" action="/company/cancel">
-      <input type="hidden" name="id_company" value="<%= company.id %>">
-      <input type="hidden" name="id_nyukyo" value="<%= company.id_nyukyo %>">
-      <input type="submit" value="解約">
-    </form>
-    <dl>
-      <dt>ID</dt>
-      <dd><%= company.id %></dd>
-        <dt>ID_NYUKYO</dt>
-      <dd><%= company.id_nyukyo %></dd>
-      <dt>ID_KAIGI</dt>
-      <dd><%= company.id_kaigi %></dd>
-      <dt>NAME</dt>
-      <dd><%= company.name %></dd>
-      <dt>KANA</dt>
-      <dd><%= company.kana %></dd>
-      <dt>BIKOU</dt>
-      <dd><%= company.bikou %></dd>
-    </dl>
-    <a href="/company/update/<%= company.id %>">更新</a>
-    <a href="/company/delete/<%= company.id %>">削除</a>
+  <section class="main">
+    <div class="main__wrapper">
+      <div class="company">
+        <form name="cacelForm" method="POST" action="/company/cancel">
+          <!-- /.company__btn-cancel -->
+          <dl>
+            <dt>会社番号</dt>
+            <dd><input type="text" class="form__item-style" name="id" value="<%= company.id %>" disabled></dd>
+            <dt>入居番号</dt>
+            <dd><input type="text" class="form__item-style" name="id_nyukyo" value="<%= company.id_nyukyo %>" disabled></dd>
+            <dt>会議室利用番号</dt>
+            <dd><input type="text" class="form__item-style" name="id_kaigi" value="<%= company.id_kaigi %>" disabled></dd>
+            <dt>会社名</dt>
+            <dd><input type="text" class="form__item-style" name="name" value="<%= company.name %>" disabled></dd>
+            <dt>会社名カナ</dt>
+            <dd><input type="text" class="form__item-style" name="kana" value="<%= company.kana %>" disabled></dd>
+            <dt>備考</dt>
+            <dd><input type="text" class="form__item-style" name="bikou" value="<%= company.bikou %>" disabled></dd>
+            <div class="form__btn">
+              <input class="btn-base" type="submit" value="解約">
+              <a class="btn-base" href="/company/update/<%= company.id %>">更新</a>
+              <a class="btn-base" href="/company/delete/<%= company.id %>">削除</a>
+            </div>
+            <input type="hidden" name="id_company" value="<%= company.id %>">
+            <input type="hidden" name="id_nyukyo" value="<%= company.id_nyukyo %>">
+          </dl>
+        </form>
+      </div>
+      <!-- /.company -->
+      <div class="person">
+        <div class="person__header">
+          <p class="midashi">個人</p>
+        </div>
+        <div class="person__items">
+            <% if (persons) { %>
+            <%  persons.forEach( person => { %>
+            <div class="person__item">
+              <a href="/person/<%= person.id %>"><%= person.name %>（<%= person.id %>）</a>
+            </div>
+            <%  }); %>
+            <% } %>
+        </div>
+        <!-- /.person__items -->
+      </div>
+      <!-- /.person -->
+
+      <div class="room">
+        <div class="room__header">
+          <p class="midashi">部屋</p>
+        </div>
+        <form name="roomForm" method="POST" action="/company/addroom">
+          <input type="submit" value="部屋追加">
+          <select name="id_room">
+            <option value="" selected>--部屋選択--</option>
+            <% freerooms.forEach( freeroom => { %>
+            <option value="<%= freeroom.id %>">
+              <%= freeroom.kubun %><%= freeroom.name %>（<%= freeroom.id %>）<%= freeroom.place %> / <%= freeroom.floor %>
+            </option>
+            <% }) %>
+          </select>
+          <input type="hidden" name="id_company" value="<%= company.id %>">
+        </form>
+        <ul>
+          <% if (rooms) { %>
+          <%  rooms.forEach( room => { %>
+          <li>
+            <%= room.name %>（<%= room.id %>）<%= room.place %>：<%= room.floor %> <a
+              href="/company/deleteroom/<%= company.id %>/<%= room.id %>">削除</a>
+          </li>
+          <%  }) %>
+          <% } %>
+        </ul>
+      </div>
+      <!-- /.room -->
+
+
+
+    </div>
+    <!-- /.main-wrapper -->
   </section>
-  <hr>
+  <!-- /.main -->
+
+
+
+
+
   <section>
-    <h2>個人</h2>
-    <ul>
-      <% if (persons) { %>
-      <%  persons.forEach( person => { %>
-      <li>
-        <a href="/person/<%= person.id %>"><%= person.name %>（<%= person.id %>）</a>
-      </li>
-      <%  }); %>
-      <% } %>
-    </ul>
-  </section>
-  <hr>
-  <section>
-    <h2>部屋</h2>
-    <form name="roomForm" method="POST" action="/company/addroom">
-      <input type="submit" value="部屋追加">
-      <select name="id_room">
-        <option value="" selected>--部屋選択--</option>
-        <% freerooms.forEach( freeroom => { %>
-        <option value="<%= freeroom.id %>"><%= freeroom.kubun %><%= freeroom.name %>（<%= freeroom.id %>）<%= freeroom.place %> / <%= freeroom.floor %></option>
-        <% }) %>
-      </select>
-      <input type="hidden" name="id_company" value="<%= company.id %>">
-    </form>
-    <ul>
-      <% if (rooms) { %>
-      <%  rooms.forEach( room => { %>
-      <li>
-        <%= room.name %>（<%= room.id %>）<%= room.place %>：<%= room.floor %> <a href="/company/deleteroom/<%= company.id %>/<%= room.id %>">削除</a>
-      </li>
-      <%  }) %>
-      <% } %>
-    </ul>
   </section>
   <hr>
   <section>
@@ -76,11 +104,11 @@
     <% if (nyukyo) { %>
     <p><%= nyukyo.id %></p>
     <ul>
-    <% nyukyocompanies.forEach( nyukyocompany  => { %>
+      <% nyukyocompanies.forEach( nyukyocompany  => { %>
       <li>
         <dl>
           <dt>ID</dt>
-          <dd><a href="/company/<%= nyukyocompany.id %>" ><%= nyukyocompany.id %></a></dd>
+          <dd><a href="/company/<%= nyukyocompany.id %>"><%= nyukyocompany.id %></a></dd>
           <dt>ID_NYUKYO</dt>
           <dd><%= nyukyocompany.id_nyukyo %></dd>
           <dt>ID_KAIGI</dt>
@@ -93,7 +121,7 @@
           <dd><%= nyukyocompany.bikou %></dd>
         </dl>
       </li>
-    <% }) %>
+      <% }) %>
     </ul>
     <% } %>
   </section>
@@ -106,7 +134,8 @@
       <select name="id_cabinet">
         <option value="" selected>--キャビネット選択--</option>
         <% freecabinets.forEach(function (freecabinet) { %>
-        <option value="<%= freecabinet.id %>"><%= freecabinet.name %>（<%= freecabinet.id %>）<%= freecabinet.place %></option>
+        <option value="<%= freecabinet.id %>"><%= freecabinet.name %>（<%= freecabinet.id %>）<%= freecabinet.place %>
+        </option>
         <% }) %>
       </select>
       <input type="hidden" name="id_nyukyo" value="<%= company.id_nyukyo %>">
@@ -116,7 +145,8 @@
       <% if (cabinets) { %>
       <%  cabinets.forEach( cabinet => { %>
       <li>
-        <%= cabinet.name %>（<%= cabinet.id %>）<%= cabinet.place %> <a href="/company/deletecabinet/<%= company.id %>/<%= nyukyo.id %>/<%= cabinet.id %>">削除</a>
+        <%= cabinet.name %>（<%= cabinet.id %>）<%= cabinet.place %> <a
+          href="/company/deletecabinet/<%= company.id %>/<%= nyukyo.id %>/<%= cabinet.id %>">削除</a>
       </li>
       <%  }) %>
       <% } %>
@@ -125,4 +155,5 @@
   </section>
 </body>
 <%- include("./common/javascripts.ejs") %>
+
 </html>

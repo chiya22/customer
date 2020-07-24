@@ -7,8 +7,8 @@
 </head>
 
 <body>
-  <section class="main">
-    <div class="main__wrapper">
+  <section class="login">
+    <div class="login__wrapper">
       <form action="/login" method="post">
         <% if (message && message.length !== 0) { %>
         <div class="alert alert-danger">
@@ -21,7 +21,7 @@
         <div class="form__item">
           <input type="password" name="password" class="form__item-style" placeholder="パスワード">
         </div>
-        <input type="submit" class="btn__login" value="ログイン" />
+        <input type="submit" class="btn-base" value="ログイン" />
       </form>
     </div>
   </section>
