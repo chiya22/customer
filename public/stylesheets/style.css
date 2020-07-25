@@ -202,7 +202,6 @@ body {
   font-size: 1rem;
   background: #fff;
   color: #cd5e42;
-  font-weight: bold;
   border: 1px solid #cd5e42;
   border-radius: 8px;
 }
@@ -253,7 +252,7 @@ dd {
   margin: 20px;
 }
 
-.company__form, .person__form {
+.company__form, .person__form, .cancel__form {
   margin-top: 2rem;
 }
 

@@ -24,11 +24,24 @@ router.get('/', security.authorize(), function (req, res, next) {
 // TOPページから「個人リンク選択」での個人ページへ遷移
 router.get('/:id', security.authorize(), function (req, res, next) {
   const id_person = req.params.id;
+  let person;
   m_person.findPKey(id_person, (err, retObj) => {
     if (err) { next(err); }
-    res.render('person', {
-      person: retObj,
-    });
+    person = retObj;
+    if (person.id_company) {
+      m_company.findPKey(person.id_company, (err, retObj) => {
+        if (err) { next(err); }
+        res.render('person', {
+          person: person,
+          companyname : retObj.name,
+        });
+      })
+    } else {
+      res.render('person', {
+        person: person,
+        companyname : null,
+      });
+    }
   });
 });
 
