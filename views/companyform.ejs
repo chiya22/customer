@@ -75,6 +75,7 @@
             <% } else if (mode === 'update') { %>
             <dt>会社番号</dt>
             <dd><input class="form__item-style bg-disabled" type="text" name="id" value="<%= company.id %>" disabled></dd>
+            <input type="hidden" name="id" value="<%= company.id %>">
             <dt>入居番号</dt>
             <dd>
               <select class="form__item-style" name="id_nyukyo">
@@ -107,6 +108,7 @@
               <% } else { %>
               <dt>会社番号</dt>
               <dd><input class="form__item-style bg-disabled" type="text" name="id" value="<%= company.id %>" disabled></dd>
+              <input type="hidden" name="id" value="<%= company.id %>">
               <dt>入居番号</dt>
               <dd><input class="form__item-style bg-disabled" type="text" name="id_nyukyo" value="<%= company.id_nyukyo %>" disabled></dd>
               <dt>会議室利用番号</dt>

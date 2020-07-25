@@ -46,6 +46,16 @@ body {
   }
 }
 
+.form__item-readonly-style {
+  color: #8a8a8a;
+  display: block;
+  width: 100%;
+  height: 44px;
+  padding: 5px 5%;
+  font-size: 105%;
+  letter-spacing: 0.8px;
+}
+
 //アクションするボタン
 .btn-base {
   display: inline-block;
@@ -157,14 +167,6 @@ body {
 }
 
 // index
-.select__items {
-  display: flex;
-  .select__item {
-    padding: 20px;
-  }
-}
-
-// top
 .top__btns {
   display: flex;
   flex-wrap: nowrap;
@@ -262,8 +264,7 @@ dd {
     display: flex;
     flex-wrap: wrap;
     .person__item {
-      // margin: 2em 1rem;
-      padding: 1.5em 1em;
+      padding: 1rem;
       border: solid 1px $base-color;
       border-radius: 8px;
       margin: 0 10px;
@@ -272,5 +273,60 @@ dd {
       }
     }
   }
-
+}
+.room {
+  margin-bottom: 2rem;
+  .room__form {
+    display: flex;
+    margin-bottom: 1rem;
+  }
+  .room__items {
+    display: flex;
+    flex-wrap: wrap;
+    .room__item {
+      padding: 1em;
+      border: solid 1px $base-color;
+      border-radius: 8px;
+      margin: 0 10px;
+      &:hover {
+        background-color: $second-color;
+      }
+    }
+  }
+}
+.nyukyo {
+  margin-bottom: 2rem;
+  .nyukyo__items {
+    display: flex;
+    flex-wrap: wrap;
+    .nyukyo__item {
+      padding: 1em;
+      border: solid 1px $base-color;
+      border-radius: 8px;
+      margin: 0 10px;
+      &:hover {
+        background-color: $second-color;
+      }
+    }
+  }
+}
+.cabinet {
+  margin-bottom: 2rem;
+  .cabinet__form {
+    display: flex;
+    margin-bottom: 1rem;
+  }
+  .cabinet__items {
+    display: flex;
+    flex-wrap: wrap;
+    .cabinet__item {
+      padding: 1em;
+      border: solid 1px $base-color;
+      border-radius: 8px;
+      margin: 0 10px;
+      &:hover {
+        background-color: $second-color;
+      }
+    }
+  }
 }

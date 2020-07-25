@@ -13,31 +13,31 @@
       <form name="cacelForm" class="cancel__form" method="POST" action="/person/cancel">
           <dl>
           <dt>個人番号</dt>
-          <dd><input type="text" class="form__item-style" name="id" value="<%= person.id %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="id" value="<%= person.id %>" disabled></dd>
           <dt>会社番号</dt>
-          <dd><input type="text" class="form__item-style" name="companyname" value="<%= companyname %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="companyname" value="<%= companyname %>" disabled></dd>
           <input type="hidden" name="id_company" value="<%= person.id_company %>">
           <dt>個人名</dt>
-          <dd><input type="text" class="form__item-style" name="name" value="<%= person.name %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= person.name %>" disabled></dd>
           <dt>個人名カナ</dt>
-          <dd><input type="text" class="form__item-style" name="kana" value="<%= person.kana %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="kana" value="<%= person.kana %>" disabled></dd>
           <dt>電話番号</dt>
-          <dd><input type="text" class="form__item-style" name="telno" value="<%= person.telno %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="telno" value="<%= person.telno %>" disabled></dd>
           <dt>携帯電話番号</dt>
-          <dd><input type="text" class="form__item-style" name="telno_mobile" value="<%= person.telno_mobile %>"
+          <dd><input type="text" class="form__item-readonly-style" name="telno_mobile" value="<%= person.telno_mobile %>"
               disabled>
           </dd>
           <dt>メールアドレス</dt>
-          <dd><input type="text" class="form__item-style" name="email" value="<%= person.email %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="email" value="<%= person.email %>" disabled></dd>
           <dt>郵便番号</dt>
-          <dd><input type="text" class="form__item-style" name="no_yubin" value="<%= person.no_yubin %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="no_yubin" value="<%= person.no_yubin %>" disabled></dd>
           <dt>都道府県</dt>
-          <dd><input type="text" class="form__item-style" name="todoufuken" value="<%= person.todoufuken %>" disabled>
+          <dd><input type="text" class="form__item-readonly-style" name="todoufuken" value="<%= person.todoufuken %>" disabled>
           </dd>
           <dt>住所</dt>
-          <dd><input type="text" class="form__item-style" name="address" value="<%= person.address %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="address" value="<%= person.address %>" disabled></dd>
           <dt>備考</dt>
-          <dd><input type="text" class="form__item-style" name="bikou" value="<%= person.bikou %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="bikou" value="<%= person.bikou %>" disabled></dd>
           <div class="form__btn">
             <input class="btn-base" type="submit" value="解約">
             <a class="btn-base" href="/person/update/<%= person.id %>">更新</a>

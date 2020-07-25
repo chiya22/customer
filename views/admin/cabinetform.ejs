@@ -8,31 +8,37 @@
 
 <body>
   <%- include("../common/header.ejs") %>
-  <% if (message && message.length !== 0) { %>
-  <div class="alert alert-danger">
-    <%= message %>
+  <div class="main">
+    <div class="main__wrapper">
+      <% if (message && message.length !== 0) { %>
+        <div class="alert alert-danger">
+          <%= message %>
+        </div>
+        <% } %>
+        <a class="btn-base" href="/admin/cabinets">戻る</a>
+        <h1>キャビネット管理（編集）</h1>
+        <form name="cabinetform" method="POST">
+          <% if (mode === 'insert') { %>
+          ID:<input type="text" name="id" required>
+          PLACE:<input type="text" name="place" required>
+          NAME:<input type="text" name="name" required>
+          <input class="btn-base" type="button" id="btn_insert" value="登録">
+          <% } else { %>
+          ID:<%= cabinet.id %>
+          <input type="hidden" name="id" value="<%= cabinet.id %>">
+          PLACE:<input type="text" name="place" value="<%= cabinet.place %>" required>
+          NAME:<input type="text" name="name" value="<%= cabinet.name %>" required>
+          <input type="hidden" name="ymd_start" value="<%= cabinet.ymd_start %>">
+          <input type="hidden" name="ymd_end" value="<%= cabinet.ymd_end %>">
+          <input class="btn-base" type="button" id="btn_update" value="更新">
+          <input class="btn-base" type="button" id="btn_delete" value="削除">
+          <% } %>
+          <input type="hidden" id="field_mode">
+        </form>
+    </div>
+    <!-- /.main__wrapper -->
   </div>
-  <% } %>
-  <a href="/admin/cabinets">戻る</a>
-  <h1>キャビネット管理（編集）</h1>
-  <form name="cabinetform" method="POST">
-    <% if (mode === 'insert') { %>
-    ID:<input type="text" name="id" required>
-    PLACE:<input type="text" name="place" required>
-    NAME:<input type="text" name="name" required>
-    <input type="button" id="btn_insert" value="登録">
-    <% } else { %>
-    ID:<%= cabinet.id %>
-    <input type="hidden" name="id" value="<%= cabinet.id %>">
-    PLACE:<input type="text" name="place" value="<%= cabinet.place %>" required>
-    NAME:<input type="text" name="name" value="<%= cabinet.name %>" required>
-    <input type="hidden" name="ymd_start" value="<%= cabinet.ymd_start %>">
-    <input type="hidden" name="ymd_end" value="<%= cabinet.ymd_end %>">
-    <input type="button" id="btn_update" value="更新">
-    <input type="button" id="btn_delete" value="削除">
-    <% } %>
-    <input type="hidden" id="field_mode">
-  </form>
+  <!-- /.main -->
   <script>
     let insertbtn = document.getElementById("btn_insert");
     if (insertbtn) {
