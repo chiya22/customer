@@ -2,26 +2,104 @@
 <html>
 
 <head>
-  <title>フロントページ</title>
+  <title>トップページ</title>
   <%- include("./common/stylesheets.ejs") %>
 </head>
 
 <body>
   <%- include("./common/header.ejs") %>
-  <section class="main">
+  <div class="main">
     <div class="main__wrapper">
-      <div class="select__items">
-        <div class="select__item">
-          <a href="" class="btn-link">勤怠管理</a>
+      <!-- /.top__link -->
+      <div class="top__btns">
+        <div class="top__btn">
+          <a class="btn-link" href="/company">会社登録</a>
         </div>
-        <!-- /.select__item -->
-        <div class="select__item">
-          <a href="top" class="btn-link">入居者管理</a>
+        <!-- /.top__btn -->
+        <div class="top__btn">
+          <a class="btn-link" href="/person">個人登録</a>
         </div>
-        <!-- /.select__item -->
+        <!-- /.top__btn -->
       </div>
+      <div class="searchform">
+        <form name="searchform" method="post" action="/">
+          <div class="searchform__top">
+            <input type="text" name="searchvalue" placeholder="検索文字を入力してください" class="form__item-style"
+              value="<%= searchvalue %>">
+            <input type="button" class="btn-base ml-small" id="btn_search" value="検索" />
+          </div>
+          <!-- /.searchform__top -->
+          <input type="hidden" id="page_max" name="page_max" value="<%= page_max %>">
+          <input type="hidden" id="page_current" name="page_current" value="<%= page_current %>">
+          <input type="hidden" id="count_all" name="count_all" value="<%= count_all %>">
+          <input type="hidden" id="pageaction" name="pageaction">
+        </form>
+      </div>
+      <div class="search__result">
+        <% if (results) { %>
+          <div class="result-disp">
+            <p>検索結果（<%= count_all %>件）</p>
+          </div>
+          <!-- /.result-disp -->
+            <div class="page-section">
+          <% if ((page_current !== 1) && (page_max !== 0)){ %>
+          <input type="button" class="btn-base" id="btn_prev" value="前ページ" />
+          <% } %>
+          <% if (page_max > 1) { %>
+            <div class="page-disp">
+            <%= page_current %>/<%= page_max %>
+          </div>
+          <% } %>
+          <% if (page_current !== page_max) { %>
+          <input type="button" class="btn-base" id="btn_next" value="次ページ" />
+          <% } %>
+          <!-- /.page-disp -->
+        </div>
+        <!-- /.page-section -->
+        <%  results.forEach( result => { %>
+        <% if (result.kubun === '個人') { %>
+        <a class="search__result-item" href="./person/<%= result.id %>">
+          <% } else { %>
+          <a class="search__result-item" href="./company/<%= result.id %>">
+            <% } %>
+            <div class="search__result-box">
+              <span class="box-title"><%= result.kubun %></span>
+              <p class="searc_result-item-text"><%= result.name %>（<%= result.id %>）</p>
+            </div>
+          </a>
+          <%  }) %>
+          <% } %>
+      </div>
+      <!-- /.search__result -->
     </div>
-  </section>
+    <!-- /.main__wrpper -->
+  </div>
+  <!-- /.main -->
+  <script>
+    let btnSearch = document.getElementById("btn_search");
+    btnSearch.addEventListener("click", function () {
+      let pageaction = document.getElementById("pageaction");
+      pageaction.value = "";
+      document.searchform.submit();
+    });
+
+    let btnNext = document.getElementById("btn_next");
+    if (btnNext) {
+      btnNext.addEventListener("click", function () {
+        let pageaction = document.getElementById("pageaction");
+        pageaction.value = "next";
+        document.searchform.submit();
+      });
+    }
+    let btnPrev = document.getElementById("btn_prev");
+    if (btnPrev) {
+      btnPrev.addEventListener("click", function () {
+        let pageaction = document.getElementById("pageaction");
+        pageaction.value = "prev";
+        document.searchform.submit();
+      });
+    }
+  </script>
 </body>
 <%- include("./common/javascripts.ejs") %>
 

@@ -12,7 +12,6 @@ var usersRouter = require('./routes/admin/users');
 var roomsRouter = require('./routes/admin/rooms');
 var cabinetsRouter = require('./routes/admin/cabinets');
 var nyukyosRouter = require('./routes/admin/nyukyos');
-var topRouter = require('./routes/top');
 var companyRouter = require('./routes/company');
 var personRouter = require('./routes/person');
 
@@ -51,7 +50,6 @@ app.use('/admin/users', usersRouter);
 app.use('/admin/rooms', roomsRouter);
 app.use('/admin/cabinets', cabinetsRouter);
 app.use('/admin/nyukyos', nyukyosRouter);
-app.use('/top', topRouter);
 app.use('/company', companyRouter);
 app.use('/person', personRouter);
 
