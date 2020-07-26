@@ -33,13 +33,13 @@ router.get('/:id', security.authorize(), function (req, res, next) {
         if (err) { next(err); }
         res.render('person', {
           person: person,
-          companyname : retObj.name,
+          companyname: retObj.name,
         });
       })
     } else {
       res.render('person', {
         person: person,
-        companyname : null,
+        companyname: null,
       });
     }
   });
@@ -107,7 +107,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
     m_person.insert(inObj, (err, retObj) => {
       //個人のidは自動採番とするため、Duplicateエラーは考慮不要
       if (err) { next(err); }
-      res.redirect('/top');
+      res.redirect('/');
     });
   });
 });
@@ -151,7 +151,7 @@ router.post('/update', security.authorize(), function (req, res, next) {
       if (inObj.id_company) {
         res.redirect('/company/' + inObj.id_company);
       } else {
-        res.redirect('/top');
+        res.redirect('/');
       }
     }
   });
@@ -167,7 +167,7 @@ router.post('/delete', security.authorize(), function (req, res, next) {
     if (inObj.id_company) {
       res.redirect('/company/' + inObj.id_company);
     } else {
-      res.redirect('/top');
+      res.redirect('/');
     }
   });
 });
@@ -176,17 +176,17 @@ router.post('/delete', security.authorize(), function (req, res, next) {
 router.post('/cancel', security.authorize(), function (req, res, next) {
 
   let inObj = {};
-  inObj.id = req.body.id_person;
+  inObj.id = req.body.id;
   inObj.ymd_end = tool.getToday();
   inObj.ymd_upd = tool.getToday();
   inObj.id_upd = req.user;
 
   m_person.cancel(inObj, (err, retObj) => {
     if (err) { next(err) }
-    if (req.body.id_company) {
+    if ((req.body.id_company) && (req.body.id_company !== '')) {
       res.redirect('/company/' + req.body.id_company);
     } else {
-      res.redirect('/top');
+      res.redirect('/');
     }
   });
 });

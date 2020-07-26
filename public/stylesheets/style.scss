@@ -6,6 +6,7 @@ html {
 }
 body {
   font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  color: #333;
 }
 
 
@@ -16,14 +17,25 @@ body {
   margin-left: 10px;
 }
 
+//タイトル
+.title {
+  width: 100%;
+  padding: 1rem;
+  background-color: $base-color;
+  color: #fff;
+  font-size:1.75rem;
+}
+
 //見出し
 .midashi {
   padding: 0.25em 0.5em;
   color: $base-color;
   background: transparent;
+  // border-left: solid 5px $base-color;
   border-bottom: solid 2px $base-color;
   font-size: 1.5rem;;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+  font-weight: bold;
 }
 
 //inputタグ用
@@ -46,6 +58,7 @@ body {
   }
 }
 
+//inputタグ読み取り専用
 .form__item-readonly-style {
   color: #8a8a8a;
   display: block;
@@ -74,7 +87,7 @@ body {
   }
 }
 
-//別の画面へ遷移するボタン
+//画面遷移するボタン
 .btn-link {
   display: inline-block;
   padding: 0.5em 1em;
@@ -92,6 +105,64 @@ body {
     transform: translateY(2px);
   }
 }
+
+//リンク領域
+.area-link {
+  padding: 20px 0;
+  a {
+    margin-right: 15px;
+  }
+}
+// formのボタン領域
+.form__btn {
+  margin:0 auto;
+  .btn-base {
+    margin: 20px;
+  }
+}
+
+.msg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(0,0,0,.7);
+  z-index:100;
+  visibility: hidden;
+}
+.msgarea {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 15px;
+  font-size: 1rem;
+  width: 400px;
+  text-align: center;
+  padding: 1rem;
+}
+.msgarea__text {
+  padding: 0 20px 20px 20px;
+  line-height: 1.5rem;
+}
+.msgarea__okbtn,
+.msgarea__ngbtn {
+  font-size: 1rem;
+  color: #808080;
+  border: 1px solid #808080;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 5px 10px;
+  margin: 0 15px;
+}
+.msgarea__okbtn:hover,
+.msgarea__ngbtn:hover {
+  background-color: #808080;
+  color: #fff;
+  transform: translateY(-5px);
+  box-shadow: 0 0 30px rgba(0,0,0,.2);
+}
+
 
 //非アクティブ状態の場合の背景色
 .bg-disabled {
@@ -117,9 +188,20 @@ body {
 .alert-danger {
   color: $base-color;
 }
+// タグ
+.tag {
+  display: inline-block;
+  color: #fff;
+  background-color: $base-color;
+  border-radius: 28px;
+  font-size: 0.875rem;
+  padding: 2px 7px;
+  margin-right: 5px;
+}
 
 //　--- 画面 ---
-// ログイン
+
+// login
 .login {
   background: rgba(0, 0, 0, 0.2);
   width: 100%;
@@ -148,7 +230,7 @@ body {
   }
 }
 
-//ヘッダー
+// header
 .header {
   width: 100%;
   height: 70px;
@@ -180,37 +262,8 @@ body {
   flex-wrap: nowrap;
   align-items: center;
 }
-.search__result-item {
-  display: block;
-}
-.search__result-box {
-  position: relative;
-  margin: 2em 0;
-  padding: 1.5em 1em;
-  border: solid 1px $base-color;
-  border-radius: 8px;
-  &:hover {
-    background-color: $second-color;
-    .box-title {
-      background-color: $second-color;
-    }
-  }
-  .box-title {
-    position: absolute;
-    display: inline-block;
-    top: -13px;
-    left: 10px;
-    padding: 2px 12px;
-    font-size: 1rem;
-    background: #fff;
-    color: $base-color;
-    border: 1px solid $base-color;
-    border-radius: 8px;
-  }
-}
-// topのページ制御部分
 .search__result {
-  .result-disp {
+  .search__result-disp {
     margin-top: 1rem;
   }
   .page-section {
@@ -227,8 +280,19 @@ body {
     }
   }
 }
+.search__result-item {
+  margin:15px 0;
+  a {
+    display: block;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}
 
-// 会社情報、個人情報部分
+// company, companyform, person, personform
+.company,.company__form, .person__form, .cancel__form {
+  margin-top: 1rem;
+}
 dl {
   display: flex;
   flex-wrap: wrap;
@@ -237,43 +301,27 @@ dl {
 dt {
   width: 30%;
   text-align: right;
-  padding: 10px 20px 10px;
+  padding: 5px 20px 5px;
   font-weight: normal;
 }
 dd {
   width: 70%;
-  padding: 10px 0;
-}
-//会社情報、個人情報のボタン部分
-.form__btn {
-  margin:0 auto;
-  .btn-base {
-    margin: 20px;
-  }
+  padding: 5px 0;
 }
 
-// 会社情報、個人情報のフォーム領域
-.company__form, .person__form, .cancel__form {
-  margin-top: 2rem;
-}
 
-// 「会社」画面の「個人」部分
+// company-person
 .person {
   margin-bottom: 2rem;
   .person__items {
     display: flex;
     flex-wrap: wrap;
     .person__item {
-      padding: 1rem;
-      border: solid 1px $base-color;
-      border-radius: 8px;
-      margin: 0 10px;
-      &:hover {
-        background-color: $second-color;
-      }
+      margin-right: 15px;
     }
   }
 }
+// company-room
 .room {
   margin-bottom: 2rem;
   .room__form {
@@ -284,32 +332,31 @@ dd {
     display: flex;
     flex-wrap: wrap;
     .room__item {
-      padding: 1em;
+      background-color: #f7f7f7;
+      color: $base-color;
+      font-weight: bold;
+      padding: 0.5em 1rem;
       border: solid 1px $base-color;
-      border-radius: 8px;
-      margin: 0 10px;
-      &:hover {
-        background-color: $second-color;
+      // border-radius: 8px;
+      margin-right: 10px;
+      a:hover {
+        opacity: 0.7;
       }
     }
   }
 }
+//company-nyukyo
 .nyukyo {
   margin-bottom: 2rem;
   .nyukyo__items {
     display: flex;
     flex-wrap: wrap;
     .nyukyo__item {
-      padding: 1em;
-      border: solid 1px $base-color;
-      border-radius: 8px;
-      margin: 0 10px;
-      &:hover {
-        background-color: $second-color;
-      }
+      margin-right: 15px;
     }
   }
 }
+//company-cabinet
 .cabinet {
   margin-bottom: 2rem;
   .cabinet__form {
@@ -320,13 +367,31 @@ dd {
     display: flex;
     flex-wrap: wrap;
     .cabinet__item {
-      padding: 1em;
+      background-color: #f7f7f7;
+      color: $base-color;
+      font-weight: bold;
+      padding: 0.5em 1rem;
       border: solid 1px $base-color;
-      border-radius: 8px;
-      margin: 0 10px;
-      &:hover {
-        background-color: $second-color;
+      // border-radius: 8px;
+      margin-right: 10px;
+      a:hover {
+        opacity: 0.7;
       }
     }
+  }
+}
+
+// admin
+.area-admin {
+  margin-top: 2rem;
+  a {
+    margin-right: 15px;
+  }
+}
+// admin-user
+.admin__user, .admin__nyukyo, .admin__room, .admin__cabinet {
+  margin-top: 1rem;
+  a {
+      margin: 0.5rem 0;
   }
 }

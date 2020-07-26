@@ -8,27 +8,43 @@
 
 <body>
   <%- include("../common/header.ejs") %>
-  <% if (message && message.length !== 0) { %>
-  <div class="alert alert-danger">
-    <%= message %>
+  <div class="main">
+    <div class="main__wrapper">
+      <div class="area-link">
+        <a class="btn-base" href="/admin/nyukyos">戻る</a>
+      </div>
+      <% if (message && message.length !== 0) { %>
+      <div class="alert alert-danger">
+        <%= message %>
+      </div>
+      <% } %>
+      <div class="admin__nyukyo">
+        <form name="nyukyoform" method="POST">
+          <dl>
+          <% if (mode === 'insert') { %>
+          <dt>入居番号</dt>
+          <dd><input class="form__item-style" type="text" name="id" required></dd>
+          <div class="form__btn">
+            <input class="btn-base" type="button" id="btn_insert" value="登録">
+            <% } else { %>
+            <dt>入居番号</dt>
+            <dd><input class="form__item-style bg-disabled" type="text" name="id" value="<%= nyukyo.id %>" disabled></dd>
+            <input type="hidden" name="ymd_start" value="<%= nyukyo.ymd_start %>">
+            <input type="hidden" name="ymd_end" value="<%= nyukyo.ymd_end %>">
+            <input type="hidden" name="id" value="<%= nyukyo.id %>">
+            <div class="form__btn">
+              <input class="btn-base" type="button" id="btn_update" value="更新">
+              <input class="btn-base" type="button" id="btn_delete" value="削除">
+              <% } %>
+            </div>
+            <input type="hidden" id="field_mode">
+          </dl>
+        </form>
+      </div>
+    </div>
+    <!-- /.main__wrapper -->
   </div>
-  <% } %>
-  <a href="/admin/nyukyos">戻る</a>
-  <h1>入居番号管理（編集）</h1>
-  <form name="nyukyoform" method="POST">
-    <% if (mode === 'insert') { %>
-    ID:<input type="text" name="id" required>
-    <input type="button" id="btn_insert" value="登録">
-    <% } else { %>
-    ID:<%= nyukyo.id %>
-    <input type="hidden" name="ymd_start" value="<%= nyukyo.ymd_start %>">
-    <input type="hidden" name="ymd_end" value="<%= nyukyo.ymd_end %>">
-    <input type="hidden" name="id" value="<%= nyukyo.id %>">
-    <input type="button" id="btn_update" value="更新">
-    <input type="button" id="btn_delete" value="削除">
-    <% } %>
-    <input type="hidden" id="field_mode">
-  </form>
+  <!-- /.main -->
   <script>
     let insertbtn = document.getElementById("btn_insert");
     if (insertbtn) {
@@ -54,4 +70,5 @@
   </script>
 </body>
 <%- include("../common/javascripts.ejs") %>
+
 </html>

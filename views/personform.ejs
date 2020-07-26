@@ -10,6 +10,18 @@
   <%- include("./common/header.ejs") %>
   <section class="main">
     <div class="main__wrapper">
+      <div class="area-link">
+        <a class="btn-link" href="/">TOPへ</a>
+        <% if ((person) && (person.id_company)) { %>
+          <a class="btn-link" href="/company/<%= person.id_company %>">会社へ</a>
+        <% } %>
+      </div>
+      <!-- /.area-link -->
+      <% if (person) { %>
+      <h1 class="title"><%= person.name %></h1>
+      <% } else { %>
+        <h1 class="title">新規登録</h1>
+      <% } %>
       <form class="person__form" name="personform" method="POST">
         <% if (errors) { %>
         <div class="alert alert-danger">
@@ -168,11 +180,6 @@
                   disabled></dd>
               <div class="form__btn">
                 <input type="button" class="btn-base" id="btn_delete" value="削除">
-                <% } %>
-                <% if ((person) && (person.id)) { %>
-                <a class="btn-base" href="/person/<%= person.id %>">戻る</a>
-                <% } else { %>
-                <a class="btn-base" href="/">戻る</a>
               </div>
               <% } %>
               <input type="hidden" id="field_mode">

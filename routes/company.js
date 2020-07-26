@@ -156,7 +156,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
     m_company.insert(inObj, (err, retObj) => {
       //会社のidは自動採番とするため、Duplicateエラーは考慮不要
       if (err) { next(err); }
-      res.redirect('/top');
+      res.redirect('/');
     });
   });
 });
@@ -221,7 +221,7 @@ router.post('/delete', security.authorize(), function (req, res, next) {
         next(err);
       }
     } else {
-      res.redirect('/top');
+      res.redirect('/');
     }
   });
 });
@@ -231,7 +231,6 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
 
   const id_company = req.body.id_company
   const id_nyukyo = req.body.id_nyukyo
-  let objCompany = {};
 
   let inObj = {};
   inObj.id = id_company;
@@ -268,10 +267,10 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
             //入居番号⇔キャビネットの解約
             m_relation_nyucabi.cancelByNyukyo(inRObj, (err, retObj) => {
               if (err) { next(err) }
-              res.redirect('/top');
+              res.redirect('/');
             });
           } else {
-            res.redirect('/top');
+            res.redirect('/');
           }
         });
       });

@@ -9,14 +9,27 @@
 <body>
   <%- include("./common/header.ejs") %>
   <section class="main">
+    <div class="msg">
+      <div class="msgarea">
+        <p class="msgarea__text">解約します。<br>よろしいですか？</p>
+        <button class="msgarea__okbtn">はい</button>
+        <button class="msgarea__ngbtn">いいえ</button>
+      </div>
+    </div>
     <div class="main__wrapper">
-      <form name="cacelForm" class="cancel__form" method="POST" action="/person/cancel">
+      <div class="area-link">
+        <a class="btn-link" href="/">TOPへ</a>
+        <% if (person.id_company) { %>
+          <a class="btn-link" href="/company/<%= person.id_company %>  ">会社へ</a>
+        <% } %>
+      </div>
+      <h1 class="title"><%= person.name %></h1>
+      <form name="cancelForm" class="cancel__form" method="POST" action="/person/cancel">
           <dl>
           <dt>個人番号</dt>
           <dd><input type="text" class="form__item-readonly-style" name="id" value="<%= person.id %>" disabled></dd>
           <dt>会社番号</dt>
           <dd><input type="text" class="form__item-readonly-style" name="companyname" value="<%= companyname %>" disabled></dd>
-          <input type="hidden" name="id_company" value="<%= person.id_company %>">
           <dt>個人名</dt>
           <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= person.name %>" disabled></dd>
           <dt>個人名カナ</dt>
@@ -39,22 +52,34 @@
           <dt>備考</dt>
           <dd><input type="text" class="form__item-readonly-style" name="bikou" value="<%= person.bikou %>" disabled></dd>
           <div class="form__btn">
-            <input class="btn-base" type="submit" value="解約">
+            <input id="cancelbtn" class="btn-base" type="button" value="解約">
             <a class="btn-base" href="/person/update/<%= person.id %>">更新</a>
             <a class="btn-base" href="/person/delete/<%= person.id %>">削除</a>
-            <input type="hidden" name="id_person" value="<%= person.id %>">
+            <input type="hidden" name="id" value="<%= person.id %>">
             <input type="hidden" name="id_company" value="<%= person.id_company %>">
-            <% if (person.id_company) { %>
-              <a class="btn-base" href="/company/<%= person.id_company %>">戻る</a>
-            <% } else { %>
-              <a class="btn-base" href="/">戻る</a>
-            <% } %>
         </div>
         </dl>
       </form>
     </div>
   </section>
 </body>
-<%- include("./common/javascripts.ejs") %>
+<script>
+
+  let cancelbtn = document.getElementById("cancelbtn");
+  cancelbtn.addEventListener('click', function () {
+    let msg = document.getElementsByClassName("msg")[0];
+    msg.style.visibility = "visible";
+  });
+  let okbtn = document.getElementsByClassName("msgarea__okbtn")[0];
+  let ngbtn = document.getElementsByClassName("msgarea__ngbtn")[0];
+  okbtn.addEventListener('click', function () {
+    document.cancelForm.submit();
+  });
+  ngbtn.addEventListener('click', function () {
+    let msg = document.getElementsByClassName("msg")[0];
+    msg.style.visibility = "hidden";
+  });
+
+</script><%- include("./common/javascripts.ejs") %>
 
 </html>

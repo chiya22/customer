@@ -8,20 +8,27 @@
 
 <body>
   <%- include("../common/header.ejs") %>
-  <a href="/admin/rooms/insert">登録</a>
-  <hr>
-  <h1>部屋管理</h1>
-  <ul>
-    <% if (rooms) { %>
-    <%  rooms.forEach( room => { %>
-    <li>
-      <a href="/admin/rooms/update/<%= room.id %>">
-        <%= room.name %>（<%= room.id %>）
-      </a>
-    </li>
-    <%  }) %>
-    <% } %>
-  </ul>
+  <div class="main">
+    <div class="main__wrapper">
+      <div class="area-link">
+        <a class="btn-base" href="/admin/rooms/insert">登録</a>
+      </div>
+      <div class="admin__room">
+        <% if (rooms) { %>
+          <%  rooms.forEach( room => { %>
+          <div>
+            <a class="btn-link" href="/admin/rooms/update/<%= room.id %>">
+              <%= room.name %>（<%= room.id %>）
+            </a>
+          </div>
+          <%  }) %>
+          <% } %>
+      </div>
+      <!-- /.admin__room -->
+    </div>
+    <!-- /.main__wrapper -->
+  </div>
+  <!-- /.main -->
 </body>
 <%- include("../common/javascripts.ejs") %>
 </html>

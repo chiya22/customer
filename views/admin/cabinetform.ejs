@@ -10,31 +10,42 @@
   <%- include("../common/header.ejs") %>
   <div class="main">
     <div class="main__wrapper">
-      <% if (message && message.length !== 0) { %>
+      <div class="area-link">
+        <a class="btn-base" href="/admin/cabinets">戻る</a>
+      </div>
+        <% if (message && message.length !== 0) { %>
         <div class="alert alert-danger">
           <%= message %>
         </div>
         <% } %>
-        <a class="btn-base" href="/admin/cabinets">戻る</a>
-        <h1>キャビネット管理（編集）</h1>
-        <form name="cabinetform" method="POST">
-          <% if (mode === 'insert') { %>
-          ID:<input type="text" name="id" required>
-          PLACE:<input type="text" name="place" required>
-          NAME:<input type="text" name="name" required>
-          <input class="btn-base" type="button" id="btn_insert" value="登録">
-          <% } else { %>
-          ID:<%= cabinet.id %>
-          <input type="hidden" name="id" value="<%= cabinet.id %>">
-          PLACE:<input type="text" name="place" value="<%= cabinet.place %>" required>
-          NAME:<input type="text" name="name" value="<%= cabinet.name %>" required>
-          <input type="hidden" name="ymd_start" value="<%= cabinet.ymd_start %>">
-          <input type="hidden" name="ymd_end" value="<%= cabinet.ymd_end %>">
-          <input class="btn-base" type="button" id="btn_update" value="更新">
-          <input class="btn-base" type="button" id="btn_delete" value="削除">
-          <% } %>
-          <input type="hidden" id="field_mode">
+        <div class="admin__cabinet">
+          <form name="cabinetform" method="POST">
+            <dl>
+
+            <% if (mode === 'insert') { %>
+            <dt>キャビネット番号</dt><dd><input class="form__item-style" type="text" name="id" required></dd>
+            <dt>場所</dt><dd><input class="form__item-style" type="text" name="place" required></dd>
+            <dt>名前</dt><dd><input class="form__item-style" type="text" name="name" required></dd>
+            <div class="form__btn">
+              <input class="btn-base" type="button" id="btn_insert" value="登録"></dd>
+            <% } else { %>
+            <dt>キャビネット番号</dt>
+            <dd><input class="form__item-style bg-disabled" type="text" name="id" value="<%= cabinet.id %>" disabled></dd>
+            <input type="hidden" name="id" value="<%= cabinet.id %>">
+            <dt>場所</dt><dd><input class="form__item-style" type="text" name="place" value="<%= cabinet.place %>" required></dd>
+            <dt>名前</dt><dd><input class="form__item-style" type="text" name="name" value="<%= cabinet.name %>" required></dd>
+            <input type="hidden" name="ymd_start" value="<%= cabinet.ymd_start %>">
+            <input type="hidden" name="ymd_end" value="<%= cabinet.ymd_end %>">
+            <div class="form__btn">
+              <input class="btn-base" type="button" id="btn_update" value="更新">
+            <input class="btn-base" type="button" id="btn_delete" value="削除">
+            <% } %>
+            <input type="hidden" id="field_mode">
+            </div>
+          </dl>
         </form>
+        </div>
+        <!-- /.admin__cabinet -->
     </div>
     <!-- /.main__wrapper -->
   </div>

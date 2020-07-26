@@ -5,10 +5,19 @@ html {
 
 body {
   font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  color: #333;
 }
 
 .ml-small {
   margin-left: 10px;
+}
+
+.title {
+  width: 100%;
+  padding: 1rem;
+  background-color: #cd5e42;
+  color: #fff;
+  font-size: 1.75rem;
 }
 
 .midashi {
@@ -17,7 +26,8 @@ body {
   background: transparent;
   border-bottom: solid 2px #cd5e42;
   font-size: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+  font-weight: bold;
 }
 
 .form__item-style {
@@ -90,6 +100,68 @@ body {
   transform: translateY(2px);
 }
 
+.area-link {
+  padding: 20px 0;
+}
+
+.area-link a {
+  margin-right: 15px;
+}
+
+.form__btn {
+  margin: 0 auto;
+}
+
+.form__btn .btn-base {
+  margin: 20px;
+}
+
+.msg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+  visibility: hidden;
+}
+
+.msgarea {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 15px;
+  font-size: 1rem;
+  width: 400px;
+  text-align: center;
+  padding: 1rem;
+}
+
+.msgarea__text {
+  padding: 0 20px 20px 20px;
+  line-height: 1.5rem;
+}
+
+.msgarea__okbtn,
+.msgarea__ngbtn {
+  font-size: 1rem;
+  color: #808080;
+  border: 1px solid #808080;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 5px 10px;
+  margin: 0 15px;
+}
+
+.msgarea__okbtn:hover,
+.msgarea__ngbtn:hover {
+  background-color: #808080;
+  color: #fff;
+  transform: translateY(-5px);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+}
+
 .bg-disabled {
   background-color: rgba(0, 0, 0, 0.1);
 }
@@ -110,6 +182,16 @@ body {
 
 .alert-danger {
   color: #cd5e42;
+}
+
+.tag {
+  display: inline-block;
+  color: #fff;
+  background-color: #cd5e42;
+  border-radius: 28px;
+  font-size: 0.875rem;
+  padding: 2px 7px;
+  margin-right: 5px;
 }
 
 .login {
@@ -175,40 +257,7 @@ body {
   align-items: center;
 }
 
-.search__result-item {
-  display: block;
-}
-
-.search__result-box {
-  position: relative;
-  margin: 2em 0;
-  padding: 1.5em 1em;
-  border: solid 1px #cd5e42;
-  border-radius: 8px;
-}
-
-.search__result-box:hover {
-  background-color: #fff4ed;
-}
-
-.search__result-box:hover .box-title {
-  background-color: #fff4ed;
-}
-
-.search__result-box .box-title {
-  position: absolute;
-  display: inline-block;
-  top: -13px;
-  left: 10px;
-  padding: 2px 12px;
-  font-size: 1rem;
-  background: #fff;
-  color: #cd5e42;
-  border: 1px solid #cd5e42;
-  border-radius: 8px;
-}
-
-.search__result .result-disp {
+.search__result .search__result-disp {
   margin-top: 1rem;
 }
 
@@ -228,6 +277,20 @@ body {
   font-size: 0.875rem;
 }
 
+.search__result-item {
+  margin: 15px 0;
+}
+
+.search__result-item a {
+  display: block;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.company, .company__form, .person__form, .cancel__form {
+  margin-top: 1rem;
+}
+
 dl {
   display: flex;
   flex-wrap: wrap;
@@ -237,25 +300,13 @@ dl {
 dt {
   width: 30%;
   text-align: right;
-  padding: 10px 20px 10px;
+  padding: 5px 20px 5px;
   font-weight: normal;
 }
 
 dd {
   width: 70%;
-  padding: 10px 0;
-}
-
-.form__btn {
-  margin: 0 auto;
-}
-
-.form__btn .btn-base {
-  margin: 20px;
-}
-
-.company__form, .person__form, .cancel__form {
-  margin-top: 2rem;
+  padding: 5px 0;
 }
 
 .person {
@@ -268,14 +319,7 @@ dd {
 }
 
 .person .person__items .person__item {
-  padding: 1rem;
-  border: solid 1px #cd5e42;
-  border-radius: 8px;
-  margin: 0 10px;
-}
-
-.person .person__items .person__item:hover {
-  background-color: #fff4ed;
+  margin-right: 15px;
 }
 
 .room {
@@ -293,14 +337,16 @@ dd {
 }
 
 .room .room__items .room__item {
-  padding: 1em;
+  background-color: #f7f7f7;
+  color: #cd5e42;
+  font-weight: bold;
+  padding: 0.5em 1rem;
   border: solid 1px #cd5e42;
-  border-radius: 8px;
-  margin: 0 10px;
+  margin-right: 10px;
 }
 
-.room .room__items .room__item:hover {
-  background-color: #fff4ed;
+.room .room__items .room__item a:hover {
+  opacity: 0.7;
 }
 
 .nyukyo {
@@ -313,14 +359,7 @@ dd {
 }
 
 .nyukyo .nyukyo__items .nyukyo__item {
-  padding: 1em;
-  border: solid 1px #cd5e42;
-  border-radius: 8px;
-  margin: 0 10px;
-}
-
-.nyukyo .nyukyo__items .nyukyo__item:hover {
-  background-color: #fff4ed;
+  margin-right: 15px;
 }
 
 .cabinet {
@@ -338,12 +377,30 @@ dd {
 }
 
 .cabinet .cabinet__items .cabinet__item {
-  padding: 1em;
+  background-color: #f7f7f7;
+  color: #cd5e42;
+  font-weight: bold;
+  padding: 0.5em 1rem;
   border: solid 1px #cd5e42;
-  border-radius: 8px;
-  margin: 0 10px;
+  margin-right: 10px;
 }
 
-.cabinet .cabinet__items .cabinet__item:hover {
-  background-color: #fff4ed;
+.cabinet .cabinet__items .cabinet__item a:hover {
+  opacity: 0.7;
+}
+
+.area-admin {
+  margin-top: 2rem;
+}
+
+.area-admin a {
+  margin-right: 15px;
+}
+
+.admin__user, .admin__nyukyo, .admin__room, .admin__cabinet {
+  margin-top: 1rem;
+}
+
+.admin__user a, .admin__nyukyo a, .admin__room a, .admin__cabinet a {
+  margin: 0.5rem 0;
 }

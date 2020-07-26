@@ -8,20 +8,27 @@
 
 <body>
   <%- include("../common/header.ejs") %>
-  <a href="/admin/users/insert">登録</a>
-  <hr>
-  <h1>ユーザ管理</h1>
-  <ul>
-    <% if (users) { %>
-    <%  users.forEach( user => { %>
-    <li>
-      <a href="/admin/users/update/<%= user.id %>">
-        <%= user.name %>（<%= user.id %>）
-      </a>
-    </li>
-    <%  }) %>
-    <% } %>
-  </ul>
+  <div class="main">
+    <div class="main__wrapper">
+      <div class="area-link">
+        <a class="btn-base" href="/admin/users/insert">登録</a>
+      </div>
+        <div class="admin__user">
+          <% if (users) { %>
+          <%  users.forEach( user => { %>
+          <div>
+            <a class="btn-link" href="/admin/users/update/<%= user.id %>">
+              <%= user.name %>（<%= user.id %>）
+            </a>
+          </div>
+          <%  }) %>
+          <% } %>
+      </div>
+      <!-- /.admin__user -->
+    </div>
+    <!-- /.main__wrapper -->
+  </div>
+  <!-- /.main -->
 </body>
 <%- include("../common/javascripts.ejs") %>
 </html>

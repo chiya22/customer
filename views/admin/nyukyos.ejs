@@ -8,20 +8,27 @@
 
 <body>
   <%- include("../common/header.ejs") %>
-  <a href="/admin/nyukyos/insert">登録</a>
-  <hr>
-  <h1>入居番号管理</h1>
-  <ul>
-    <% if (nyukyos) { %>
-    <%  nyukyos.forEach( nyukyo => { %>
-    <li>
-      <a href="/admin/nyukyos/update/<%= nyukyo.id %>">
-        <%= nyukyo.id %>
-      </a>
-    </li>
-    <%  }) %>
-    <% } %>
-  </ul>
+  <div class="main">
+    <div class="main__wrapper">
+      <div class="area-link">
+        <a class="btn-base" href="/admin/nyukyos/insert">登録</a>
+      </div>
+      <div class="admin__nyukyo">
+          <% if (nyukyos) { %>
+          <%  nyukyos.forEach( nyukyo => { %>
+          <div>
+            <a class="btn-link" href="/admin/nyukyos/update/<%= nyukyo.id %>">
+              <%= nyukyo.id %>
+            </a>
+          </div>
+          <%  }) %>
+          <% } %>
+      </div>
+      <!-- /.admin_nyukyo -->
+    </div>
+    <!-- /.main__wrapper -->
+  </div>
+  <!-- /.main -->
 </body>
 <%- include("../common/javascripts.ejs") %>
 </html>

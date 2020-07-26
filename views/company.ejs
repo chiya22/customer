@@ -8,12 +8,21 @@
 
 <body>
   <%- include("./common/header.ejs") %>
-  <a href="/">TOPへ</a>
-  <hr>
   <section class="main">
-    <div class="main__wrapper">
+    <div class="msg">
+      <div class="msgarea">
+        <p class="msgarea__text">解約します。<br>よろしいですか？</p>
+        <button class="msgarea__okbtn">はい</button>
+        <button class="msgarea__ngbtn">いいえ</button>
+      </div>
+    </div>
+  <div class="main__wrapper">
+          <div class="area-link">
+        <a class="btn-link" href="/">TOPへ</a>
+      </div>
+      <h1 class="title"><%= company.name %></h1>
       <div class="company">
-        <form name="cacelForm" method="POST" action="/company/cancel">
+        <form name="cancelForm" method="POST" action="/company/cancel">
           <!-- /.company__btn-cancel -->
           <dl>
             <dt>会社番号</dt>
@@ -31,7 +40,7 @@
             <dt>備考</dt>
             <dd><input type="text" class="form__item-readonly-style" name="bikou" value="<%= company.bikou %>" disabled></dd>
             <div class="form__btn">
-              <input class="btn-base" type="submit" value="解約">
+              <input type="button" class="btn-base" id="cancelbtn" value="解約">
               <a class="btn-base" href="/company/update/<%= company.id %>">更新</a>
               <a class="btn-base" href="/company/delete/<%= company.id %>">削除</a>
             </div>
@@ -49,7 +58,7 @@
           <% if (persons) { %>
           <%  persons.forEach( person => { %>
           <div class="person__item">
-            <a href="/person/<%= person.id %>"><%= person.name %>（<%= person.id %>）</a>
+            <a class="btn-link" href="/person/<%= person.id %>"><%= person.name %>（<%= person.id %>）</a>
           </div>
           <%  }); %>
           <% } %>
@@ -79,8 +88,11 @@
           <% if (rooms) { %>
           <%  rooms.forEach( room => { %>
           <div class="room__item">
-            <%= room.name %>（<%= room.id %>）<%= room.place %>：<%= room.floor %> <a
-              href="/company/deleteroom/<%= company.id %>/<%= room.id %>">削除</a>
+            <%= room.name %>（<%= room.id %>）%><%= room.place %>
+            <% if (room.place) { %>
+              ：
+            <% } %><%= room.floor %> 
+            <a class="tag" href="/company/deleteroom/<%= company.id %>/<%= room.id %>">削除</a>
           </div>
           <%  }) %>
           <% } %>
@@ -100,7 +112,7 @@
         <div class="nyukyo__items">
           <% nyukyocompanies.forEach( nyukyocompany  => { %>
           <div class="nyukyo__item">
-            <a href="/company/<%= nyukyocompany.id %>"><%= nyukyocompany.id %>
+            <a class="btn-link" href="/company/<%= nyukyocompany.id %>"><%= nyukyocompany.id %>
               <%= nyukyocompany.name %>（<%= nyukyocompany.id %>）
             </a>
           </div>
@@ -115,7 +127,7 @@
           <p class="midashi">キャビネット</p>
         </div>
         <% if (nyukyo) { %>
-        <form name="cabinetForm" class="cabinet__form" method="POST" action="/company/addcabinet">
+        <form name="cabinetForm" class="cabinet__form" method="POST" action="/company/addcabinet" onsubmit="return checkCancel();">
           <select name="id_cabinet" class="form__item-style cabinet__select">
             <option value="" selected>--キャビネット選択--</option>
             <% freecabinets.forEach(function (freecabinet) { %>
@@ -132,8 +144,8 @@
           <% if (cabinets) { %>
           <%  cabinets.forEach( cabinet => { %>
           <div class="cabinet__item">
-            <%= cabinet.name %>（<%= cabinet.id %>）<%= cabinet.place %> <a
-              href="/company/deletecabinet/<%= company.id %>/<%= nyukyo.id %>/<%= cabinet.id %>">削除</a>
+            <%= cabinet.name %>（<%= cabinet.id %>）<%= cabinet.place %>
+            <a class="tag" href="/company/deletecabinet/<%= company.id %>/<%= nyukyo.id %>/<%= cabinet.id %>">削除</a>
           </div>
           <%  }) %>
           <% } %>
@@ -147,6 +159,24 @@
   </section>
   <!-- /.main -->
 </body>
+<script>
+
+    let cancelbtn = document.getElementById("cancelbtn");
+    cancelbtn.addEventListener('click', function () {
+      let msg = document.getElementsByClassName("msg")[0];
+      msg.style.visibility = "visible";
+    });
+    let okbtn = document.getElementsByClassName("msgarea__okbtn")[0];
+    let ngbtn = document.getElementsByClassName("msgarea__ngbtn")[0];
+    okbtn.addEventListener('click', function () {
+      document.cancelForm.submit();
+    });
+    ngbtn.addEventListener('click', function () {
+      let msg = document.getElementsByClassName("msg")[0];
+      msg.style.visibility = "hidden";
+    });
+
+</script>
 <%- include("./common/javascripts.ejs") %>
 
 </html>
