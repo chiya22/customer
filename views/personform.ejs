@@ -18,9 +18,15 @@
       </div>
       <!-- /.area-link -->
       <% if ((person) && (person.name)) { %>
-      <h1 class="title"><%= person.name %></h1>
+        <div class="title">
+          <span class="tag-big"><%= person.kubun_person %></span>
+          <% if (person.ymd_kaiyaku !== '99991231') { %>
+            <span class="tag-big">解約</span>
+          <% } %>
+          <%= person.name %>
+        </div>
       <% } else { %>
-        <h1 class="title">新規登録</h1>
+        <div class="title">新規登録</div>
       <% } %>
       <form class="person__form" name="personform" method="POST">
         <% if (errors) { %>
@@ -52,7 +58,12 @@
             <input type="hidden" name="id_company" value="<%= person.id_company %>">
           </dd>
           <dt>個人区分</dt>
-          <dd><input type="text" class="form__item-style" name="kubun_person" value="<%= person.kubun_person %>" required></dd>
+          <dd>
+            <input id="kubun_person_1" class="form__radio-style" type="radio" value="主" checked="checked" name="kubun_person"><label for="kubun_person_1" class="form__radio-label">主</label>
+            <input id="kubun_person_2" class="form__radio-style" type="radio" value="従" name="kubun_person"><label for="kubun_person_2" class="form__radio-label">従</label>
+            <input id="kubun_person_3" class="form__radio-style" type="radio" value="人数内" name="kubun_person"><label for="kubun_person_3" class="form__radio-label">人数内</label>
+            <input id="kubun_person_4" class="form__radio-style" type="radio" value="フリー" name="kubun_person"><label for="kubun_person_4" class="form__radio-label">フリー</label>
+          </dd>
           <dt>個人名</dt>
           <dd><input type="text" class="form__item-style" name="name" value="<%= person.name %>" required></dd>
           <dt>個人名カナ</dt>

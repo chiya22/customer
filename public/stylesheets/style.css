@@ -18,6 +18,9 @@ body {
   background-color: #cd5e42;
   color: #fff;
   font-size: 1.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .midashi {
@@ -48,6 +51,27 @@ body {
   outline: none;
   border: 1px solid #cd5e42;
   color: #cd5e42;
+}
+
+.form__radio-style {
+  clip: rect(1px, 1px, 1px, 1px);
+  position: absolute !important;
+}
+
+.form__radio-label {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  margin: 0 10px;
+  border-radius: 3px;
+  transition: all .2s;
+  border: 1px solid #cd5e42;
+  color: #cd5e42;
+}
+
+.form__radio-style:checked + .form__radio-label {
+  background: #cd5e42;
+  color: #fff;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);
 }
 
 .form__item-readonly-style {
@@ -193,6 +217,17 @@ body {
   padding: 4px 7px 2px;
   margin-right: 5px;
   font-weight: normal;
+}
+
+.tag-big {
+  display: inline-block;
+  color: #cd5e42;
+  background-color: #fff;
+  border-radius: 28px;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 3px 10px;
+  margin-right: 10px;
 }
 
 .bg-gray {

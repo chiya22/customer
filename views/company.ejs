@@ -21,7 +21,16 @@
         <a class="btn-link" href="/">TOPへ</a>
         <a class="btn-link" href="/person/add/<%= company.id %>">個人登録</a>
       </div>
-      <h1 class="title"><%= company.name %></h1>
+      <div class="title">
+        <% if (company.id_nyukyo) { %>
+          <span class="tag-big"><%= company.id_nyukyo %></span>
+        <% } %>
+        <span class="tag-big"><%= company.kubun_company %></span>
+        <% if (company.ymd_kaiyaku !== '99991231') { %>
+          <span class="tag-big">解約</span>
+        <% } %>
+        <%= company.name %>
+      </div>
       <div class="company">
         <form name="cancelForm" method="POST" action="/company/cancel">
           <!-- /.company__btn-cancel -->

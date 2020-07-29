@@ -23,7 +23,13 @@
           <a class="btn-link" href="/company/<%= person.id_company %>">会社へ</a>
         <% } %>
       </div>
-      <h1 class="title"><%= person.name %></h1>
+      <div class="title">
+        <span class="tag-big"><%= person.kubun_person %></span>
+        <% if (person.ymd_kaiyaku !== '99991231') { %>
+          <span class="tag-big">解約</span>
+        <% } %>
+        <%= person.name %>
+      </div>
       <form name="cancelForm" class="cancel__form" method="POST" action="/person/cancel">
           <dl>
           <dt>個人番号</dt>
