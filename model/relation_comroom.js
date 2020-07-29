@@ -14,7 +14,8 @@ const findPKey = function (inObj, callback) {
 
 const findByCompany = function (id_company, callback) {
     (async function () {
-        await connection.query('select b.id as id, b.place as place, b.floor as floor, b.name as name from relation_comroom AS a INNER JOIN rooms AS b ON a.id_room = b.id where a.id_company = "' + id_company + '" and a.ymd_end = "99991231" and b.ymd_end = "99991231" order by b.id asc', function ( error, results, fields) {
+        const query ='select * from relation_comroom AS a INNER JOIN rooms AS b ON a.id_room = b.id where a.id_company = "' + id_company + '" and a.ymd_end = "99991231" and b.ymd_end = "99991231" order by b.id asc';
+        await connection.query(query, function ( error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -89,7 +90,7 @@ const update = function (inObj, callback) {
 
 const remove = function (inObj, callback) {
     (async function() {
-        const query = 'delete from relation_comroom where id_company = "' + inObj.id_company+ '" and id_room = "' + inObj.id_room + '" and no_seq = ' + inObj.no_seq + ' and ymd_end = "99991231"';
+        const query = 'update relation_comroom set ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_company = "' + inObj.id_company+ '" and id_room = "' + inObj.id_room + '" and no_seq = ' + inObj.no_seq + ' and ymd_end = "99991231"';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);

@@ -8,12 +8,14 @@ const m_company = require('../model/company');
 const m_person = require('../model/person');
 const m_sq = require('../model/sq');
 
-// TOPページから「個人登録」で個人（編集）ページへの遷移
-router.get('/', security.authorize(), function (req, res, next) {
+// 会社ページより「個人登録」をクリック
+router.get('/add/:id_company', security.authorize(), function (req, res, next) {
+  let person = {};
+  person.id_company = req.params.id_company;
   m_company.findForSelect((err, retObj) => {
     if (err) { next(err) };
     res.render('personform', {
-      person: null,
+      person: person,
       companies: retObj,
       mode: 'insert',
       errors: null,
@@ -112,7 +114,11 @@ router.post('/insert', security.authorize(), function (req, res, next) {
     m_person.insert(inObj, (err, retObj) => {
       //個人のidは自動採番とするため、Duplicateエラーは考慮不要
       if (err) { next(err); }
-      res.redirect('/');
+      if (inObj.id_company) {
+        res.redirect('/company/' + inObj.id_company);
+      } else {
+        res.redirect('/');
+      }
     });
   });
 });
@@ -207,19 +213,23 @@ function validateData(body) {
   let isValidated = true;
   let errors = {};
 
+  if (!body.kubun_person) {
+    isValidated = false;
+    errors.kubun_person = "個人区分が未入力です。";
+  }
   if (!body.name) {
     isValidated = false;
-    errors.name = "名前が未入力です。";
+    errors.name = "個人名が未入力です。";
   } else {
     if (body.name.length > 100) {
       isValidated = false;
-      errors.name = "名前は100桁以下で入力してください。";
+      errors.name = "個人名は100桁以下で入力してください。";
     }
   }
   if (body.kana) {
     if (body.kana.length > 100) {
       isValidated = false;
-      errors.kana = "カナは100桁以下で入力してください。";
+      errors.kana = "個人名カナは100桁以下で入力してください。";
     }
   }
   if (body.telno) {
@@ -257,6 +267,10 @@ function validateData(body) {
       isValidated = false;
       errors.address = "住所は200桁以下で入力してください。";
     }
+  }
+  if (!body.ymd_nyukyo) {
+    isValidated = false;
+    errors.ymd_nyukyo = "入居年月日が未入力です。";
   }
   if (body.bikou) {
     if (body.bikou.length > 100) {

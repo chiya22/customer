@@ -17,8 +17,9 @@
       </div>
     </div>
   <div class="main__wrapper">
-          <div class="area-link">
+      <div class="area-link">
         <a class="btn-link" href="/">TOPへ</a>
+        <a class="btn-link" href="/person/add/<%= company.id %>">個人登録</a>
       </div>
       <h1 class="title"><%= company.name %></h1>
       <div class="company">
@@ -83,10 +84,10 @@
         <form name="roomForm" class="room__form" method="POST" action="/company/addroom">
           <select name="id_room" class="form__item-style room__select">
             <option value="" selected>--部屋選択--</option>
-            <% freerooms.forEach( freeroom => { %>
-            <option value="<%= freeroom.id %>">
-              <%= freeroom.kubun %><%= freeroom.name %>（<%= freeroom.id %>）<%= freeroom.place %> /
-              <%= freeroom.floor %>
+            <% selectrooms.forEach( selectroom => { %>
+            <option value="<%= selectroom.id %>">
+              <%= selectroom.kubun %><%= selectroom.name %>（<%= selectroom.id %>）<%= selectroom.place %> /
+              <%= selectroom.floor %>
             </option>
             <% }) %>
           </select>
@@ -101,9 +102,9 @@
             <% if (room.place) { %>
               ：
             <% } %><%= room.floor %> 
-            <a class="tag" href="/company/deleteroom/<%= company.id %>/<%= room.id %>">削除</a>
+            <a class="tag" href="/company/deleteroom/<%= company.id %>/<%= room.id %>/<%= room.no_seq %>">削除</a>
           </div>
-          <%  }) %>
+          <% }) %>
           <% } %>
         </div>
       </div>
@@ -154,7 +155,7 @@
           <%  cabinets.forEach( cabinet => { %>
           <div class="cabinet__item">
             <%= cabinet.name %>（<%= cabinet.id %>）<%= cabinet.place %>
-            <a class="tag" href="/company/deletecabinet/<%= company.id %>/<%= nyukyo.id %>/<%= cabinet.id %>">削除</a>
+            <a class="tag" href="/company/deletecabinet/<%= company.id %>/<%= nyukyo.id %>/<%= cabinet.id %>/<%= cabinet.no_seq %>">削除</a>
           </div>
           <%  }) %>
           <% } %>

@@ -194,9 +194,22 @@ body {
   color: #fff;
   background-color: $base-color;
   border-radius: 28px;
-  font-size: 0.875rem;
-  padding: 2px 7px;
+  font-size: 0.75rem;
+  padding: 4px 7px 2px;
   margin-right: 5px;
+  font-weight: normal;
+}
+.bg-gray {
+  background-color:#808080;
+}
+.color-gray {
+  color: #808080;
+}
+.dateinfo {
+  font-size: 0.75rem;
+}
+.bd-left-gray {
+  border-left: solid 6px #808080; /*左線*/
 }
 
 //　--- 画面 ---

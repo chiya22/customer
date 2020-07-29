@@ -16,10 +16,6 @@
           <a class="btn-link" href="/company">会社登録</a>
         </div>
         <!-- /.top__btn -->
-        <div class="top__btn">
-          <a class="btn-link" href="/person">個人登録</a>
-        </div>
-        <!-- /.top__btn -->
       </div>
       <div class="searchform">
         <form name="searchform" method="post" action="/">
@@ -59,12 +55,27 @@
         <div class="search__result-items">
           <%  results.forEach( result => { %>
           <div class="search__result-item">
-              <% if (result.header === '個人') { %>
-              <a class="btn-link" href="./person/<%= result.id %>"><p class="tag">個人</p>
-                <% } else { %>
-                <a class="btn-link" href="./company/<%= result.id %>"><p class="tag">会社</p>
+              <% if ((result.ymd_kaiyaku) && (result.ymd_kaiyaku !== '99991231')) { %>
+                  <% if (result.header === '個人') { %>
+                  <a class="btn-link bd-left-gray" href="./person/<%= result.id %>"><p class="tag bg-gray"><%= result.header %></p>
+                  <% } else { %>
+                  <a class="btn-link bd-left-gray" href="./company/<%= result.id %>"><p class="tag bg-gray"><%= result.header %> <%= result.id_nyukyo %></p>
                   <% } %>
+                  <p class="tag bg-gray"><%= result.kubun %></p>
+                  <p class="tag bg-gray">解約</p>
+                  <span class="color-gray"><%= result.name %>（<%= result.id %>）</span>
+                  <span class="dateinfo color-gray">入居年月日：<%= result.ymd_nyukyo %>　
+                    解約年月日：<%= result.ymd_kaiyaku %></span>
+              <% } else { %>
+                  <% if (result.header === '個人') { %>
+                  <a class="btn-link" href="./person/<%= result.id %>"><p class="tag"><%= result.header %></p>
+                  <% } else { %>
+                  <a class="btn-link" href="./company/<%= result.id %>"><p class="tag"><%= result.header %> <%= result.id_nyukyo %></p>
+                  <% } %>
+                  <p class="tag"><%= result.kubun %></p>
                   <%= result.name %>（<%= result.id %>）
+                  <span class="dateinfo">入居年月日：<%= result.ymd_nyukyo %></span>
+              <% } %>
                 </a>
           </div>
           <!-- /.search__result-item -->

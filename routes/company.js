@@ -69,11 +69,11 @@ router.get('/:id', security.authorize(), function (req, res, next) {
               freecabinets = retObj;
 
               //部屋情報の取得
-              m_relation_comroom.findByCompany(inObj.id_company, (err, retObj) => {
+              m_relation_comroom.findByCompany(inObj.id, (err, retObj) => {
                 if (err) { next(err); }
                 rooms = retObj;
 
-                //空いている部屋情報の取得
+                //使用／未使用の区分をつけてすべての部屋情報の取得
                 m_relation_comroom.findForSelect((err, retObj) => {
                   // m_relation_comroom.findFree((err, retObj) => {
                   if (err) { next(err); };
@@ -85,7 +85,7 @@ router.get('/:id', security.authorize(), function (req, res, next) {
                     cabinets: cabinets,
                     freecabinets: freecabinets,
                     rooms: rooms,
-                    freerooms: retObj,
+                    selectrooms: retObj,
                   });
                 });
               });
@@ -307,12 +307,17 @@ router.post('/addroom', security.authorize(), function (req, res, next) {
 });
 
 // 会社⇔部屋情報の削除
-router.get('/deleteroom/:id_company/:id_room', security.authorize(), function (req, res, next) {
-  const id_company = req.params.id_company;
-  const id_room = req.params.id_room;
-  m_relation_comroom.remove(id_company, id_room, (err, retObj) => {
+router.get('/deleteroom/:id_company/:id_room/:no_seq', security.authorize(), function (req, res, next) {
+  let relation_comroom = {};
+  relation_comroom.id_company = req.params.id_company;
+  relation_comroom.id_room = req.params.id_room;
+  relation_comroom.no_seq = req.params.no_seq;
+  relation_comroom.ymd_end = tool.getToday();
+  relation_comroom.ymd_upd = tool.getToday();
+  relation_comroom.id_upd = req.user;
+  m_relation_comroom.remove(relation_comroom, (err, retObj) => {
     if (err) { next(err); };
-    res.redirect('/company/' + id_company);
+    res.redirect('/company/' + req.params.id_company);
   });
 });
 
@@ -332,13 +337,17 @@ router.post('/addcabinet', security.authorize(), function (req, res, next) {
 });
 
 // 入居番号⇔キャビネットの削除
-router.get('/deletecabinet/:id_company/:id_nyukyo/:id_cabinet', security.authorize(), function (req, res, next) {
-  const id_company = req.params.id_company;
-  const id_nyukyo = req.params.id_nyukyo;
-  const id_cabinet = req.params.id_cabinet;
-  m_relation_nyucabi.remove(id_nyukyo, id_cabinet, (err, retObj) => {
+router.get('/deletecabinet/:id_company/:id_nyukyo/:id_cabinet/:no_seq', security.authorize(), function (req, res, next) {
+  let relation_nyucabi = {};
+  relation_nyucabi.id_nyukyo = req.params.id_nyukyo;
+  relation_nyucabi.id_cabinet = req.params.id_cabinet;
+  relation_nyucabi.no_seq = req.params.no_seq;
+  relation_nyucabi.ymd_end = tool.getToday();
+  relation_nyucabi.ymd_upd = tool.getToday();
+  relation_nyucabi.id_upd = req.user;
+  m_relation_nyucabi.remove(relation_nyucabi, (err, retObj) => {
     if (err) { next(err) };
-    res.redirect('/company/' + id_company);
+    res.redirect('/company/' + req.params.id_company);
   });
 });
 
@@ -347,13 +356,17 @@ function validateData(body) {
   let isValidated = true;
   let errors = {};
 
+  if (!body.kubun_company) {
+    isValidated = false;
+    errors.kubun_company = "会社区分が未入力です。";
+  }
   if (!body.name) {
     isValidated = false;
-    errors.name = "名前が未入力です。";
+    errors.name = "会社名が未入力です。";
   } else {
     if (body.name.length > 100) {
       isValidated = false;
-      errors.name = "名前は100桁以下で入力してください。";
+      errors.name = "会社名は100桁以下で入力してください。";
     }
   }
   if (body.id_kaigi) {
@@ -367,6 +380,10 @@ function validateData(body) {
       isValidated = false;
       errors.kana = "カナは100桁以下で入力してください。";
     }
+  }
+  if (!body.ymd_nyukyo) {
+    isValidated = false;
+    errors.ymd_nyukyo = "入居年月日が未入力です。";
   }
   if (body.bikou) {
     if (body.bikou.length > 100) {

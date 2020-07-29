@@ -17,7 +17,7 @@
         <% } %>
       </div>
       <!-- /.area-link -->
-      <% if (person) { %>
+      <% if ((person) && (person.name)) { %>
       <h1 class="title"><%= person.name %></h1>
       <% } else { %>
         <h1 class="title">新規登録</h1>
@@ -33,46 +33,9 @@
         <dl>
           <!-- ◆登録モード -->
           <% if (mode === 'insert') { %>
-          <% if (!person) { %>
           <dt>会社番号</dt>
           <dd>
-            <select class="form__item-style" name="id_company">
-              <option value="" selected>--会社選択--</option>
-              <% companies.forEach(function (company) { %>
-              <option value="<%= company.id %>">【<%= company.kubun_company %>】<%= company.name %></option>
-              <% }); %>
-            </select>
-          </dd>
-          <dt>個人区分</dt>
-          <dd><input type="text" class="form__item-style" name="kubun_person" required></dd>
-          <dt>個人名</dt>
-          <dd><input type="text" class="form__item-style" name="name" required></dd>
-          <dt>個人名（カナ）</dt>
-          <dd><input type="text" class="form__item-style" name="kana"></dd>
-          <dt>電話番号</dt>
-          <dd><input type="text" class="form__item-style" name="telno"></dd>
-          <dt>携帯電話番号</dt>
-          <dd><input type="text" class="form__item-style" name="telno_mobile"></dd>
-          <dt>メールアドレス</dt>
-          <dd><input type="text" class="form__item-style" name="email"></dd>
-          <dt>郵便番号</dt>
-          <dd><input type="text" class="form__item-style" name="no_yubin"></dd>
-          <dt>都道府県</dt>
-          <dd><input type="text" class="form__item-style" name="todoufuken"></dd>
-          <dt>住所</dt>
-          <dd><input type="text" class="form__item-style" name="address"></dd>
-          <dt>入居年月日</dt>
-          <dd><input type="text" class="form__item-style" name="ymd_nyukyo"></dd>
-          <dt>解約年月日</dt>
-          <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku" disabled></dd>
-          <dt>備考</dt>
-          <dd><input type="text" class="form__item-style" name="bikou"></dd>
-
-          <!-- 新規登録時エラー発生 -->
-          <% } else { %>
-          <dt>会社番号</dt>
-          <dd>
-            <select class="form__item-style" name="id_company">
+            <select class="form__item-style" name="id_company_disp" disabled>
               <% if (!person.id_company) { %>
               <option value="" selected>--会社選択--</option>
               <% } else { %>
@@ -86,6 +49,7 @@
               <% } %>
               <% }); %>
             </select>
+            <input type="hidden" name="id_company" value="<%= person.id_company %>">
           </dd>
           <dt>個人区分</dt>
           <dd><input type="text" class="form__item-style" name="kubun_person" value="<%= person.kubun_person %>" required></dd>
@@ -108,10 +72,10 @@
           <dt>入居年月日</dt>
           <dd><input type="text" class="form__item-style" name="ymd_nyukyo" value="<%= person.ymd_nyukyo %>" required></dd>
           <dt>解約年月日</dt>
-          <dd><input type="text" class="form__item-style" name="ymd_kaiyaku" value="<%= person.ymd_kaiyaku %>" required></dd>
-          <dt>備考/dt>
+          <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku_disp" value="<%= person.ymd_kaiyaku %>" disabled></dd>
+          <input type="hidden" name="ymd_kaiyaku" value="<%= person.ymd_kaiyaku %>">
+          <dt>備考</dt>
           <dd><input type="text" class="form__item-style" name="bikou" value="<%= person.bikou %>"></dd>
-          <% } %>
           <div class="form__btn">
             <input type="button" class="btn-base" id="btn_insert" value="登録">
 

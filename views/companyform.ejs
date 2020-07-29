@@ -44,17 +44,17 @@
             </select>
           </dd>
           <dt>会議室利用番号</dt>
-          <dd><input type="text" class="form__item-style" name="id_kaigi" required></dd>
+          <dd><input type="text" class="form__item-style" name="id_kaigi"></dd>
           <dt>会社区分</dt>
           <dd><input type="text" class="form__item-style" name="kubun_company" required></dd>
+          <dt>会社名</dt>
+          <dd><input type="text" class="form__item-style" name="name" required></dd>
+          <dt>会社名カナ</dt>
+          <dd><input type="text" class="form__item-style" name="kana"></dd>
           <dt>入居年月日</dt>
           <dd><input type="text" class="form__item-style" name="ymd_nyukyo" required></dd>
           <dt>解約年月日</dt>
           <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku" disabled></dd>
-          <dt>会社名</dt>
-          <dd><input type="text" class="form__item-style" name="name" required></dd>
-          <dt>会社名カナ</dt>
-          <dd><input type="text" class="form__item-style" name="kana" required></dd>
           <dt>備考</dt>
           <dd><input type="text" class="form__item-style" name="bikou"></dd>
 
@@ -84,13 +84,14 @@
           <dt>会社名</dt>
           <dd><input type="text" class="form__item-style" name="name" value="<%= company.name %>" required></dd>
           <dt>会社名カナ</dt>
+          <dd><input type="text" class="form__item-style" name="kana" value="<%= company.kana %>"></dd>
           <dt>入居年月日</dt>
           <dd><input type="text" class="form__item-style" name="ymd_nyukyo" value="<%= company.ymd_nyukyo %>" required>
           </dd>
           <dt>解約年月日</dt>
-          <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku" value="<%= company.ymd_kaiyaku %>" disabled>
+          <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku_disp" value="<%= company.ymd_kaiyaku %>" disabled>
+          <input type="hidden" name="ymd_kaiyaku" value="<%= company.ymd_kaiyaku %>">
           </dd>
-          <dd><input type="text" class="form__item-style" name="kana" value="<%= company.kana %>" required></dd>
           <dt>備考</dt>
           <dd><input type="text" class="form__item-style" name="bikou" value="<%= company.bikou %>"></dd>
           <% } %>
