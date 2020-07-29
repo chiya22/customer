@@ -20,7 +20,7 @@
       <div class="area-link">
         <a class="btn-link" href="/">TOPへ</a>
         <% if (person.id_company) { %>
-          <a class="btn-link" href="/company/<%= person.id_company %>  ">会社へ</a>
+          <a class="btn-link" href="/company/<%= person.id_company %>">会社へ</a>
         <% } %>
       </div>
       <h1 class="title"><%= person.name %></h1>
@@ -30,6 +30,8 @@
           <dd><input type="text" class="form__item-readonly-style" name="id" value="<%= person.id %>" disabled></dd>
           <dt>会社番号</dt>
           <dd><input type="text" class="form__item-readonly-style" name="companyname" value="<%= companyname %>" disabled></dd>
+          <dt>個人区分</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="kubun_person" value="<%= person.kubun_person %>" disabled></dd>
           <dt>個人名</dt>
           <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= person.name %>" disabled></dd>
           <dt>個人名カナ</dt>
@@ -49,6 +51,12 @@
           </dd>
           <dt>住所</dt>
           <dd><input type="text" class="form__item-readonly-style" name="address" value="<%= person.address %>" disabled></dd>
+          <dt>入居年月日</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= person.ymd_nyukyo %>" required>
+          </dd>
+          <dt>解約年月日</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="ymd_kaiyaku" value="<%= person.ymd_kaiyaku %>" required>
+          </dd>
           <dt>備考</dt>
           <dd><input type="text" class="form__item-readonly-style" name="bikou" value="<%= person.bikou %>" disabled></dd>
           <div class="form__btn">

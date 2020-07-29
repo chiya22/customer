@@ -10,17 +10,15 @@
   <%- include("../common/header.ejs") %>
   <div class="main">
     <div class="main__wrapper">
-      <div class="area-link">
+      <div class="area-admin-link">
         <a class="btn-base" href="/admin/users/insert">登録</a>
       </div>
         <div class="admin__user">
           <% if (users) { %>
           <%  users.forEach( user => { %>
-          <div>
             <a class="btn-link" href="/admin/users/update/<%= user.id %>">
               <%= user.name %>（<%= user.id %>）
             </a>
-          </div>
           <%  }) %>
           <% } %>
       </div>

@@ -48,12 +48,14 @@ router.post('/', security.authorize(), function (req, res, next) {
   //表示開始位置を確定する
   const offset = (pagecount_target - 1) * count_perpage;
 
-  connection.query('select count(*) as count_all from ((select "company" AS kubun, c.id, c.name, c.kana from companies as c where ((c.name like "%' + searchvalue + '%") or (c.kana like "%' + searchvalue + '%") or (c.id_nyukyo like "%' + searchvalue + '%")) and c.ymd_end = "99991231") union all (select "person" AS kubun, p.id, p.name, p.kana from persons as p where ((p.name like "%' + searchvalue + '%") or (p.kana like "%' + searchvalue + '%")) and p.ymd_end = "99991231")) as total', function (error, results, fields) {
+  const query = 'select count(*) as count_all from ((select "company" AS kubun, c.id, c.name, c.kana from companies as c where ((c.name like "%' + searchvalue + '%") or (c.kana like "%' + searchvalue + '%") or (c.id_nyukyo like "%' + searchvalue + '%")) and c.ymd_end = "99991231") union all (select "person" AS kubun, p.id, p.name, p.kana from persons as p where ((p.name like "%' + searchvalue + '%") or (p.kana like "%' + searchvalue + '%")) and p.ymd_end = "99991231")) as total'
+  connection.query(query, function (error, results, fields) {
     if (error) { next(error) };
     let count_all;
     count_all = results[0].count_all;
     const pagecount_max = parseInt(count_all / count_perpage) + 1;
-    connection.query('(select IFNULL(concat("会社:",c.id_nyukyo),"会社") AS kubun, c.id, c.name, c.kana from companies as c where ((c.name like "%' + searchvalue + '%") or (c.kana like "%' + searchvalue + '%") or (c.id_nyukyo like "%' + searchvalue + '%")) and c.ymd_end = "99991231") union all (select "個人" AS kubun, p.id, p.name, p.kana from persons as p where ((p.name like "%' + searchvalue + '%") or (p.kana like "%' + searchvalue + '%")) and p.ymd_end = "99991231") limit ' + count_perpage + ' offset ' + offset, function (error, results, fields) {
+    const query2 = '(select IFNULL(concat("会社:",c.id_nyukyo),"会社") AS header, c.id, c.kubun_company as kubun, c.name, c.kana from companies as c where ((c.name like "%' + searchvalue + '%") or (c.kana like "%' + searchvalue + '%") or (c.id_nyukyo like "%' + searchvalue + '%")) and c.ymd_end = "99991231") union all (select "個人" AS header, p.id, p.kubun_person as kubun, p.name, p.kana from persons as p where ((p.name like "%' + searchvalue + '%") or (p.kana like "%' + searchvalue + '%")) and p.ymd_end = "99991231") limit ' + count_perpage + ' offset ' + offset
+    connection.query(query2, function (error, results, fields) {
       if (error) { next(error) };
       res.render('index', {
         searchvalue: searchvalue,

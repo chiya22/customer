@@ -172,7 +172,7 @@ body {
 }
 
 .main__wrapper {
-  width: 900px;
+  width: 80%;
   margin: 0 auto;
 }
 
@@ -319,7 +319,7 @@ dd {
 }
 
 .person .person__items .person__item {
-  margin-right: 15px;
+  margin: 5px 15px 5px 0;
 }
 
 .room {
@@ -342,7 +342,7 @@ dd {
   font-weight: bold;
   padding: 0.5em 1rem;
   border: solid 1px #cd5e42;
-  margin-right: 10px;
+  margin: 5px 15px 5px 0;
 }
 
 .room .room__items .room__item a:hover {
@@ -359,7 +359,7 @@ dd {
 }
 
 .nyukyo .nyukyo__items .nyukyo__item {
-  margin-right: 15px;
+  margin: 5px 15px 5px 0;
 }
 
 .cabinet {
@@ -382,7 +382,7 @@ dd {
   font-weight: bold;
   padding: 0.5em 1rem;
   border: solid 1px #cd5e42;
-  margin-right: 10px;
+  margin: 5px 15px 5px 0;
 }
 
 .cabinet .cabinet__items .cabinet__item a:hover {
@@ -391,16 +391,27 @@ dd {
 
 .area-admin {
   margin-top: 2rem;
+  margin-left: 1.5rem;
 }
 
 .area-admin a {
   margin-right: 15px;
 }
 
+.area-admin-link {
+  margin-top: 2rem;
+  margin-left: 1.5rem;
+}
+
+.area-admin-link a {
+  margin-right: 15px;
+}
+
 .admin__user, .admin__nyukyo, .admin__room, .admin__cabinet {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  margin-left: 1.5rem;
 }
 
 .admin__user a, .admin__nyukyo a, .admin__room a, .admin__cabinet a {
-  margin: 0.5rem 0;
+  margin: 0.5rem 0.5rem;
 }

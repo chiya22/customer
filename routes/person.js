@@ -23,13 +23,16 @@ router.get('/', security.authorize(), function (req, res, next) {
 
 // TOPページから「個人リンク選択」での個人ページへ遷移
 router.get('/:id', security.authorize(), function (req, res, next) {
-  const id_person = req.params.id;
+  let inObj = {};
+  inObj.id = req.params.id;
   let person;
-  m_person.findPKey(id_person, (err, retObj) => {
+  m_person.findPKey(inObj, (err, retObj) => {
     if (err) { next(err); }
     person = retObj;
     if (person.id_company) {
-      m_company.findPKey(person.id_company, (err, retObj) => {
+      let inObjC = {};
+      inObjC.id = person.id_company;
+      m_company.findPKey(inObjC, (err, retObj) => {
         if (err) { next(err); }
         res.render('person', {
           person: person,
@@ -47,12 +50,13 @@ router.get('/:id', security.authorize(), function (req, res, next) {
 
 // 個人ページから「更新」リンクでの個人（編集）ページへの遷移
 router.get('/update/:id', security.authorize(), function (req, res, next) {
-  const id_person = req.params.id;
+  let inObj = {};
+  inObj.id = req.params.id;
   let companies;
   m_company.findForSelect((err, retObj) => {
     if (err) { next(err) };
     companies = retObj;
-    m_person.findPKey(id_person, (err, retObj) => {
+    m_person.findPKey(inObj, (err, retObj) => {
       if (err) { next(err); }
       res.render('personform', {
         person: retObj,
@@ -66,8 +70,9 @@ router.get('/update/:id', security.authorize(), function (req, res, next) {
 
 // 個人ページから「削除」リンクでの個人（編集）ページへの遷移
 router.get('/delete/:id', security.authorize(), function (req, res, next) {
-  const id_person = req.params.id;
-  m_person.findPKey(id_person, (err, retObj) => {
+  let inObj = {};
+  inObj.id = req.params.id;
+  m_person.findPKey(inObj, (err, retObj) => {
     if (err) { next(err); }
     res.render('personform', {
       person: retObj,
@@ -161,8 +166,13 @@ router.post('/update', security.authorize(), function (req, res, next) {
 router.post('/delete', security.authorize(), function (req, res, next) {
   let inObj = {};
   inObj.id = req.body.id;
-  inObj.id_company = req.body.id_company;
-  m_person.remove(inObj.id, (err, retObj) => {
+  inObj.ymd_kaiyaku = req.body.ymd_kaiyaku;
+  if (inObj.ymd_kaiyaku === '99991231') {
+    inObj.ymd_kaiyaku = tool.getToday();
+  }
+  inObj.ymd_end = tool.getToday();
+
+  m_person.remove(inObj, (err, retObj) => {
     if (err) { next(err); }
     if (inObj.id_company) {
       res.redirect('/company/' + inObj.id_company);
@@ -177,7 +187,7 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
 
   let inObj = {};
   inObj.id = req.body.id;
-  inObj.ymd_end = tool.getToday();
+  inObj.ymd_kaiyaku = tool.getToday();
   inObj.ymd_upd = tool.getToday();
   inObj.id_upd = req.user;
 
@@ -262,6 +272,8 @@ function getPersonData(body) {
   let inObj = {};
   inObj.id = body.id;
   inObj.id_company = body.id_company;
+  inObj.kubun_company = body.kubun_company;
+  inObj.kubun_person = body.kubun_person;
   inObj.name = body.name;
   inObj.kana = body.kana;
   inObj.telno = body.telno;
@@ -270,6 +282,8 @@ function getPersonData(body) {
   inObj.no_yubin = body.no_yubin;
   inObj.todoufuken = body.todoufuken;
   inObj.address = body.address;
+  inObj.ymd_nyukyo = body.ymd_nyukyo;
+  inObj.ymd_kaiyaku = body.ymd_kaiyaku;
   inObj.ymd_start = body.ymd_start;
   inObj.ymd_end = body.ymd_end;
   inObj.ymd_upd = body.ymd_upd;

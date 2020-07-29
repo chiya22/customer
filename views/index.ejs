@@ -59,7 +59,7 @@
         <div class="search__result-items">
           <%  results.forEach( result => { %>
           <div class="search__result-item">
-              <% if (result.kubun === '個人') { %>
+              <% if (result.header === '個人') { %>
               <a class="btn-link" href="./person/<%= result.id %>"><p class="tag">個人</p>
                 <% } else { %>
                 <a class="btn-link" href="./company/<%= result.id %>"><p class="tag">会社</p>

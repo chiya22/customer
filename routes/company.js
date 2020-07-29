@@ -26,7 +26,8 @@ router.get('/', security.authorize(), function (req, res, next) {
 
 // TOPページから「会社リンク選択」での会社ページへの遷移
 router.get('/:id', security.authorize(), function (req, res, next) {
-  const id_company = req.params.id;
+  let inObj = {};
+  inObj.id = req.params.id;
   let company;
   let persons;
   let nyukyo;
@@ -36,12 +37,14 @@ router.get('/:id', security.authorize(), function (req, res, next) {
   let nyukyocompanies;
 
   //会社情報の取得
-  m_company.findPKey(id_company, (err, retObj) => {
+  m_company.findPKey(inObj, (err, retObj) => {
     if (err) { next(err); }
     company = retObj;
 
     //個人情報の取得
-    m_person.findByCompany(id_company, (err, retObj) => {
+    let inObjP = {};
+    inObjP.id_company = req.params.id;
+    m_person.findByCompany(inObjP, (err, retObj) => {
       if (err) { next(err); }
       persons = retObj;
 
@@ -66,7 +69,7 @@ router.get('/:id', security.authorize(), function (req, res, next) {
               freecabinets = retObj;
 
               //部屋情報の取得
-              m_relation_comroom.findByCompany(id_company, (err, retObj) => {
+              m_relation_comroom.findByCompany(inObj.id_company, (err, retObj) => {
                 if (err) { next(err); }
                 rooms = retObj;
 
@@ -96,9 +99,10 @@ router.get('/:id', security.authorize(), function (req, res, next) {
 
 // 会社ページから「更新」リンクでの会社（編集）ページへの遷移
 router.get('/update/:id', security.authorize(), function (req, res, next) {
-  const id_company = req.params.id;
+  let inObj = {};
+  inObj.id = req.params.id;
   let company;
-  m_company.findPKey(id_company, (err, retObj) => {
+  m_company.findPKey(inObj, (err, retObj) => {
     if (err) { next(err); }
     company = retObj;
     m_nyukyo.findForSelect((err, retObj) => {
@@ -115,8 +119,9 @@ router.get('/update/:id', security.authorize(), function (req, res, next) {
 
 // 会社ページから「削除」リンクでの会社（編集）ページへの遷移
 router.get('/delete/:id', security.authorize(), function (req, res, next) {
-  const id_company = req.params.id;
-  m_company.findPKey(id_company, (err, retObj) => {
+  let inObj = {};
+  inObj.id = req.params.id;
+  m_company.findPKey(inObj, (err, retObj) => {
     if (err) { next(err); }
     res.render('companyform', {
       company: retObj,
@@ -203,11 +208,19 @@ router.post('/update', security.authorize(), function (req, res, next) {
 
 //会社情報の削除
 router.post('/delete', security.authorize(), function (req, res, next) {
-  const id = req.body.id;
-  m_company.remove(id, (err, retObj) => {
+
+  let inObj = {};
+  inObj.id = req.body.id;
+  inObj.ymd_kaiyaku = req.body.ymd_kaiyaku;
+  if (inObj.ymd_kaiyaku === '99991231') {
+    inObj.ymd_kaiyaku = tool.getToday();
+  }
+  inObj.ymd_end = tool.getToday();
+
+  m_company.remove(inObj, (err, retObj) => {
     if (err) {
       if (err.errno === 1451) {
-        m_company.findPKey(id, (err, retObj) => {
+        m_company.findPKey(inObj, (err, retObj) => {
           if (err) { next(err) };
           let errors = {};
           errors.common = '削除対象の会社は使用されています';
@@ -229,21 +242,22 @@ router.post('/delete', security.authorize(), function (req, res, next) {
 //会社情報の解約
 router.post('/cancel', security.authorize(), function (req, res, next) {
 
-  const id_company = req.body.id_company
-  const id_nyukyo = req.body.id_nyukyo
+  const id_company = req.body.id_company;
+  const id_nyukyo = req.body.id_nyukyol
 
   let inObj = {};
   inObj.id = id_company;
-  inObj.ymd_end = tool.getToday();
+  inObj.ymd_kaiyaku = tool.getToday();
   inObj.ymd_upd = tool.getToday();
   inObj.id_upd = req.user;
+
   //会社情報の解約
   m_company.cancel(inObj, (err, retObj) => {
     if (err) { next(err) }
 
     let inPObj = {};
     inPObj.id_company = id_company;
-    inPObj.ymd_end = tool.getToday();
+    inPObj.ymd_kaiyaku = tool.getToday();
     inPObj.ymd_upd = tool.getToday();
     inPObj.id_upd = req.user;
     //個人情報の解約
@@ -369,8 +383,11 @@ function getCompanyData(body) {
   inObj.id = body.id;
   inObj.id_nyukyo = body.id_nyukyo;
   inObj.id_kaigi = body.id_kaigi;
+  inObj.kubun_company = body.kubun_company;
   inObj.name = body.name;
   inObj.kana = body.kana;
+  inObj.ymd_nyukyo = body.ymd_nyukyo;
+  inObj.ymd_kaiyaku = body.ymd_kaiyaku;
   inObj.ymd_start = body.ymd_start;
   inObj.ymd_end = body.ymd_end;
   inObj.ymd_upd = body.ymd_upd;

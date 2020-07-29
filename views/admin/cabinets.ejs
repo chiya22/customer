@@ -10,17 +10,15 @@
   <%- include("../common/header.ejs") %>
   <div class="main">
     <div class="main__wrapper">
-      <div class="area-link">
+      <div class="area-admin-link">
         <a class="btn-base" href="/admin/cabinets/insert">登録</a>
       </div>
       <div class="admin__cabinet">
         <% if (cabinets) { %>
           <%  cabinets.forEach( cabinet => { %>
-          <div>
-            <a class="btn-link" href="/admin/cabinets/update/<%= cabinet.id %>">
-              <%= cabinet.name %>（<%= cabinet.id %>）
-            </a>
-          </div>
+          <a class="btn-link" href="/admin/cabinets/update/<%= cabinet.id %>">
+            <%= cabinet.name %>（<%= cabinet.id %>）
+          </a>
           <%  }) %>
           <% } %>
       </div>

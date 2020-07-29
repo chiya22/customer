@@ -45,12 +45,19 @@
           </dd>
           <dt>会議室利用番号</dt>
           <dd><input type="text" class="form__item-style" name="id_kaigi" required></dd>
+          <dt>会社区分</dt>
+          <dd><input type="text" class="form__item-style" name="kubun_company" required></dd>
+          <dt>入居年月日</dt>
+          <dd><input type="text" class="form__item-style" name="ymd_nyukyo" required></dd>
+          <dt>解約年月日</dt>
+          <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku" disabled></dd>
           <dt>会社名</dt>
           <dd><input type="text" class="form__item-style" name="name" required></dd>
           <dt>会社名カナ</dt>
           <dd><input type="text" class="form__item-style" name="kana" required></dd>
           <dt>備考</dt>
           <dd><input type="text" class="form__item-style" name="bikou"></dd>
+
           <!-- 新規登録時エラー発生 -->
           <% } else  { %>
           <dt>入居番号</dt>
@@ -72,9 +79,17 @@
           </dd>
           <dt>会議室利用番号</dt>
           <dd><input type="text" class="form__item-style" name="id_kaigi" value="<%= company.id_kaigi %>" required></dd>
+          <dt>会社区分</dt>
+          <dd><input type="text" class="form__item-style" name="kubun_company" value="<%= company.kubun_company %>" required></dd>
           <dt>会社名</dt>
           <dd><input type="text" class="form__item-style" name="name" value="<%= company.name %>" required></dd>
           <dt>会社名カナ</dt>
+          <dt>入居年月日</dt>
+          <dd><input type="text" class="form__item-style" name="ymd_nyukyo" value="<%= company.ymd_nyukyo %>" required>
+          </dd>
+          <dt>解約年月日</dt>
+          <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku" value="<%= company.ymd_kaiyaku %>" disabled>
+          </dd>
           <dd><input type="text" class="form__item-style" name="kana" value="<%= company.kana %>" required></dd>
           <dt>備考</dt>
           <dd><input type="text" class="form__item-style" name="bikou" value="<%= company.bikou %>"></dd>
@@ -106,10 +121,19 @@
             </dd>
             <dt>会議室利用番号</dt>
             <dd><input class="form__item-style" type="text" name="id_kaigi" value="<%= company.id_kaigi %>" required></dd>
+            <dt>会社区分</dt>
+            <dd><input class="form__item-style bg-disabled" type="text" name="kubun_company" value="<%= company.kubun_company %>" disabled></dd>
+            <input type="hidden" name="kubun_company" value="<%= company.kubun_company %>">
             <dt>会社名</dt>
             <dd><input class="form__item-style" type="text" name="name" value="<%= company.name %>" required></dd>
             <dt>会社名（カナ）</dt>
             <dd><input class="form__item-style" type="text" name="kana" value="<%= company.kana %>" required></dd>
+            <dt>入居年月日</dt>
+            <dd><input type="text" class="form__item-style" name="ymd_nyukyo" value="<%= company.ymd_nyukyo %>" required></dd>
+            <dt>解約年月日</dt>
+            <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku_disp" value="<%= company.ymd_kaiyaku %>" disabled>
+            <input type="hidden" name="ymd_kaiyaku" value="<%= company.ymd_kaiyaku %>">
+            </dd>
             <dt>備考</dt>
             <dd><input class="form__item-style" type="text" name="bikou" value="<%= company.bikou %>"></dd>
             <div class="form__btn">
@@ -119,17 +143,27 @@
               <% } else { %>
               <dt>会社番号</dt>
               <dd><input class="form__item-style bg-disabled" type="text" name="id" value="<%= company.id %>" disabled></dd>
-              <input type="hidden" name="id" value="<%= company.id %>">
               <dt>入居番号</dt>
               <dd><input class="form__item-style bg-disabled" type="text" name="id_nyukyo" value="<%= company.id_nyukyo %>" disabled></dd>
               <dt>会議室利用番号</dt>
               <dd><input class="form__item-style bg-disabled" type="text" name="id_kaigi" value="<%= company.id_kaigi %>" disabled></dd>
+              <dt>会社区分</dt>
+              <dd><input class="form__item-style bg-disabled" type="text" name="kubun_company" value="<%= company.kubun_company %>" disabled></dd>
+              <input type="hidden" name="kubun_company" value="<%= company.kubun_company %>">
               <dt>会社名</dt>
               <dd><input class="form__item-style bg-disabled" type="text" name="name" value="<%= company.name %>" disabled></dd>
               <dt>会社名（カナ）</dt>
               <dd><input class="form__item-style bg-disabled" type="text" name="kana" value="<%= company.kana %>" disabled></dd>
+              <dt>入居年月日</dt>
+              <dd><input type="text" class="form__item-style bg-disabled" name="ymd_nyukyo" value="<%= company.ymd_nyukyo %>" disabled>
+              </dd>
+              <dt>解約年月日</dt>
+              <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku_disp" value="<%= company.ymd_kaiyaku %>" disabled>
+              </dd>
               <dt>備考</dt>
               <dd><input class="form__item-style bg-disabled" type="text" name="bikou" value="<%= company.bikou %>" disabled></dd>
+              <input type="hidden" name="id" value="<%= company.id %>">
+              <input type="hidden" name="ymd_kaiyaku" value="<%= company.ymd_kaiyaku %>">
               <div class="form__btn">
                 <input type="button" class="btn-base" id="btn_delete" value="削除">
                 <% } %>

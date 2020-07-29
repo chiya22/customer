@@ -33,6 +33,15 @@
             <dt>会議室利用番号</dt>
             <dd><input type="text" class="form__item-readonly-style" name="id_kaigi" value="<%= company.id_kaigi %>" disabled>
             </dd>
+            <dt>会社区分</dt>
+            <dd><input type="text" class="form__item-readonly-style" name="kubun_company" value="<%= company.kubun_company %>" disabled>
+            </dd>
+            <dt>入居年月日</dt>
+            <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= company.ymd_nyukyo %>" disabled>
+            </dd>
+            <dt>解約年月日</dt>
+            <dd><input type="text" class="form__item-readonly-style" name="ymd_kaiyaku" value="<%= company.ymd_kaiyaku %>" disabled>
+            </dd>
             <dt>会社名</dt>
             <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= company.name %>" disabled></dd>
             <dt>会社名カナ</dt>
@@ -112,7 +121,7 @@
         <div class="nyukyo__items">
           <% nyukyocompanies.forEach( nyukyocompany  => { %>
           <div class="nyukyo__item">
-            <a class="btn-link" href="/company/<%= nyukyocompany.id %>"><%= nyukyocompany.id %>
+            <a class="btn-link" href="/company/<%= nyukyocompany.id %>">
               <%= nyukyocompany.name %>（<%= nyukyocompany.id %>）
             </a>
           </div>
@@ -136,7 +145,7 @@
             </option>
             <% }) %>
           </select>
-          <input class="btn-base" type="submit" value="キャビネット追加">
+          <input class="btn-base ml-small" type="submit" value="追加">
           <input type="hidden" name="id_nyukyo" value="<%= company.id_nyukyo %>">
           <input type="hidden" name="id_company" value="<%= company.id %>">
         </form>

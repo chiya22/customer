@@ -176,7 +176,7 @@ body {
 }
 // メイン領域のコンテンツを格納する領域
 .main__wrapper {
-  width: 900px;
+  width: 80%;
   margin: 0 auto;
 }
 
@@ -317,7 +317,7 @@ dd {
     display: flex;
     flex-wrap: wrap;
     .person__item {
-      margin-right: 15px;
+      margin: 5px 15px 5px 0;
     }
   }
 }
@@ -338,7 +338,7 @@ dd {
       padding: 0.5em 1rem;
       border: solid 1px $base-color;
       // border-radius: 8px;
-      margin-right: 10px;
+      margin: 5px 15px 5px 0;
       a:hover {
         opacity: 0.7;
       }
@@ -352,7 +352,7 @@ dd {
     display: flex;
     flex-wrap: wrap;
     .nyukyo__item {
-      margin-right: 15px;
+      margin: 5px 15px 5px 0;
     }
   }
 }
@@ -373,7 +373,7 @@ dd {
       padding: 0.5em 1rem;
       border: solid 1px $base-color;
       // border-radius: 8px;
-      margin-right: 10px;
+      margin: 5px 15px 5px 0;
       a:hover {
         opacity: 0.7;
       }
@@ -384,14 +384,24 @@ dd {
 // admin
 .area-admin {
   margin-top: 2rem;
+  margin-left: 1.5rem;
+  a {
+    margin-right: 15px;
+  }
+}
+//リンク領域
+.area-admin-link {
+  margin-top: 2rem;
+  margin-left: 1.5rem;
   a {
     margin-right: 15px;
   }
 }
 // admin-user
 .admin__user, .admin__nyukyo, .admin__room, .admin__cabinet {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  margin-left: 1.5rem;
   a {
-      margin: 0.5rem 0;
+      margin: 0.5rem 0.5rem;
   }
 }
