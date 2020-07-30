@@ -19,58 +19,70 @@
     <div class="main__wrapper">
       <div class="area-link">
         <% if (person.id_company) { %>
-          <a class="btn-link" href="/company/<%= person.id_company %>">会社へ</a>
+        <a class="btn-link" href="/company/<%= person.id_company %>">会社へ</a>
         <% } %>
       </div>
       <div class="title">
         <span class="tag-big"><%= person.kubun_person %></span>
         <% if (person.ymd_kaiyaku !== '99991231') { %>
-          <span class="tag-big">解約</span>
+        <span class="tag-big">解約</span>
         <% } %>
         <%= person.name %>
       </div>
       <form name="cancelForm" class="cancel__form" method="POST" action="/person/cancel">
-          <dl>
+        <dl>
           <dt>個人番号</dt>
           <dd><input type="text" class="form__item-readonly-style" name="id" value="<%= person.id %>" disabled></dd>
           <dt>会社番号</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="companyname" value="<%= companyname %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="companyname" value="<%= companyname %>"
+              disabled></dd>
           <dt>個人区分</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="kubun_person" value="<%= person.kubun_person %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="kubun_person"
+              value="<%= person.kubun_person %>" disabled></dd>
           <dt>個人名</dt>
           <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= person.name %>" disabled></dd>
           <dt>個人名カナ</dt>
           <dd><input type="text" class="form__item-readonly-style" name="kana" value="<%= person.kana %>" disabled></dd>
           <dt>電話番号</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="telno" value="<%= person.telno %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="telno" value="<%= person.telno %>" disabled>
+          </dd>
           <dt>携帯電話番号</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="telno_mobile" value="<%= person.telno_mobile %>"
-              disabled>
+          <dd><input type="text" class="form__item-readonly-style" name="telno_mobile"
+              value="<%= person.telno_mobile %>" disabled>
           </dd>
           <dt>メールアドレス</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="email" value="<%= person.email %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="email" value="<%= person.email %>" disabled>
+          </dd>
           <dt>郵便番号</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="no_yubin" value="<%= person.no_yubin %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="no_yubin" value="<%= person.no_yubin %>"
+              disabled></dd>
           <dt>都道府県</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="todoufuken" value="<%= person.todoufuken %>" disabled>
+          <dd><input type="text" class="form__item-readonly-style" name="todoufuken" value="<%= person.todoufuken %>"
+              disabled>
           </dd>
           <dt>住所</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="address" value="<%= person.address %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="address" value="<%= person.address %>"
+              disabled></dd>
           <dt>入居年月日</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= person.ymd_nyukyo %>" required>
+          <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= person.ymd_nyukyo %>"
+              required>
           </dd>
           <dt>解約年月日</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="ymd_kaiyaku" value="<%= person.ymd_kaiyaku %>" required>
+          <dd><input type="text" class="form__item-readonly-style" name="ymd_kaiyaku" value="<%= person.ymd_kaiyaku %>"
+              required>
           </dd>
           <dt>備考</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="bikou" value="<%= person.bikou %>" disabled></dd>
+          <dd><input type="text" class="form__item-readonly-style" name="bikou" value="<%= person.bikou %>" disabled>
+          </dd>
+          <% if (person.ymd_kaiyaku === '99991231') { %>
           <div class="form__btn">
             <input id="cancelbtn" class="btn-base" type="button" value="解約">
             <a class="btn-base" href="/person/update/<%= person.id %>">更新</a>
             <a class="btn-base" href="/person/delete/<%= person.id %>">削除</a>
             <input type="hidden" name="id" value="<%= person.id %>">
             <input type="hidden" name="id_company" value="<%= person.id_company %>">
-        </div>
+          </div>
+          <% } %>
         </dl>
       </form>
     </div>

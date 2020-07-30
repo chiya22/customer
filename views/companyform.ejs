@@ -55,12 +55,15 @@
           <dd><input type="text" class="form__item-style" name="id_kaigi"></dd>
           <dt>会社区分</dt>
           <dd>
-            <input id="kubun_company_1" class="form__radio-style" type="radio" value="ON" checked="checked" name="kubun_company"><label for="kubun_company_1" class="form__radio-label">ON</label>
-            <input id="kubun_company_2" class="form__radio-style" type="radio" value="CN" name="kubun_company"><label for="kubun_company_2" class="form__radio-label">CN</label>
-            <input id="kubun_company_3" class="form__radio-style" type="radio" value="TR" name="kubun_company"><label for="kubun_company_3" class="form__radio-label">TR</label>
+            <input id="kubun_company_1" class="form__radio-style" type="radio" value="ON" checked="checked"
+              name="kubun_company"><label for="kubun_company_1" class="form__radio-label">ON</label>
+            <input id="kubun_company_2" class="form__radio-style" type="radio" value="CN" name="kubun_company"><label
+              for="kubun_company_2" class="form__radio-label">CN</label>
+            <input id="kubun_company_3" class="form__radio-style" type="radio" value="TR" name="kubun_company"><label
+              for="kubun_company_3" class="form__radio-label">TR</label>
           </dd>
           <!-- <dd><input type="text" class="form__item-style" name="kubun_company" required></dd> -->
-    
+
           <dt>会社名</dt>
           <dd><input type="text" class="form__item-style" name="name" required></dd>
           <dt>会社名カナ</dt>
@@ -96,17 +99,26 @@
           <dt>会社区分</dt>
           <dd>
             <% if (company.kubun_company === 'ON') { %>
-              <input id="kubun_company_1" class="form__radio-style" type="radio" value="ON" checked="checked" name="kubun_company"><label for="kubun_company_1" class="form__radio-label">ON</label>
-              <input id="kubun_company_2" class="form__radio-style" type="radio" value="CN" name="kubun_company"><label for="kubun_company_2" class="form__radio-label">CN</label>
-              <input id="kubun_company_3" class="form__radio-style" type="radio" value="TR" name="kubun_company"><label for="kubun_company_3" class="form__radio-label">TR</label>
+            <input id="kubun_company_1" class="form__radio-style" type="radio" value="ON" checked="checked"
+              name="kubun_company"><label for="kubun_company_1" class="form__radio-label">ON</label>
+            <input id="kubun_company_2" class="form__radio-style" type="radio" value="CN" name="kubun_company"><label
+              for="kubun_company_2" class="form__radio-label">CN</label>
+            <input id="kubun_company_3" class="form__radio-style" type="radio" value="TR" name="kubun_company"><label
+              for="kubun_company_3" class="form__radio-label">TR</label>
             <% } else if (company.kubun_company === 'CN') { %>
-              <input id="kubun_company_1" class="form__radio-style" type="radio" value="ON" name="kubun_company"><label for="kubun_company_1" class="form__radio-label">ON</label>
-              <input id="kubun_company_2" class="form__radio-style" type="radio" value="CN" checked="checked" name="kubun_company"><label for="kubun_company_2" class="form__radio-label">CN</label>
-              <input id="kubun_company_3" class="form__radio-style" type="radio" value="TR" name="kubun_company"><label for="kubun_company_3" class="form__radio-label">TR</label>
+            <input id="kubun_company_1" class="form__radio-style" type="radio" value="ON" name="kubun_company"><label
+              for="kubun_company_1" class="form__radio-label">ON</label>
+            <input id="kubun_company_2" class="form__radio-style" type="radio" value="CN" checked="checked"
+              name="kubun_company"><label for="kubun_company_2" class="form__radio-label">CN</label>
+            <input id="kubun_company_3" class="form__radio-style" type="radio" value="TR" name="kubun_company"><label
+              for="kubun_company_3" class="form__radio-label">TR</label>
             <% } else { %>
-              <input id="kubun_company_1" class="form__radio-style" type="radio" value="ON" checked="checked" name="kubun_company"><label for="kubun_company_1" class="form__radio-label">ON</label>
-              <input id="kubun_company_2" class="form__radio-style" type="radio" value="CN" name="kubun_company"><label for="kubun_company_2" class="form__radio-label">CN</label>
-              <input id="kubun_company_3" class="form__radio-style" type="radio" value="TR" checked="checked" name="kubun_company"><label for="kubun_company_3" class="form__radio-label">TR</label>
+            <input id="kubun_company_1" class="form__radio-style" type="radio" value="ON" checked="checked"
+              name="kubun_company"><label for="kubun_company_1" class="form__radio-label">ON</label>
+            <input id="kubun_company_2" class="form__radio-style" type="radio" value="CN" name="kubun_company"><label
+              for="kubun_company_2" class="form__radio-label">CN</label>
+            <input id="kubun_company_3" class="form__radio-style" type="radio" value="TR" checked="checked"
+              name="kubun_company"><label for="kubun_company_3" class="form__radio-label">TR</label>
             <% } %>
           </dd>
           <dt>会社名</dt>
@@ -114,7 +126,8 @@
           <dt>会社名カナ</dt>
           <dd><input type="text" class="form__item-style" name="kana" value="<%= company.kana %>"></dd>
           <dt>入居年月日</dt>
-          <dd><input type="text" class="form__item-style flatpickr" name="ymd_nyukyo" value="<%= company.ymd_nyukyo %>" required>
+          <dd><input type="text" class="form__item-style flatpickr" name="ymd_nyukyo" value="<%= company.ymd_nyukyo %>"
+              required>
           </dd>
           <dt>解約年月日</dt>
           <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku_disp"
@@ -128,7 +141,7 @@
             <input type="button" class="btn-base" id="btn_insert" value="登録">
 
             <!-- ◆更新モード -->
-            <% } else if (mode === 'update') { %>
+            <% } else if ((mode === 'update') && (company.ymd_kaiyaku === '99991231')) { %>
             <dt>会社番号</dt>
             <dd><input class="form__item-style bg-disabled" type="text" name="id" value="<%= company.id %>" disabled>
             </dd>
@@ -162,8 +175,8 @@
             <dt>会社名（カナ）</dt>
             <dd><input class="form__item-style" type="text" name="kana" value="<%= company.kana %>" required></dd>
             <dt>入居年月日</dt>
-            <dd><input type="text" class="form__item-style flatpickr" name="ymd_nyukyo" value="<%= company.ymd_nyukyo %>"
-                required></dd>
+            <dd><input type="text" class="form__item-style flatpickr" name="ymd_nyukyo"
+                value="<%= company.ymd_nyukyo %>" required></dd>
             <dt>解約年月日</dt>
             <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku_disp"
                 value="<%= company.ymd_kaiyaku %>" disabled>
@@ -209,7 +222,9 @@
               <input type="hidden" name="id" value="<%= company.id %>">
               <input type="hidden" name="ymd_kaiyaku" value="<%= company.ymd_kaiyaku %>">
               <div class="form__btn">
-                <input type="button" class="btn-base" id="btn_delete" value="削除">
+                <% if (company.ymd_kaiyaku === '99991231') { %>
+                  <input type="button" class="btn-base" id="btn_delete" value="削除">
+                <% } %>
                 <% } %>
               </div>
               <input type="hidden" id="field_mode">

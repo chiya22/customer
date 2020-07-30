@@ -17,9 +17,11 @@
   <%- include("./common/header.ejs") %>
   <section class="main">
   <div class="main__wrapper">
+      <% if (company.ymd_kaiyaku === '99991231') { %>
       <div class="area-link">
         <a class="btn-link" href="/person/add/<%= company.id %>">個人登録</a>
       </div>
+      <% } %>
       <div class="title">
         <% if (company.id_nyukyo) { %>
           <span class="tag-big"><%= company.id_nyukyo %></span>
@@ -57,11 +59,13 @@
             <dd><input type="text" class="form__item-readonly-style" name="kana" value="<%= company.kana %>" disabled></dd>
             <dt>備考</dt>
             <dd><input type="text" class="form__item-readonly-style" name="bikou" value="<%= company.bikou %>" disabled></dd>
-            <div class="form__btn">
+            <% if (company.ymd_kaiyaku === '99991231') { %>
+              <div class="form__btn">
               <input type="button" class="btn-base" id="cancelbtn" value="解約">
               <a class="btn-base" href="/company/update/<%= company.id %>">更新</a>
               <a class="btn-base" href="/company/delete/<%= company.id %>">削除</a>
             </div>
+            <% } %>
             <input type="hidden" name="id_company" value="<%= company.id %>">
             <input type="hidden" name="id_nyukyo" value="<%= company.id_nyukyo %>">
           </dl>
@@ -94,7 +98,8 @@
         <div class="room__header">
           <p class="midashi">部屋</p>
         </div>
-        <form name="roomForm" class="room__form" method="POST" action="/company/addroom">
+        <% if (company.ymd_kaiyaku === '99991231') { %>
+          <form name="roomForm" class="room__form" method="POST" action="/company/addroom">
           <select name="id_room" class="form__item-style room__select">
             <option value="" selected>--部屋選択--</option>
             <% selectrooms.forEach( selectroom => {
@@ -115,6 +120,7 @@
           <input class="btn-base ml-small" type="submit" value="追加">
           <input type="hidden" name="id_company" value="<%= company.id %>">
         </form>
+        <% } %>
         <div class="room__items">
           <% if (rooms) { %>
           <%  rooms.forEach( room => { %>
@@ -123,7 +129,7 @@
             <% if (room.place) { %>
               ：
             <% } %><%= room.floor %> ）
-            <a class="tag" href="/company/deleteroom/<%= company.id %>/<%= room.id %>/<%= room.no_seq %>">削除</a>
+            <a class="tag" href="/company/deleteroom/<%= room.id_company %>/<%= room.id_room %>/<%= room.no_seq %>">削除</a>
           </div>
           <% }) %>
           <% } %>
@@ -165,7 +171,8 @@
           <p class="midashi">キャビネット</p>
         </div>
         <% if (nyukyo) { %>
-        <form name="cabinetForm" class="cabinet__form" method="POST" action="/company/addcabinet" onsubmit="return checkCancel();">
+          <% if (company.ymd_kaiyaku === '99991231') { %>
+            <form name="cabinetForm" class="cabinet__form" method="POST" action="/company/addcabinet" onsubmit="return checkCancel();">
           <select name="id_cabinet" class="form__item-style cabinet__select">
             <option value="" selected>--キャビネット選択--</option>
             <% freecabinets.forEach(function (freecabinet) { %>
@@ -178,12 +185,15 @@
           <input type="hidden" name="id_nyukyo" value="<%= company.id_nyukyo %>">
           <input type="hidden" name="id_company" value="<%= company.id %>">
         </form>
+        <% } %>
         <div class="cabinet__items">
           <% if (cabinets) { %>
           <%  cabinets.forEach( cabinet => { %>
           <div class="cabinet__item">
             <%= cabinet.name %>（<%= cabinet.place %>）
-            <a class="tag" href="/company/deletecabinet/<%= company.id %>/<%= nyukyo.id %>/<%= cabinet.id %>/<%= cabinet.no_seq %>">削除</a>
+            <% if (company.ymd_kaiyaku === '99991231') { %>
+              <a class="tag" href="/company/deletecabinet/<%= company.id %>/<%= nyukyo.id %>/<%= cabinet.id %>/<%= cabinet.no_seq %>">削除</a>
+            <% } %>
           </div>
           <%  }) %>
           <% } %>
