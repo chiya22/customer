@@ -77,9 +77,9 @@
           <%  persons.forEach( person => { %>
           <div class="person__item">
             <% if (person.ymd_kaiyaku === '99991231') { %>
-            <a class="btn-link" href="/person/<%= person.id %>"><%= person.name %><span class="dateinfo">　入居：<%= person.ymd_nyukyo %></span></a>
+            <a class="btn-link" href="/person/<%= person.id %>"><span class="tag"><%= person.kubun_person %></span><%= person.name %><span class="dateinfo">　入居：<%= person.ymd_nyukyo %></span></a>
             <% } else { %>
-            <a class="btn-link bd-left-gray" href="/person/<%= person.id %>"><span class="color-gray"><%= person.name %><span class="dateinfo">　入居：<%= person.ymd_nyukyo %>　解約：<%= person.ymd_kaiyaku %></span></span></a>
+            <a class="btn-link bd-left-gray" href="/person/<%= person.id %>"><span class="tag bg-gray">解約</span><span class="tag bg-gray"><%= person.kubun_person %></span><span class="color-gray"><%= person.name %><span class="dateinfo">　入居：<%= person.ymd_nyukyo %>　解約：<%= person.ymd_kaiyaku %></span></span></a>
             <% } %>
           </div>
           <%  }); %>
@@ -89,6 +89,7 @@
       </div>
       <!-- /.person -->
 
+      <% if (company.kubun_company === 'CN') { %>
       <div class="room">
         <div class="room__header">
           <p class="midashi">部屋</p>
@@ -129,6 +130,7 @@
         </div>
       </div>
       <!-- /.room -->
+      <% } %>
 
       <div class="nyukyo">
         <div class="nyukyo__header">
