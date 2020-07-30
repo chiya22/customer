@@ -98,6 +98,19 @@ body {
     border: 1px solid $base-color;
   }
 }
+//非活性ボタン
+.btn-disabled {
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 19px;
+  background-clip: padding-box;
+  background-color: rgba(0,0,0,.1);
+  border: 1px solid transparent;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  font-size: 0.75rem;
+}
 //画面遷移するボタン
 .btn-link {
   display: inline-block;

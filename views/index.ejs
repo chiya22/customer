@@ -40,6 +40,8 @@
         <div class="page-section">
           <% if ((page_current !== 1) && (page_max !== 0)){ %>
           <input type="button" class="btn-base" id="btn_prev" value="前ページ" />
+          <% } else { %>
+            <input type="button" class="btn-disabled" id="btn_prev" value="前ページ" disabled />
           <% } %>
           <% if (page_max > 1) { %>
           <div class="page-disp">
@@ -49,6 +51,8 @@
           <% } %>
           <% if (page_current !== page_max) { %>
           <input type="button" class="btn-base" id="btn_next" value="次ページ" />
+          <% } else { %>
+            <input type="button" class="btn-disabled" id="btn_next" value="次ページ" disabled/>
           <% } %>
         </div>
         <!-- /.page-section -->

@@ -53,7 +53,10 @@ router.post('/', security.authorize(), function (req, res, next) {
     if (error) { next(error) };
     let count_all;
     count_all = results[0].count_all;
-    const pagecount_max = parseInt(count_all / count_perpage) + 1;
+    let pagecount_max = parseInt(count_all / count_perpage);
+    if ((count_all % count_perpage) > 0) {
+      pagecount_max += 1;
+    }
     const query2 = '(select "会社" AS header, c.id, c.id_nyukyo as id_nyukyo, c.kubun_company as kubun, c.name, c.kana, c.ymd_nyukyo, c.ymd_kaiyaku from companies as c where ((c.name like "%' + searchvalue + '%") or (c.kana like "%' + searchvalue + '%") or (c.id_nyukyo like "%' + searchvalue + '%")) and c.ymd_end = "99991231") union all (select "個人" AS header, p.id, NULL as id_nyukyo, p.kubun_person as kubun, p.name, p.kana, p.ymd_nyukyo, p.ymd_kaiyaku from persons as p where ((p.name like "%' + searchvalue + '%") or (p.kana like "%' + searchvalue + '%")) and p.ymd_end = "99991231") order by header asc, ymd_kaiyaku desc, ymd_nyukyo asc limit ' + count_perpage + ' offset ' + offset
     connection.query(query2, function (error, results, fields) {
       if (error) { next(error) };
