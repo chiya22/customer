@@ -363,6 +363,10 @@ function validateData(body) {
   let isValidated = true;
   let errors = {};
 
+  if (!body.id_nyukyo) {
+    isValidated = false;
+    errors.id_nyukyo = "入居番号を選択してください。";
+  }
   if (!body.kubun_company) {
     isValidated = false;
     errors.kubun_company = "会社区分が未入力です。";
