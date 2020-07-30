@@ -17,7 +17,7 @@
           <% if (nyukyos) { %>
           <%  nyukyos.forEach( nyukyo => { %>
           <a class="btn-link" href="/admin/nyukyos/update/<%= nyukyo.id %>">
-            <%= nyukyo.id %>
+            <%= nyukyo.id %><span class="dateinfo-small">　開始：<%= nyukyo.ymd_start %>　終了：<%= nyukyo.ymd_end %></span>
           </a>
           <%  }) %>
           <% } %>

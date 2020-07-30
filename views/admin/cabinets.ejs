@@ -17,7 +17,7 @@
         <% if (cabinets) { %>
           <%  cabinets.forEach( cabinet => { %>
           <a class="btn-link" href="/admin/cabinets/update/<%= cabinet.id %>">
-            <%= cabinet.name %>（<%= cabinet.id %>）
+            <%= cabinet.name %><span class="dateinfo-small">　開始：<%= cabinet.ymd_start %>　終了：<%= cabinet.ymd_end %></span>
           </a>
           <%  }) %>
           <% } %>

@@ -121,7 +121,7 @@ const cancel = function (inObj, callback) {
 
 const cancelByCompany = function (inObj, callback) {
     (async function () {
-        const query = 'update persons set ymd_kaiyaku = "' + inObj.ymd_kaiyaku + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_person = ' + tool.returnvalue(inObj.id_person) + ' and ymd_end = "99991231"';
+        const query = 'update persons set ymd_kaiyaku = "' + inObj.ymd_kaiyaku + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_company = ' + tool.returnvalue(inObj.id_company) + ' and ymd_end = "99991231"';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);

@@ -10,17 +10,30 @@ const m_sq = require('../model/sq');
 
 // 会社ページより「個人登録」をクリック
 router.get('/add/:id_company', security.authorize(), function (req, res, next) {
-  let person = {};
-  person.id_company = req.params.id_company;
-  m_company.findForSelect((err, retObj) => {
+
+  let company = {};
+
+  //会社情報
+  let inObj = {};
+  inObj.id = req.params.id_company;
+  m_company.findPKey(inObj, (err, retObj) => {
     if (err) { next(err) };
-    res.render('personform', {
-      person: person,
-      companies: retObj,
-      mode: 'insert',
-      errors: null,
+    company = retObj;
+
+    //会社セレクト情報
+    let inObjP = {};
+    inObjP.id_company = req.params.id_company;
+    m_company.findForSelect((err, retObj) => {
+      if (err) { next(err) };
+      res.render('personform', {
+        person: inObjP,
+        company: company,
+        companies: retObj,
+        mode: 'insert',
+        errors: null,
+      });
     });
-  });
+  })
 });
 
 // TOPページから「個人リンク選択」での個人ページへ遷移
@@ -52,37 +65,63 @@ router.get('/:id', security.authorize(), function (req, res, next) {
 
 // 個人ページから「更新」リンクでの個人（編集）ページへの遷移
 router.get('/update/:id', security.authorize(), function (req, res, next) {
+  let companies;
+  let person;
+
+  //個人情報
   let inObj = {};
   inObj.id = req.params.id;
-  let companies;
-  m_company.findForSelect((err, retObj) => {
+  m_person.findPKey(inObj, (err, retObj) => {
     if (err) { next(err) };
-    companies = retObj;
-    m_person.findPKey(inObj, (err, retObj) => {
-      if (err) { next(err); }
-      res.render('personform', {
-        person: retObj,
-        companies: companies,
-        mode: 'update',
-        errors: null,
+    person = retObj;
+
+    //会社情報
+    let inObjC = {};
+    inObjC.id = person.id_company;
+    m_company.findPKey(inObjC, (err, retObj) => {
+      if (err) { next(err) };
+      company = retObj;
+
+      //会社セレクト情報
+      m_company.findForSelect((err, retObj) => {
+        if (err) { next(err) };
+        res.render('personform', {
+          person: person,
+          company: company,
+          companies: retObj,
+          mode: 'update',
+          errors: null,
+        });
       });
-    })
+    });
   });
 });
 
 // 個人ページから「削除」リンクでの個人（編集）ページへの遷移
 router.get('/delete/:id', security.authorize(), function (req, res, next) {
+
+  //個人情報
+  let person = {};
   let inObj = {};
   inObj.id = req.params.id;
   m_person.findPKey(inObj, (err, retObj) => {
-    if (err) { next(err); }
-    res.render('personform', {
-      person: retObj,
-      companies: null,
-      mode: 'delete',
-      errors: null,
+    if (err) { next(err) };
+    person = retObj;
+
+    //会社情報
+    let inObjC = {};
+    inObjC.id = person.id_company;
+    m_company.findPKey(inObj, (err, retObj) => {
+      if (err) { next(err); }
+      res.render('personform', {
+        person: person,
+        company: retObj,
+        companies: null,
+        mode: 'delete',
+        errors: null,
+      });
     });
-  })
+  });
 });
 
 // 個人情報の登録
@@ -95,13 +134,25 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   //入力チェック
   const errors = validateData(req.body);
   if (errors) {
-    m_company.findForSelect((err, retObj) => {
+
+    //会社情報
+    let company = {};
+    let inObjC = {};
+    inObjC.id = inObj.id_company;
+    m_company.findPKey(inObjC, (err, retObj) => {
       if (err) { next(err) };
-      res.render('personform', {
-        person: inObj,
-        companies: retObj,
-        mode: 'insert',
-        errors: errors,
+      company = retObj;
+
+      //会社セレクト情報
+      m_company.findForSelect((err, retObj) => {
+        if (err) { next(err) };
+        res.render('personform', {
+          person: inObj,
+          company: company,
+          companies: retObj,
+          mode: 'insert',
+          errors: errors,
+        });
       });
     });
     return;
@@ -129,6 +180,15 @@ router.post('/update', security.authorize(), function (req, res, next) {
   inObj.ymd_upd = tool.getToday();
   inObj.id_upd = req.user;
 
+  //会社情報
+  let company = {};
+  let inObjC = {};
+  inObjC.id = inObj.id_company;
+  m_company.findPKey(inObjC, (err, retObj) => {
+    if (err) { next(err) };
+    company = retObj;
+  });
+
   //入力チェック
   const errors = validateData(req.body);
   if (errors) {
@@ -136,6 +196,7 @@ router.post('/update', security.authorize(), function (req, res, next) {
       if (err) { next(err) };
       res.render('personform', {
         person: inObj,
+        company: company,
         companies: retObj,
         mode: 'update',
         errors: errors,
@@ -153,6 +214,7 @@ router.post('/update', security.authorize(), function (req, res, next) {
         errors.common = '更新対象はすでに削除されています';
         res.render('personform', {
           person: inObj,
+          company: company,
           companies: retObj,
           mode: 'update',
           errors: errors,

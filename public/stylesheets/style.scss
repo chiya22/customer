@@ -9,14 +9,7 @@ body {
   color: #333;
 }
 
-
 // --- 共通部品 --
-
-//margin-left
-.ml-small {
-  margin-left: 10px;
-}
-
 //タイトル
 .title {
   width: 100%;
@@ -28,7 +21,6 @@ body {
   flex-wrap: wrap;
   align-items: center;
 }
-
 //見出し
 .midashi {
   padding: 0.25em 0.5em;
@@ -37,22 +29,21 @@ body {
   // border-left: solid 5px $base-color;
   border-bottom: solid 2px $base-color;
   font-size: 1.5rem;;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
   font-weight: bold;
 }
-
 //inputタグ用
 .form__item-style {
   color: #8a8a8a;
   display: block;
   width: 100%;
-  height: 44px;
+  height: 30px;
   padding: 5px 5%;
   border: 1px solid #ccc;
   border-radius: 27px;
   background-clip: padding-box;
   background-color: #fff;
-  font-size: 105%;
+  font-size: 85%;
   letter-spacing: 0.8px;
   &:focus {
     outline: none;
@@ -60,46 +51,39 @@ body {
     color: $base-color;
   }
 }
-
 .form__radio-style {
     clip: rect(1px, 1px, 1px, 1px);
     position: absolute !important;
 }
 .form__radio-label {
     display: inline-block;
-    padding: 0.5rem 1rem;
+    padding: 5px 10px;
     margin: 0 10px;
     border-radius: 3px;
     transition: all .2s;
     border: 1px solid $base-color;
     color: $base-color;
+    font-size: 85%;
 }
 .form__radio-style:checked + .form__radio-label {
     background: $base-color;
     color: #fff;
     text-shadow: 0 0 1px rgba(0,0,0,.7);
 }
-// .form__radio-style:focus + .form__radio-label {
-//     outline-color: #4D90FE;
-//     outline-offset: -2px;
-//     outline-style: auto;
-//     outline-width: 5px;
-// }
 //inputタグ読み取り専用
 .form__item-readonly-style {
   color: #8a8a8a;
   display: block;
   width: 100%;
-  height: 44px;
+  height: 30px;
   padding: 5px 5%;
-  font-size: 105%;
+  font-size: 85%;
   letter-spacing: 0.8px;
 }
-
 //アクションするボタン
 .btn-base {
   display: inline-block;
-  padding: 10px 20px;
+  padding: 5px 15px;
   border-radius: 19px;
   background-clip: padding-box;
   background-color: $base-color;
@@ -107,13 +91,13 @@ body {
   color: #fff;
   font-weight: bold;
   text-align: center;
+  font-size: 0.75rem;
   &:hover {
     background-color: #fff;
     color: $base-color;
     border: 1px solid $base-color;
   }
 }
-
 //画面遷移するボタン
 .btn-link {
   display: inline-block;
@@ -124,6 +108,7 @@ body {
   color: $base-color; /*文字色*/
   font-weight: bold;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
+  font-size: 0.75rem;
   &:hover {
     opacity: 0.7;
   }
@@ -132,12 +117,12 @@ body {
     transform: translateY(2px);
   }
 }
-
 //リンク領域
 .area-link {
-  padding: 20px 0;
+  padding: 5px 0;
+  margin-bottom: 5px;
   a {
-    margin-right: 15px;
+    margin-right: 5px;
   }
 }
 // formのボタン領域
@@ -147,7 +132,7 @@ body {
     margin: 20px;
   }
 }
-
+//メッセージ領域
 .msg {
   width: 100%;
   height: 100%;
@@ -190,15 +175,9 @@ body {
   box-shadow: 0 0 30px rgba(0,0,0,.2);
 }
 
-
-//非アクティブ状態の場合の背景色
-.bg-disabled {
-  background-color: rgba(0,0,0,.1);
-}
-
 // メイン領域
 .main {
-  padding-top: 70px;
+  padding-top: 50px;
   width: 100%;
 }
 // メイン領域のコンテンツを格納する領域
@@ -236,6 +215,14 @@ body {
   padding: 3px 10px;
   margin-right: 10px;
 }
+
+//部分的な設定
+.ml-small {
+  margin-left: 10px;
+}
+.bg-disabled {
+  background-color: rgba(0,0,0,.1);
+}
 .bg-gray {
   background-color:#808080;
 }
@@ -244,6 +231,11 @@ body {
 }
 .dateinfo {
   font-size: 0.75rem;
+}
+.dateinfo-small {
+  font-size: 0.75rem;
+  color:#808080;
+  font-weight: normal;
 }
 .bd-left-gray {
   border-left: solid 6px #808080; /*左線*/
@@ -272,6 +264,9 @@ body {
     top: 50%;
     margin-left: -180px;
     margin-top: -200px;
+    .form__header {
+      margin-bottom: 1.5rem;
+    }
     .form__item {
       position: relative;
       display: block;
@@ -283,16 +278,47 @@ body {
 // header
 .header {
   width: 100%;
-  height: 70px;
-  background-color: $base-color;
+  height: 50px;
+  background-color: #fff;
   position: fixed;
   .header-wrapper {
     max-width: 900px;
+    min-width: 600px;
+    height: 100%;
     padding: 0 20px;
-    ul {
-      li {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    .header-left {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      .header-logo {
         display: inline-block;
-        padding-top: 15px;
+        background-color: #fff;
+        padding: 5px 10px;
+        width: 300px;
+        height: auto;
+      }
+    }
+    .header-right {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: flex-end;
+      align-items: center;
+      .btn-header {
+        font-size: 0.75rem;
+        background-color: #fff;
+        padding: 8px 10px;
+        border-radius: 19px;
+        color:$base-color;
+        border: 1px solid $base-color;
+        margin-right: 10px;
+        &:hover {
+          background-color: $base-color;
+          color: #fff;
+        }
       }
     }
   }
@@ -302,9 +328,9 @@ body {
 .top__btns {
   display: flex;
   flex-wrap: nowrap;
-  padding: 20px 0;
+  padding: 5px 0;
   .top__btn {
-    padding: 10px;
+    padding: 5px;
   }
 }
 .searchform__top {
@@ -313,6 +339,7 @@ body {
   align-items: center;
 }
 .search__result {
+  font-size: 0.75rem;
   .search__result-disp {
     margin-top: 1rem;
   }
@@ -322,11 +349,7 @@ body {
     margin-top: 1rem;
     .page-disp {
       padding: 0 10px;
-      font-size: 1rem;
       font-weight: normal;
-    }
-    input {
-      font-size: 0.875rem;
     }
   }
 }
@@ -334,8 +357,8 @@ body {
   margin:15px 0;
   a {
     display: block;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 }
 
@@ -353,16 +376,16 @@ dt {
   text-align: right;
   padding: 5px 20px 5px;
   font-weight: normal;
+  font-size: 85%;
 }
 dd {
   width: 70%;
   padding: 5px 0;
 }
 
-
 // company-person
 .person {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   .person__items {
     display: flex;
     flex-wrap: wrap;
@@ -373,10 +396,10 @@ dd {
 }
 // company-room
 .room {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   .room__form {
     display: flex;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
   .room__items {
     display: flex;
@@ -389,6 +412,7 @@ dd {
       border: solid 1px $base-color;
       // border-radius: 8px;
       margin: 5px 15px 5px 0;
+      font-size: 0.75rem;
       a:hover {
         opacity: 0.7;
       }
@@ -397,7 +421,7 @@ dd {
 }
 //company-nyukyo
 .nyukyo {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   .nyukyo__items {
     display: flex;
     flex-wrap: wrap;
@@ -408,10 +432,10 @@ dd {
 }
 //company-cabinet
 .cabinet {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   .cabinet__form {
     display: flex;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
   .cabinet__items {
     display: flex;
@@ -422,7 +446,7 @@ dd {
       font-weight: bold;
       padding: 0.5em 1rem;
       border: solid 1px $base-color;
-      // border-radius: 8px;
+      font-size: 0.75rem;
       margin: 5px 15px 5px 0;
       a:hover {
         opacity: 0.7;
@@ -436,12 +460,11 @@ dd {
   margin-top: 2rem;
   margin-left: 1.5rem;
   a {
-    margin-right: 15px;
+    margin: 10px 15px;
   }
 }
-//リンク領域
 .area-admin-link {
-  margin-top: 2rem;
+  margin-top: 1rem;
   margin-left: 1.5rem;
   a {
     margin-right: 15px;

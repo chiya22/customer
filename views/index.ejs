@@ -63,9 +63,9 @@
                   <% } %>
                   <p class="tag bg-gray"><%= result.kubun %></p>
                   <p class="tag bg-gray">解約</p>
-                  <span class="color-gray"><%= result.name %>（<%= result.id %>）</span>
-                  <span class="dateinfo color-gray">入居年月日：<%= result.ymd_nyukyo %>　
-                    解約年月日：<%= result.ymd_kaiyaku %></span>
+                  <span class="color-gray"><%= result.name %></span>
+                  <span class="dateinfo color-gray">入居：<%= result.ymd_nyukyo %>　
+                    解約：<%= result.ymd_kaiyaku %></span>
               <% } else { %>
                   <% if (result.header === '個人') { %>
                   <a class="btn-link" href="./person/<%= result.id %>"><p class="tag"><%= result.header %></p>
@@ -73,8 +73,8 @@
                   <a class="btn-link" href="./company/<%= result.id %>"><p class="tag"><%= result.header %> <%= result.id_nyukyo %></p>
                   <% } %>
                   <p class="tag"><%= result.kubun %></p>
-                  <%= result.name %>（<%= result.id %>）
-                  <span class="dateinfo">入居年月日：<%= result.ymd_nyukyo %></span>
+                  <%= result.name %>
+                  <span class="dateinfo">入居：<%= result.ymd_nyukyo %></span>
               <% } %>
                 </a>
           </div>

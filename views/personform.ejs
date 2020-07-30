@@ -11,7 +11,6 @@
   <section class="main">
     <div class="main__wrapper">
       <div class="area-link">
-        <a class="btn-link" href="/">TOPへ</a>
         <% if ((person) && (person.id_company)) { %>
           <a class="btn-link" href="/company/<%= person.id_company %>">会社へ</a>
         <% } %>
@@ -59,10 +58,16 @@
           </dd>
           <dt>個人区分</dt>
           <dd>
+          <% if (company.kubun_company === 'CN') { %>
             <input id="kubun_person_1" class="form__radio-style" type="radio" value="主" checked="checked" name="kubun_person"><label for="kubun_person_1" class="form__radio-label">主</label>
-            <input id="kubun_person_2" class="form__radio-style" type="radio" value="従" name="kubun_person"><label for="kubun_person_2" class="form__radio-label">従</label>
-            <input id="kubun_person_3" class="form__radio-style" type="radio" value="人数内" name="kubun_person"><label for="kubun_person_3" class="form__radio-label">人数内</label>
+            <input id="kubun_person_2" class="form__radio-style" type="radio" value="人数内" name="kubun_person"><label for="kubun_person_2" class="form__radio-label">従</label>
+            <input id="kubun_person_3" class="form__radio-style" type="radio" value="追加" name="kubun_person"><label for="kubun_person_3" class="form__radio-label">人数内</label>
+          <% } else { %>
+            <input id="kubun_person_1" class="form__radio-style" type="radio" value="主" checked="checked" name="kubun_person"><label for="kubun_person_1" class="form__radio-label">主</label>
+            <input id="kubun_person_2" class="form__radio-style" type="radio" value="追加" name="kubun_person"><label for="kubun_person_2" class="form__radio-label">従</label>
+            <input id="kubun_person_3" class="form__radio-style" type="radio" value="ゲスト" name="kubun_person"><label for="kubun_person_3" class="form__radio-label">人数内</label>
             <input id="kubun_person_4" class="form__radio-style" type="radio" value="フリー" name="kubun_person"><label for="kubun_person_4" class="form__radio-label">フリー</label>
+          <% } %>
           </dd>
           <dt>個人名</dt>
           <dd><input type="text" class="form__item-style" name="name" value="<%= person.name %>" required></dd>
@@ -81,7 +86,7 @@
           <dt>住所</dt>
           <dd><input type="text" class="form__item-style" name="address" value="<%= person.address %>"></dd>
           <dt>入居年月日</dt>
-          <dd><input type="text" class="form__item-style" name="ymd_nyukyo" value="<%= person.ymd_nyukyo %>" required></dd>
+          <dd><input type="text" class="form__item-style flatpickr" name="ymd_nyukyo" value="<%= person.ymd_nyukyo %>" required></dd>
           <dt>解約年月日</dt>
           <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku_disp" value="<%= person.ymd_kaiyaku %>" disabled></dd>
           <input type="hidden" name="ymd_kaiyaku" value="<%= person.ymd_kaiyaku %>">
@@ -111,7 +116,18 @@
               </select>
             </dd>
             <dt>個人区分</dt>
-            <dd><input type="text" class="form__item-style" name="kubun_person" value="<%= person.kubun_person %>" required></dd>
+            <dd>
+            <% if (company.kubun_company === 'CN') { %>
+              <input id="kubun_person_1" class="form__radio-style" type="radio" value="主" checked="checked" name="kubun_person"><label for="kubun_person_1" class="form__radio-label">主</label>
+              <input id="kubun_person_2" class="form__radio-style" type="radio" value="人数内" name="kubun_person"><label for="kubun_person_2" class="form__radio-label">従</label>
+              <input id="kubun_person_3" class="form__radio-style" type="radio" value="追加" name="kubun_person"><label for="kubun_person_3" class="form__radio-label">人数内</label>
+            <% } else { %>
+              <input id="kubun_person_1" class="form__radio-style" type="radio" value="主" checked="checked" name="kubun_person"><label for="kubun_person_1" class="form__radio-label">主</label>
+              <input id="kubun_person_2" class="form__radio-style" type="radio" value="追加" name="kubun_person"><label for="kubun_person_2" class="form__radio-label">従</label>
+              <input id="kubun_person_3" class="form__radio-style" type="radio" value="ゲスト" name="kubun_person"><label for="kubun_person_3" class="form__radio-label">人数内</label>
+              <input id="kubun_person_4" class="form__radio-style" type="radio" value="フリー" name="kubun_person"><label for="kubun_person_4" class="form__radio-label">フリー</label>
+            <% } %>
+            </dd>
             <dt>個人名</dt>
             <dd><input type="text" class="form__item-style" name="name" value="<%= person.name %>" required></dd>
             <dt>個人名（カナ）</dt>
@@ -129,7 +145,7 @@
             <dt>住所</dt>
             <dd><input type="text" class="form__item-style" name="address" value="<%= person.address %>"></dd>
             <dt>入居年月日</dt>
-            <dd><input type="text" class="form__item-style" name="ymd_nyukyo" value="<%= person.ymd_nyukyo %>"></dd>
+            <dd><input type="text" class="form__item-style flatpickr" name="ymd_nyukyo" value="<%= person.ymd_nyukyo %>"></dd>
             <dt>解約年月日</dt>
             <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku_disp" value="<%= person.ymd_kaiyaku %>" disabled></dd>
             <input type="hidden" name="ymd_kaiyaku" value="<%= person.ymd_kaiyaku %>">

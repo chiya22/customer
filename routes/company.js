@@ -255,17 +255,23 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
   m_company.cancel(inObj, (err, retObj) => {
     if (err) { next(err) }
 
-    let inPObj = {};
-    inPObj.id_company = id_company;
-    inPObj.ymd_kaiyaku = tool.getToday();
-    inPObj.ymd_upd = tool.getToday();
-    inPObj.id_upd = req.user;
+    let inObjP = {};
+    inObjP.id_company = id_company;
+    inObjP.ymd_kaiyaku = tool.getToday();
+    inObjP.ymd_upd = tool.getToday();
+    inObjP.id_upd = req.user;
     //個人情報の解約
-    m_person.cancelByCompany(inPObj, (err, retObj) => {
+    m_person.cancelByCompany(inObjP, (err, retObj) => {
       if (err) { next(err) }
 
+      let inObjCR = {};
+      inObjCR.ymd_end = tool.getToday();
+      inObjCR.ymd_upd = tool.getToday();
+      inObjCR.id_upd = req.user;
+      inObjCR.id_company = id_company;
+
       //会社⇔部屋情報の解約
-      m_relation_comroom.cancelByCompany(inPObj, (err, retObj) => {
+      m_relation_comroom.cancelByCompany(inObjCR, (err, retObj) => {
         if (err) { next(err) }
 
         //入居番号に紐づく会社情報が他に存在するかを確認する
@@ -273,13 +279,14 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
           if (err) { next(err) }
           if (retObj.length === 0) {
 
-            let inRObj = {};
-            inRObj.id_nyukyo = id_nyukyo;
-            inRObj.ymd_end = tool.getToday();
-            inRObj.ymd_upd = tool.getToday();
-            inRObj.id_upd = req.user;
+            let inObjNC = {};
+            inObjNC.id_nyukyo = id_nyukyo;
+            inObjNC.ymd_end = tool.getToday();
+            inObjNC.ymd_upd = tool.getToday();
+            inObjNC.id_upd = req.user;
+
             //入居番号⇔キャビネットの解約
-            m_relation_nyucabi.cancelByNyukyo(inRObj, (err, retObj) => {
+            m_relation_nyucabi.cancelByNyukyo(inObjNC, (err, retObj) => {
               if (err) { next(err) }
               res.redirect('/');
             });

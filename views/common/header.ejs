@@ -1,20 +1,22 @@
 <head>
     <div class="header">
         <div class="header-wrapper">
-            <ul>
-            <li><a class="btn-base" href="/">TOP</a></li>
-            <li><a class="btn-base" href="/admin">マスタ管理</a></li>
-            <% if (locals.user){ %>
-            <li>
-            <form method="POST" action="/logout">
-                <input class="btn-base" type="submit" button value="ログアウト" />
-            </form>
-            </li>
-            <% } %>
-            <li>
-                <a class="btn-link" href="javascript:history.back();">戻る</a>
-            </li>
-            </ul>
+            <div class="header-left">
+                <a class="header-logo" href="/"><img src="/static/images/building_logo.svg"></a>
+            </div>
+            <div class="header-right">
+                <div>
+                    <a class="btn-header" href="/admin">マスタ管理</a>
+                </div>
+                <% if (locals.user){ %>
+                <div>
+                    <form method="POST" action="/logout">
+                        <input class="btn-header" type="submit" button value="ログアウト" />
+                    </form>
+                </div>
+                <% } %>
+                <a class="btn-header" href="javascript:history.back();">戻る</a>
+            </div>
         </div>
         <!-- /.header-wrapper -->
     </div>

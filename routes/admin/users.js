@@ -8,7 +8,8 @@ const tool = require('../../util/tool');
 
 // TOPページ
 router.get('/', security.authorize(), function (req, res, next) {
-  connection.query('select id, name from users where ymd_end = "99991231" order by id asc', function (err, results, fields) {
+  const query = 'select * from users where ymd_end = "99991231" order by id asc';
+  connection.query(query, function (err, results, fields) {
     if (err) { next(err) };
     res.render('admin/users', {
       users: results,
@@ -28,7 +29,8 @@ router.get('/insert', security.authorize(), function (req, res, next) {
 //ユーザIDを指定して更新画面（usersForm）へ
 router.get('/update/:id', security.authorize(), function (req, res, next) {
   const id = req.params.id;
-  connection.query('select * from users where id = "' + id + '" and ymd_end = "99991231" order by id asc', function (err, results, fields) {
+  const query = 'select * from users where id = "' + id + '" and ymd_end = "99991231" order by id asc';
+  connection.query(query, function (err, results, fields) {
     if (err) { next(err) };
     res.render('admin/userform', {
       user: results[0],
@@ -47,7 +49,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   inObj.role = req.body.role;
   inObj.ymd_start = tool.getToday();
   inObj.ymd_upd = tool.getToday();
-  imObj.id_upd = req.user;
+  inObj.id_upd = req.user;
 
   const query = 'insert into users values ("' + inObj.id + '","' + inObj.name + '","' + inObj.pwd + '","' + inObj.role + '", "' + inObj.ymd_start + '", "99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '")';
   connection.query(query, function (err, results, fields) {
@@ -95,7 +97,7 @@ router.post('/update/update', security.authorize(), function (req, res, next) {
 //ユーザ情報の削除
 router.post('/update/delete', security.authorize(), function (req, res, next) {
   const id = req.body.id;
-  const query = 'delete from users where id = "' + id + '" and ymd_end = "99991231"';
+  const query = 'update users set ymd_end = "' + tool.getToday() + '" where id = "' + id + '" and ymd_end = "99991231"';
   connection.query(query, function (err, results, fields) {
     if (err) {
       // 外部制約参照エラーの場合

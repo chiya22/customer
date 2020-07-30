@@ -29,8 +29,10 @@
             <% } else { %>
             <dt>入居番号</dt>
             <dd><input class="form__item-style bg-disabled" type="text" name="id" value="<%= nyukyo.id %>" disabled></dd>
-            <input type="hidden" name="ymd_start" value="<%= nyukyo.ymd_start %>">
-            <input type="hidden" name="ymd_end" value="<%= nyukyo.ymd_end %>">
+            <dt>適用開始日</dt>
+            <dd><input class="form__item-style flatpickr" type="text" name="ymd_start" value="<%= nyukyo.ymd_start %>"></dd>
+            <dt>適用終了日</dt>
+            <dd><input class="form__item-style flatpickr" type="text" name="ymd_end" value="<%= nyukyo.ymd_end %>"></dd>
             <input type="hidden" name="id" value="<%= nyukyo.id %>">
             <div class="form__btn">
               <input class="btn-base" type="button" id="btn_update" value="更新">
