@@ -80,6 +80,7 @@
 
   let cancelbtn = document.getElementById("cancelbtn");
   cancelbtn.addEventListener('click', function () {
+    scrollTo(0, 0);
     let msg = document.getElementsByClassName("msg")[0];
     msg.style.visibility = "visible";
   });

@@ -7,15 +7,15 @@
 </head>
 
 <body>
+  <div class="msg">
+    <div class="msgarea">
+      <p class="msgarea__text">解約します。<br>よろしいですか？</p>
+      <button class="msgarea__okbtn">はい</button>
+      <button class="msgarea__ngbtn">いいえ</button>
+    </div>
+  </div>
   <%- include("./common/header.ejs") %>
   <section class="main">
-    <div class="msg">
-      <div class="msgarea">
-        <p class="msgarea__text">解約します。<br>よろしいですか？</p>
-        <button class="msgarea__okbtn">はい</button>
-        <button class="msgarea__ngbtn">いいえ</button>
-      </div>
-    </div>
   <div class="main__wrapper">
       <div class="area-link">
         <a class="btn-link" href="/person/add/<%= company.id %>">個人登録</a>
@@ -199,6 +199,7 @@
 
     let cancelbtn = document.getElementById("cancelbtn");
     cancelbtn.addEventListener('click', function () {
+      scrollTo(0, 0);
       let msg = document.getElementsByClassName("msg")[0];
       msg.style.visibility = "visible";
     });
