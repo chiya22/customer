@@ -195,7 +195,9 @@ body {
 }
 // メイン領域のコンテンツを格納する領域
 .main__wrapper {
-  width: 80%;
+  width: 100%;
+  max-width: 900px;
+  min-width: 600px;
   margin: 0 auto;
 }
 
@@ -303,6 +305,7 @@ body {
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
+    margin: 0 auto;
     .header-left {
       display: flex;
       flex-wrap: nowrap;
