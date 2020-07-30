@@ -2,7 +2,7 @@ var connection = require('../db/mysqlconfig');
 
 const findPKey = function (inObj, callback) {
     (async function () {
-        await connection.query('select * from relation_nyucabi where id_nyukyo = "' + inObj.id_nyukyo + '" and id_cabinet = "' + inObj.id_cabinet + '" and no_seq = ' + inObj.no_seq + ' and ymd_end = "99991231" order by id_nyukyo asc', function (error, results, fields) {
+        await connection.query('select * from relation_nyucabi where id_nyukyo = "' + inObj.id_nyukyo + '" and id_cabinet = "' + inObj.id_cabinet + '" and no_seq = ' + inObj.no_seq + ' order by id_nyukyo asc', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -14,7 +14,9 @@ const findPKey = function (inObj, callback) {
 
 const findByNyukyo = function (id_nyukyo, callback) {
     (async function () {
-        await connection.query('select * from relation_nyucabi AS a INNER JOIN cabinets AS b ON a.id_cabinet = b.id where a.id_nyukyo = "' + id_nyukyo + '" and a.ymd_end = "99991231" and b.ymd_end = "99991231" order by b.id asc', function ( error, results, fields) {
+        const query = 'select * from relation_nyucabi AS a INNER JOIN cabinets AS b ON a.id_cabinet = b.id where a.id_nyukyo = "' + id_nyukyo + '" and b.ymd_end = "99991231" order by b.id asc'
+        // const query = 'select * from relation_nyucabi AS a INNER JOIN cabinets AS b ON a.id_cabinet = b.id where a.id_nyukyo = "' + id_nyukyo + '" and a.ymd_end = "99991231" and b.ymd_end = "99991231" order by b.id asc'
+        await connection.query(query, function ( error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {

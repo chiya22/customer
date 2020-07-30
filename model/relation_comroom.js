@@ -2,7 +2,7 @@ var connection = require('../db/mysqlconfig');
 
 const findPKey = function (inObj, callback) {
     (async function () {
-        await connection.query('select * from relation_comroom where id_company = "' + inObj.id_company + '" and id_room = "' + inObj.id_room + '" and no_seq = ' + inObj.no_seq + ' and ymd_end = "99991231"', function (error, results, fields) {
+        await connection.query('select * from relation_comroom where id_company = "' + inObj.id_company + '" and id_room = "' + inObj.id_room + '" and no_seq = ' + inObj.no_seq, function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -14,7 +14,8 @@ const findPKey = function (inObj, callback) {
 
 const findByCompany = function (id_company, callback) {
     (async function () {
-        const query ='select * from relation_comroom AS a INNER JOIN rooms AS b ON a.id_room = b.id where a.id_company = "' + id_company + '" and a.ymd_end = "99991231" and b.ymd_end = "99991231" order by b.id asc';
+        const query ='select a.id_company, a.id_room, a.no_seq, a.ymd_start, a.ymd_end, a.ymd_upd, a.id_upd, b.place, b.floor, b.name from relation_comroom AS a INNER JOIN rooms AS b ON a.id_room = b.id where a.id_company = "' + id_company + '" and b.ymd_end = "99991231" order by b.id asc';
+        // const query ='select * from relation_comroom AS a INNER JOIN rooms AS b ON a.id_room = b.id where a.id_company = "' + id_company + '" and a.ymd_end = "99991231" and b.ymd_end = "99991231" order by b.id asc';
         await connection.query(query, function ( error, results, fields) {
             if (error) {
                 callback(error, null);
