@@ -8,6 +8,7 @@ const m_nyukyo = require('../model/nyukyos');
 const m_company = require('../model/company');
 const m_person = require('../model/person');
 const m_relation_comroom = require('../model/relation_comroom');
+const m_relation_comcabi = require('../model/relation_comcabi');
 const m_relation_nyucabi = require('../model/relation_nyucabi');
 const m_sq = require('../model/sq');
 
@@ -59,13 +60,15 @@ router.get('/:id', security.authorize(), function (req, res, next) {
           nyukyocompanies = retObj;
 
           //キャビネット情報の取得
-          m_relation_nyucabi.findByNyukyo(company.id_nyukyo, (err, retObj) => {
+          m_relation_comcabi.findByCompany(company.id, (err, retObj) => {
+            // m_relation_nyucabi.findByNyukyo(company.id_nyukyo, (err, retObj) => {
             if (err) { next(err); }
             cabinets = retObj;
 
             //空いているキャビネット情報の取得
-            m_relation_nyucabi.findFree((err, retObj) => {
-              if (err) { next(err); }
+            m_relation_comcabi.findFree((err, retObj) => {
+              // m_relation_nyucabi.findFree((err, retObj) => {
+                if (err) { next(err); }
               freecabinets = retObj;
 
               //部屋情報の取得
@@ -243,7 +246,6 @@ router.post('/delete', security.authorize(), function (req, res, next) {
 router.post('/cancel', security.authorize(), function (req, res, next) {
 
   const id_company = req.body.id_company;
-  const id_nyukyo = req.body.id_nyukyo;
   let ymd_kaiyaku;
 
   if (req.body.selected_ymd_kaiyaku) {
@@ -267,6 +269,7 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
     inObjP.ymd_kaiyaku = ymd_kaiyaku;
     inObjP.ymd_upd = tool.getToday();
     inObjP.id_upd = req.user;
+
     //個人情報の解約
     m_person.cancelByCompany(inObjP, (err, retObj) => {
       if (err) { next(err) }
@@ -281,26 +284,19 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
       m_relation_comroom.cancelByCompany(inObjCR, (err, retObj) => {
         if (err) { next(err) }
 
-        //入居番号に紐づく会社情報が他に存在するかを確認する
-        m_company.findByNyukyoWithoutKaiyaku(id_nyukyo, (err, retObj) => {
+        let inObjCC = {};
+        inObjCC.id_company = id_company;
+        inObjCC.ymd_end = ymd_kaiyaku;
+        inObjCC.ymd_upd = tool.getToday();
+        inObjCC.id_upd = req.user;
+
+        //入居番号⇔キャビネットの解約
+        m_relation_comcabi.cancelByCompany(inObjCC, (err, retObj) => {
+          // m_relation_nyucabi.cancelByNyukyo(inObjNC, (err, retObj) => {
           if (err) { next(err) }
-          if (retObj.length === 0) {
-
-            let inObjNC = {};
-            inObjNC.id_nyukyo = id_nyukyo;
-            inObjNC.ymd_end = ymd_kaiyaku;
-            inObjNC.ymd_upd = tool.getToday();
-            inObjNC.id_upd = req.user;
-
-            //入居番号⇔キャビネットの解約
-            m_relation_nyucabi.cancelByNyukyo(inObjNC, (err, retObj) => {
-              if (err) { next(err) }
-              res.redirect('/');
-            });
-          } else {
-            res.redirect('/');
-          }
+          res.redirect('/');
         });
+
       });
     });
   });
@@ -335,31 +331,31 @@ router.get('/deleteroom/:id_company/:id_room/:no_seq', security.authorize(), fun
   });
 });
 
-// 入居番号⇔キャビネットの追加
+// 会社⇔キャビネットの追加
 router.post('/addcabinet', security.authorize(), function (req, res, next) {
   const id_company = req.body.id_company;
-  let relation_nyucabi = {};
-  relation_nyucabi.id_nyukyo = req.body.id_nyukyo;
-  relation_nyucabi.id_cabinet = req.body.id_cabinet;
-  relation_nyucabi.ymd_start = tool.getToday();
-  relation_nyucabi.ymd_upd = tool.getToday();
-  relation_nyucabi.id_upd = req.user;
-  m_relation_nyucabi.insert(relation_nyucabi, (err, retObj) => {
+  let relation_comcabi = {};
+  relation_comcabi.id_company = req.body.id_company;
+  relation_comcabi.id_cabinet = req.body.id_cabinet;
+  relation_comcabi.ymd_start = tool.getToday();
+  relation_comcabi.ymd_upd = tool.getToday();
+  relation_comcabi.id_upd = req.user;
+  m_relation_comcabi.insert(relation_comcabi, (err, retObj) => {
     if (err) { next(err) };
     res.redirect('/company/' + id_company);
   });
 });
 
-// 入居番号⇔キャビネットの削除
-router.get('/deletecabinet/:id_company/:id_nyukyo/:id_cabinet/:no_seq', security.authorize(), function (req, res, next) {
-  let relation_nyucabi = {};
-  relation_nyucabi.id_nyukyo = req.params.id_nyukyo;
-  relation_nyucabi.id_cabinet = req.params.id_cabinet;
-  relation_nyucabi.no_seq = req.params.no_seq;
-  relation_nyucabi.ymd_end = tool.getToday();
-  relation_nyucabi.ymd_upd = tool.getToday();
-  relation_nyucabi.id_upd = req.user;
-  m_relation_nyucabi.remove(relation_nyucabi, (err, retObj) => {
+// 会社⇔キャビネットの削除
+router.get('/deletecabinet/:id_company/:id_cabinet/:no_seq', security.authorize(), function (req, res, next) {
+  let relation_comcabi = {};
+  relation_comcabi.id_company = req.params.id_company;
+  relation_comcabi.id_cabinet = req.params.id_cabinet;
+  relation_comcabi.no_seq = req.params.no_seq;
+  relation_comcabi.ymd_end = tool.getToday();
+  relation_comcabi.ymd_upd = tool.getToday();
+  relation_comcabi.id_upd = req.user;
+  m_relation_comcabi.remove(relation_comcabi, (err, retObj) => {
     if (err) { next(err) };
     res.redirect('/company/' + req.params.id_company);
   });

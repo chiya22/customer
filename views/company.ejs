@@ -190,23 +190,21 @@
         <div class="cabinet__header">
           <p class="midashi">キャビネット</p>
         </div>
-        <% if (nyukyo) { %>
           <% if (company.ymd_kaiyaku === '99991231') { %>
-            <form name="cabinetForm" class="cabinet__form" method="POST" action="/company/addcabinet" onsubmit="return checkCancel();">
-          <select name="id_cabinet" class="form__item-style cabinet__select">
-            <option value="" selected>--キャビネット選択--</option>
-            <% freecabinets.forEach(function (freecabinet) { %>
-            <option value="<%= freecabinet.id %>">
-              <%= freecabinet.name %>（<%= freecabinet.place %>）
-            </option>
-            <% }) %>
-          </select>
-          <input class="btn-base ml-small" type="submit" value="追加">
-          <input type="hidden" name="id_nyukyo" value="<%= company.id_nyukyo %>">
-          <input type="hidden" name="id_company" value="<%= company.id %>">
-        </form>
-        <% } %>
-        <div class="cabinet__items">
+          <form name="cabinetForm" class="cabinet__form" method="POST" action="/company/addcabinet" onsubmit="return checkCancel();">
+            <select name="id_cabinet" class="form__item-style cabinet__select">
+              <option value="" selected>--キャビネット選択--</option>
+              <% freecabinets.forEach(function (freecabinet) { %>
+              <option value="<%= freecabinet.id %>">
+                <%= freecabinet.name %>（<%= freecabinet.place %>）
+              </option>
+              <% }) %>
+            </select>
+            <input class="btn-base ml-small" type="submit" value="追加">
+            <input type="hidden" name="id_company" value="<%= company.id %>">
+          </form>
+          <% } %>
+          <div class="cabinet__items">
           <% if (cabinets) { %>
           <%  cabinets.forEach( cabinet => { %>
           <%
@@ -225,13 +223,12 @@
             <span class="color-disabled"><%= cabinet.name %>（<%= cabinet.place %>）<%= dateinfo %></span>
           <% } %>
             <% if ((company.ymd_kaiyaku === '99991231') && (cabinet.ymd_end === '99991231')) { %>
-              <a class="tag" href="/company/deletecabinet/<%= company.id %>/<%= nyukyo.id %>/<%= cabinet.id %>/<%= cabinet.no_seq %>">削除</a>
+              <a class="tag" href="/company/deletecabinet/<%= company.id %>/<%= cabinet.id_cabinet %>/<%= cabinet.no_seq %>">削除</a>
             <% } %>
           </div>
           <%  }) %>
           <% } %>
         </div>
-        <% } %>
       </div>
       <!-- /.cabinet -->
 

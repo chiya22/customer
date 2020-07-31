@@ -311,7 +311,7 @@ function validateData(body) {
     }
   }
   if (body.email) {
-    if (body.email.length > 20) {
+    if (body.email.length > 100) {
       isValidated = false;
       errors.email = "メールアドレスは100桁以下で入力してください。";
     }
