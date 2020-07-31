@@ -221,6 +221,7 @@ body {
 
 .alert-danger {
   color: #cd5e42;
+  font-size: 0.875rem;
 }
 
 .tag {
