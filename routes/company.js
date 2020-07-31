@@ -244,10 +244,17 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
 
   const id_company = req.body.id_company;
   const id_nyukyo = req.body.id_nyukyo;
+  let ymd_kaiyaku;
+
+  if (req.body.selected_ymd_kaiyaku) {
+    ymd_kaiyaku = req.body.selected_ymd_kaiyaku;
+  } else {
+    ymd_kaiyaku = tool.getToday();
+  }
 
   let inObj = {};
   inObj.id = id_company;
-  inObj.ymd_kaiyaku = tool.getToday();
+  inObj.ymd_kaiyaku = ymd_kaiyaku;
   inObj.ymd_upd = tool.getToday();
   inObj.id_upd = req.user;
 
@@ -257,7 +264,7 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
 
     let inObjP = {};
     inObjP.id_company = id_company;
-    inObjP.ymd_kaiyaku = tool.getToday();
+    inObjP.ymd_kaiyaku = ymd_kaiyaku;
     inObjP.ymd_upd = tool.getToday();
     inObjP.id_upd = req.user;
     //個人情報の解約
@@ -265,7 +272,7 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
       if (err) { next(err) }
 
       let inObjCR = {};
-      inObjCR.ymd_end = tool.getToday();
+      inObjCR.ymd_end = ymd_kaiyaku;
       inObjCR.ymd_upd = tool.getToday();
       inObjCR.id_upd = req.user;
       inObjCR.id_company = id_company;
@@ -281,7 +288,7 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
 
             let inObjNC = {};
             inObjNC.id_nyukyo = id_nyukyo;
-            inObjNC.ymd_end = tool.getToday();
+            inObjNC.ymd_end = ymd_kaiyaku;
             inObjNC.ymd_upd = tool.getToday();
             inObjNC.id_upd = req.user;
 

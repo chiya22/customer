@@ -9,7 +9,8 @@
 <body>
   <div class="msg">
     <div class="msgarea">
-      <p class="msgarea__text">解約します。<br>よろしいですか？</p>
+      <p class="msgarea__text">設定された年月日で解約します。<br>よろしいですか？</p>
+      <input type="text" placeholder="解約日を選択する" class="form__item-style flatpickr" name="select_ymd_kaiyaku" id="select_ymd_kaiyaku">
       <button class="msgarea__okbtn">はい</button>
       <button class="msgarea__ngbtn">いいえ</button>
     </div>
@@ -68,6 +69,7 @@
             <% } %>
             <input type="hidden" name="id_company" value="<%= company.id %>">
             <input type="hidden" name="id_nyukyo" value="<%= company.id_nyukyo %>">
+            <input type="hidden" name="selected_ymd_kaiyaku" id="selected_ymd_kaiyaku" value="">
           </dl>
         </form>
       </div>
@@ -83,7 +85,7 @@
             <% if (person.ymd_kaiyaku === '99991231') { %>
             <a class="btn-link" href="/person/<%= person.id %>"><span class="tag"><%= person.kubun_person %></span><%= person.name %><span class="dateinfo">　入居：<%= person.ymd_nyukyo %></span></a>
             <% } else { %>
-            <a class="btn-link bd-left-gray" href="/person/<%= person.id %>"><span class="tag bg-gray">解約</span><span class="tag bg-gray"><%= person.kubun_person %></span><span class="color-gray"><%= person.name %><span class="dateinfo">　入居：<%= person.ymd_nyukyo %>　解約：<%= person.ymd_kaiyaku %></span></span></a>
+            <a class="btn-link bd-left-disabled" href="/person/<%= person.id %>"><span class="tag bg-disabled">解約</span><span class="tag bg-disabled"><%= person.kubun_person %></span><span class="color-disabled"><%= person.name %><span class="dateinfo">　入居：<%= person.ymd_nyukyo %>　解約：<%= person.ymd_kaiyaku %></span></span></a>
             <% } %>
           </div>
           <%  }); %>
@@ -142,8 +144,8 @@
               <div class="room__item">
                 <span><%= roomname %><%= dateinfo %></span>
             <% } else { %>
-              <div class="room__item bd-gray pd-disabled">
-                <span class="color-gray"><%= roomname %><%= dateinfo %></span>
+              <div class="room__item bd-disabled pd-disabled">
+                <span class="color-disabled"><%= roomname %><%= dateinfo %></span>
             <% } %>
             <% if ((company.ymd_kaiyaku === '99991231') && (room.ymd_end === '99991231')) { %>
             <a class="tag" href="/company/deleteroom/<%= room.id_company %>/<%= room.id_room %>/<%= room.no_seq %>">削除</a>
@@ -173,8 +175,8 @@
               <span><%= nyukyocompany.name %><span class="dateinfo">　入居：<%= nyukyocompany.ymd_nyukyo %></span></span>
             </a>
           <% } else { %>
-            <a class="btn-link bd-left-gray" href="/company/<%= nyukyocompany.id %>">
-              <span class="color-gray"><%= nyukyocompany.name %><span class="dateinfo">　入居：<%= nyukyocompany.ymd_nyukyo %>　解約：<%= nyukyocompany.ymd_kaiyaku %></span></span>
+            <a class="btn-link bd-left-disabled" href="/company/<%= nyukyocompany.id %>">
+              <span class="color-disabled"><%= nyukyocompany.name %><span class="dateinfo">　入居：<%= nyukyocompany.ymd_nyukyo %>　解約：<%= nyukyocompany.ymd_kaiyaku %></span></span>
             </a>
           <% } %>
           </div>
@@ -219,8 +221,8 @@
           <div class="cabinet__item">
             <span><%= cabinet.name %>（<%= cabinet.place %>）<%= dateinfo %></span>
           <% } else { %>
-          <div class="cabinet__item bd-gray pd-disabled">
-            <span class="color-gray"><%= cabinet.name %>（<%= cabinet.place %>）<%= dateinfo %></span>
+          <div class="cabinet__item bd-disabled pd-disabled">
+            <span class="color-disabled"><%= cabinet.name %>（<%= cabinet.place %>）<%= dateinfo %></span>
           <% } %>
             <% if ((company.ymd_kaiyaku === '99991231') && (cabinet.ymd_end === '99991231')) { %>
               <a class="tag" href="/company/deletecabinet/<%= company.id %>/<%= nyukyo.id %>/<%= cabinet.id %>/<%= cabinet.no_seq %>">削除</a>
@@ -249,7 +251,15 @@
     let okbtn = document.getElementsByClassName("msgarea__okbtn")[0];
     let ngbtn = document.getElementsByClassName("msgarea__ngbtn")[0];
     okbtn.addEventListener('click', function () {
-      document.cancelForm.submit();
+      let select = document.getElementById("select_ymd_kaiyaku");
+      let selected = document.getElementById("selected_ymd_kaiyaku");
+      if (select.value) {
+        selected.value = select.value;
+        document.cancelForm.submit();
+      } else {
+        select.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
+        return false;
+      }
     });
     ngbtn.addEventListener('click', function () {
       let msg = document.getElementsByClassName("msg")[0];

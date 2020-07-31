@@ -255,7 +255,11 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
 
   let inObj = {};
   inObj.id = req.body.id;
-  inObj.ymd_kaiyaku = tool.getToday();
+  if (req.body.selected_ymd_kaiyaku) {
+    inObj.ymd_kaiyaku = req.body.selected_ymd_kaiyaku;
+  } else {
+    inObj.ymd_kaiyaku = tool.getToday();
+  }
   inObj.ymd_upd = tool.getToday();
   inObj.id_upd = req.user;
 

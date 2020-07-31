@@ -96,7 +96,7 @@
           <dd><input type="text" class="form__item-style flatpickr" name="ymd_nyukyo" value="<%= person.ymd_nyukyo %>"
               required></dd>
           <dt>解約年月日</dt>
-          <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku_disp"
+          <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_kaiyaku_disp"
               value="<%= person.ymd_kaiyaku %>" disabled></dd>
           <input type="hidden" name="ymd_kaiyaku" value="<%= person.ymd_kaiyaku %>">
           <dt>備考</dt>
@@ -107,7 +107,7 @@
             <!-- ◆更新モード -->
             <% } else if ((mode === 'update') && (person.ymd_kaiyaku === '99991231')) { %>
             <dt>個人番号</dt>
-            <dd><input type="text" class="form__item-style bg-disabled" name="id" value="<%= person.id %>" disabled>
+            <dd><input type="text" class="form__item-style bg-input-disabled" name="id" value="<%= person.id %>" disabled>
             </dd>
             <input type="hidden" name="id" value="<%= person.id %>">
             <dt>会社番号</dt>
@@ -165,7 +165,7 @@
             <dd><input type="text" class="form__item-style flatpickr" name="ymd_nyukyo"
                 value="<%= person.ymd_nyukyo %>"></dd>
             <dt>解約年月日</dt>
-            <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku_disp"
+            <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_kaiyaku_disp"
                 value="<%= person.ymd_kaiyaku %>" disabled></dd>
             <input type="hidden" name="ymd_kaiyaku" value="<%= person.ymd_kaiyaku %>">
             <dt>備考</dt>
@@ -176,48 +176,48 @@
               <!-- ◆削除モード -->
               <% } else { %>
               <dt>個人番号</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="id" value="<%= person.id %>" disabled>
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="id" value="<%= person.id %>" disabled>
               </dd>
               <input type="hidden" name="id" value="<%= person.id %>">
               <dt>会社番号</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="id_company"
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="id_company"
                   value="<%= person.id_company %>" disabled></dd>
               <dt>個人区分</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="kubun_person"
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="kubun_person"
                   value="<%= person.kubun_person %>" disabled></dd>
               <dt>個人名</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="name" value="<%= person.name %>"
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="name" value="<%= person.name %>"
                   disabled></dd>
               <dt>個人名カナ</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="kana" value="<%= person.kana %>"
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="kana" value="<%= person.kana %>"
                   disabled></dd>
               <dt>電話番号</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="telno" value="<%= person.telno %>"
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="telno" value="<%= person.telno %>"
                   disabled></dd>
               <dt>携帯電話番号</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="telno_mobile"
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="telno_mobile"
                   value="<%= person.telno_mobile %>" disabled></dd>
               <dt>メールアドレス</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="email" value="<%= person.email %>"
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="email" value="<%= person.email %>"
                   disabled></dd>
               <dt>郵便番号</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="no_yubin" value="<%= person.no_yubin %>"
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="no_yubin" value="<%= person.no_yubin %>"
                   disabled></dd>
               <dt>都道府県</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="todoufuken"
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="todoufuken"
                   value="<%= person.todoufuken %>" disabled></dd>
               <dt>住所</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="address" value="<%= person.address %>"
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="address" value="<%= person.address %>"
                   disabled></dd>
               <dt>入居年月日</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="ymd_nyukyo"
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_nyukyo"
                   value="<%= person.ymd_nyukyo %>" disabled></dd>
               <dt>解約年月日</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="ymd_kaiyaku_disp"
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_kaiyaku_disp"
                   value="<%= person.ymd_kaiyaku %>" disabled></dd>
               <input type="hidden" name="ymd_kaiyaku" value="<%= person.ymd_kaiyaku %>">
               <dt>備考</dt>
-              <dd><input type="text" class="form__item-style bg-disabled" name="bikou" value="<%= person.bikou %>"
+              <dd><input type="text" class="form__item-style bg-input-disabled" name="bikou" value="<%= person.bikou %>"
                   disabled></dd>
               <% if (person.ymd_kaiyaku === '99991231') { %>
               <div class="form__btn">
