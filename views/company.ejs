@@ -124,12 +124,30 @@
         <div class="room__items">
           <% if (rooms) { %>
           <%  rooms.forEach( room => { %>
-          <div class="room__item">
-            <%= room.name %>（<%= room.place %>
-            <% if (room.place) { %>
-              ：
-            <% } %><%= room.floor %> ）
+          <% 
+            let roomname;
+            let dateinfo;
+            if (room.place) {
+              roomname = room.name + '（' + room.place + '：' + room.floor + '）'
+            } else {
+              roomname = room.name
+            }
+            if (room.ymd_end === '99991231') {
+              dateinfo = '開始：' + room.ymd_start
+            } else {
+              dateinfo = '開始：' + room.ymd_start + '　終了：' + room.ymd_end
+            }
+          %>
+            <% if (room.ymd_end === '99991231') { %>
+              <div class="room__item">
+                <span><%= roomname %><%= dateinfo %></span>
+            <% } else { %>
+              <div class="room__item bd-gray pd-disabled">
+                <span class="color-gray"><%= roomname %><%= dateinfo %></span>
+            <% } %>
+            <% if ((company.ymd_kaiyaku === '99991231') && (room.ymd_end === '99991231')) { %>
             <a class="tag" href="/company/deleteroom/<%= room.id_company %>/<%= room.id_room %>/<%= room.no_seq %>">削除</a>
+            <% } %>
           </div>
           <% }) %>
           <% } %>
@@ -189,9 +207,22 @@
         <div class="cabinet__items">
           <% if (cabinets) { %>
           <%  cabinets.forEach( cabinet => { %>
+          <%
+            let dateinfo;
+            if (cabinet.ymd_end === '99991231') {
+              dateinfo = '開始：' + cabinet.ymd_start
+            } else {
+              dateinfo = '開始：' + cabinet.ymd_start + '　終了：' + cabinet.ymd_end
+            }
+          %>
+          <% if (cabinet.ymd_end === '99991231') { %>
           <div class="cabinet__item">
-            <%= cabinet.name %>（<%= cabinet.place %>）
-            <% if (company.ymd_kaiyaku === '99991231') { %>
+            <span><%= cabinet.name %>（<%= cabinet.place %>）<%= dateinfo %></span>
+          <% } else { %>
+          <div class="cabinet__item bd-gray pd-disabled">
+            <span class="color-gray"><%= cabinet.name %>（<%= cabinet.place %>）<%= dateinfo %></span>
+          <% } %>
+            <% if ((company.ymd_kaiyaku === '99991231') && (cabinet.ymd_end === '99991231')) { %>
               <a class="tag" href="/company/deletecabinet/<%= company.id %>/<%= nyukyo.id %>/<%= cabinet.id %>/<%= cabinet.no_seq %>">削除</a>
             <% } %>
           </div>

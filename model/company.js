@@ -40,7 +40,7 @@ const findForSelect = function (callback) {
 
 const findByNyukyo = function (id_nyukyo, callback) {
     (async function () {
-        const query = 'select * from companies where id_nyukyo = "' + id_nyukyo + '" and ymd_end = "99991231" order by ymd_kaiyaku asc';
+        const query = 'select * from companies where id_nyukyo = "' + id_nyukyo + '" order by ymd_kaiyaku asc';
         await connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
@@ -50,6 +50,20 @@ const findByNyukyo = function (id_nyukyo, callback) {
         });
     })();
 };
+
+const findByNyukyoWithoutKaiyaku = function (id_nyukyo, callback) {
+    (async function () {
+        const query = 'select * from companies where id_nyukyo = "' + id_nyukyo + '" and ymd_kaiyaku = "99991231" order by ymd_kaiyaku asc';
+        await connection.query(query, function (error, results, fields) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+        });
+    })();
+};
+
 
 const findLikeCount = function (likevalue, callback) {
     (async function () {
@@ -132,6 +146,7 @@ module.exports = {
     findPKey,
     findForSelect,
     findByNyukyo,
+    findByNyukyoWithoutKaiyaku,
     findLikeCount,
     findLikeForPaging,
     insert,

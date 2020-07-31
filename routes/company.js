@@ -243,7 +243,7 @@ router.post('/delete', security.authorize(), function (req, res, next) {
 router.post('/cancel', security.authorize(), function (req, res, next) {
 
   const id_company = req.body.id_company;
-  const id_nyukyo = req.body.id_nyukyol
+  const id_nyukyo = req.body.id_nyukyo;
 
   let inObj = {};
   inObj.id = id_company;
@@ -275,7 +275,7 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
         if (err) { next(err) }
 
         //入居番号に紐づく会社情報が他に存在するかを確認する
-        m_company.findByNyukyo(id_nyukyo, (err, retObj) => {
+        m_company.findByNyukyoWithoutKaiyaku(id_nyukyo, (err, retObj) => {
           if (err) { next(err) }
           if (retObj.length === 0) {
 

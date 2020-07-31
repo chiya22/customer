@@ -14,7 +14,7 @@ const findPKey = function (inObj, callback) {
 
 const findByNyukyo = function (id_nyukyo, callback) {
     (async function () {
-        const query = 'select * from relation_nyucabi AS a INNER JOIN cabinets AS b ON a.id_cabinet = b.id where a.id_nyukyo = "' + id_nyukyo + '" and b.ymd_end = "99991231" order by b.id asc'
+        const query = 'select a.id_nyukyo, a.id_cabinet, a.no_seq, a.ymd_start, a.ymd_end, a.ymd_upd, a.id_upd, b.place, b.name from relation_nyucabi AS a INNER JOIN cabinets AS b ON a.id_cabinet = b.id where a.id_nyukyo = "' + id_nyukyo + '" and b.ymd_end = "99991231" order by b.id asc'
         // const query = 'select * from relation_nyucabi AS a INNER JOIN cabinets AS b ON a.id_cabinet = b.id where a.id_nyukyo = "' + id_nyukyo + '" and a.ymd_end = "99991231" and b.ymd_end = "99991231" order by b.id asc'
         await connection.query(query, function ( error, results, fields) {
             if (error) {
