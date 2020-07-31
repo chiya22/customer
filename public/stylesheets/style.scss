@@ -165,6 +165,9 @@ body {
   width: 400px;
   text-align: center;
   padding: 1rem;
+  input {
+    margin-bottom: 20px;
+  }
 }
 .msgarea__text {
   padding: 0 20px 20px 20px;
@@ -238,17 +241,20 @@ body {
 .pd-disabled {
   padding: 9px 16px!important;
 }
-.bg-disabled {
-  background-color: rgba(0,0,0,.1);
+.bg-input-disabled {
+  background-color: rgba(0,0,0,.1);  
 }
-.bg-gray {
+.bg-disabled {
   background-color:#808080;
 }
-.color-gray {
+.color-disabled {
   color: #808080;
 }
-.bd-gray {
+.bd-disabled {
   border-color:#808080!important;
+}
+.bd-left-disabled {
+  border-left: solid 6px #808080;
 }
 .dateinfo {
   font-size: 0.75rem;
@@ -257,9 +263,6 @@ body {
   font-size: 0.75rem;
   color:#808080;
   font-weight: normal;
-}
-.bd-left-gray {
-  border-left: solid 6px #808080; /*左線*/
 }
 
 //　--- 画面 ---
