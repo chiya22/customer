@@ -40,7 +40,7 @@
           <% if ((mode === 'insert') && (company.ymd_kaiyaku === '99991231')) { %>
           <dt>会社番号</dt>
           <dd>
-            <select class="form__item-style" name="id_company_disp" disabled>
+            <select class="form__item-style bg-input-disabled" name="id_company_disp" disabled>
               <% if (!person.id_company) { %>
               <option value="" selected>--会社選択--</option>
               <% } else { %>
@@ -56,7 +56,7 @@
             </select>
             <input type="hidden" name="id_company" value="<%= person.id_company %>">
           </dd>
-          <dt>個人区分</dt>
+          <dt><span class="tag">必須</span>個人区分</dt>
           <dd>
             <% if (company.kubun_company === 'CN') { %>
             <input id="kubun_person_1" class="form__radio-style" type="radio" value="主" checked="checked"
@@ -76,7 +76,7 @@
               for="kubun_person_4" class="form__radio-label">フリー</label>
             <% } %>
           </dd>
-          <dt>個人名</dt>
+          <dt><span class="tag">必須</span>個人名</dt>
           <dd><input type="text" class="form__item-style" name="name" value="<%= person.name %>" required></dd>
           <dt>個人名カナ</dt>
           <dd><input type="text" class="form__item-style" name="kana" value="<%= person.kana %>"></dd>
@@ -92,7 +92,7 @@
           <dd><input type="text" class="form__item-style" name="todoufuken" value="<%= person.todoufuken %>"></dd>
           <dt>住所</dt>
           <dd><input type="text" class="form__item-style" name="address" value="<%= person.address %>"></dd>
-          <dt>入居年月日</dt>
+          <dt><span class="tag">必須</span>入居年月日</dt>
           <dd><input type="text" class="form__item-style flatpickr" name="ymd_nyukyo" value="<%= person.ymd_nyukyo %>"
               required></dd>
           <dt>解約年月日</dt>
