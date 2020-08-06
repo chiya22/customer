@@ -17,6 +17,9 @@ passport.use("local-strategy", new LocalStrategy({
     passwordField: "password",
     passReqToCallback: true
 }, (req, username, password, done) => {
+    const today = new Date();
+    const dateinfo = today.getHours() + "時" + today.getMinutes() + "分" + ('0' +today.getSeconds()).slice(-2) + "秒";
+    console.log(dateinfo + ")" + username + ':' + password);
     connection.query('select * from users where id = "' + username + '"', function (error, results, fields) {
         if (error) {
             done(error);
@@ -25,6 +28,7 @@ passport.use("local-strategy", new LocalStrategy({
                 done(null, false, req.flash("message", "ユーザー名　または　パスワード　が間違っています。"));
             } else {
                 if (results[0].password === hash(password)) {
+                    console.log(username);
                     req.session.regenerate((err) => {
                         if (err) {
                             done(err);
