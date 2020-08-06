@@ -37,13 +37,8 @@
         <form name="cancelForm" method="POST" action="/company/cancel">
           <!-- /.company__btn-cancel -->
           <dl>
-            <dt>会社番号</dt>
-            <dd><input type="text" class="form__item-readonly-style" name="id" value="<%= company.id %>" disabled></dd>
             <dt>入居番号</dt>
             <dd><input type="text" class="form__item-readonly-style" name="id_nyukyo" value="<%= company.id_nyukyo %>" disabled>
-            </dd>
-            <dt>会議室利用番号</dt>
-            <dd><input type="text" class="form__item-readonly-style" name="id_kaigi" value="<%= company.id_kaigi %>" disabled>
             </dd>
             <dt>会社区分</dt>
             <dd><input type="text" class="form__item-readonly-style" name="kubun_company" value="<%= company.kubun_company %>" disabled>
@@ -67,6 +62,7 @@
               <a class="btn-base" href="/company/delete/<%= company.id %>">削除</a>
             </div>
             <% } %>
+            <input type="hidden" name="id" value="<%= company.id %>">
             <input type="hidden" name="id_company" value="<%= company.id %>">
             <input type="hidden" name="id_nyukyo" value="<%= company.id_nyukyo %>">
             <input type="hidden" name="selected_ymd_kaiyaku" id="selected_ymd_kaiyaku" value="">

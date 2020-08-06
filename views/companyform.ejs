@@ -63,8 +63,6 @@
               <% }); %>
             </select>
           </dd>
-          <dt>会議室利用番号</dt>
-          <dd><input type="text" class="form__item-style" name="id_kaigi"></dd>
           <dt><span class="tag">必須</span>会社区分</dt>
           <dd>
             <input id="kubun_company_1" class="form__radio-style" type="radio" value="ON" checked="checked"
@@ -118,8 +116,6 @@
               <% }); %>
             </select>
           </dd>
-          <dt>会議室利用番号</dt>
-          <dd><input type="text" class="form__item-style" name="id_kaigi" value="<%= company.id_kaigi %>" required></dd>
           <dt><span class="tag">必須</span>会社区分</dt>
           <dd>
             <% if (company.kubun_company === 'ON') { %>
@@ -166,9 +162,6 @@
 
             <!-- ◆更新モード -->
             <% } else if ((mode === 'update') && (company.ymd_kaiyaku === '99991231')) { %>
-            <dt>会社番号</dt>
-            <dd><input class="form__item-style bg-input-disabled" type="text" name="id" value="<%= company.id %>" disabled>
-            </dd>
             <input type="hidden" name="id" value="<%= company.id %>">
             <dt><span class="tag">必須</span>入居番号</dt>
             <dd>
@@ -199,9 +192,6 @@
                 <% }); %>
               </select>
             </dd>
-            <dt>会議室利用番号</dt>
-            <dd><input class="form__item-style" type="text" name="id_kaigi" value="<%= company.id_kaigi %>" required>
-            </dd>
             <dt><span class="tag">必須</span>会社区分</dt>
             <dd><input class="form__item-style bg-input-disabled" type="text" name="kubun_company"
                 value="<%= company.kubun_company %>" disabled></dd>
@@ -220,6 +210,7 @@
             </dd>
             <dt>備考</dt>
             <dd><input class="form__item-style" type="text" name="bikou" value="<%= company.bikou %>"></dd>
+            <input type="hidden" id="name" value="<%= company.id %>">
             <div class="form__btn">
               <input type="button" class="btn-base" id="btn_update" value="更新">
 
@@ -231,9 +222,6 @@
               <dt>入居番号</dt>
               <dd><input class="form__item-style bg-input-disabled" type="text" name="id_nyukyo"
                   value="<%= company.id_nyukyo %>" disabled></dd>
-              <dt>会議室利用番号</dt>
-              <dd><input class="form__item-style bg-input-disabled" type="text" name="id_kaigi"
-                  value="<%= company.id_kaigi %>" disabled></dd>
               <dt>会社区分</dt>
               <dd><input class="form__item-style bg-input-disabled" type="text" name="kubun_company"
                   value="<%= company.kubun_company %>" disabled></dd>
@@ -261,7 +249,7 @@
                 <% if (company.ymd_kaiyaku === '99991231') { %>
                   <input type="button" class="btn-base" id="btn_delete" value="削除">
                 <% } %>
-                <% } %>
+              <% } %>
               </div>
               <input type="hidden" id="field_mode">
         </dl>
