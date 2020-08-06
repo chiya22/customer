@@ -28,7 +28,8 @@ const find = function (callback) {
 
 const findForSelect = function (callback) {
     (async function () {
-        const query = '(select "【使用中】" AS kubun, nyukyos.id AS id FROM nyukyos WHERE ymd_end = "99991231" and EXISTS (SELECT * FROM companies WHERE companies.ymd_kaiyaku = "99991231" and companies.id_nyukyo = nyukyos.id)) UNION ALL (SELECT "【未使用】" AS kubun, nyukyos.id AS id FROM nyukyos WHERE nyukyos.ymd_end = "99991231" and NOT EXISTS (SELECT * FROM companies WHERE companies.ymd_kaiyaku = "99991231" and companies.id_nyukyo = nyukyos.id)) ORDER BY kubun DESC, id asc';
+        // const query = '(select "【使用中】" AS kubun, nyukyos.id AS id FROM nyukyos WHERE ymd_end = "99991231" and EXISTS (SELECT * FROM companies WHERE companies.ymd_kaiyaku = "99991231" and companies.id_nyukyo = nyukyos.id)) UNION ALL (SELECT "【未使用】" AS kubun, nyukyos.id AS id FROM nyukyos WHERE nyukyos.ymd_end = "99991231" and NOT EXISTS (SELECT * FROM companies WHERE companies.ymd_kaiyaku = "99991231" and companies.id_nyukyo = nyukyos.id)) ORDER BY kubun DESC, id asc';
+        const query = 'SELECT n.id AS id, n.ymd_start AS ymd_start, n.ymd_end AS ymd_end, n.ymd_upd AS ymd_upd, n.id_upd AS id_upd, max(c.ymd_kaiyaku) AS ymd_kaiyaku FROM nyukyos AS n LEFT OUTER JOIN companies c ON n.id = c.id_nyukyo AND n.ymd_end = "99991231" AND c.ymd_end = "99991231" GROUP BY n.id ORDER BY ymd_kaiyaku ASC, id asc';
         await connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);

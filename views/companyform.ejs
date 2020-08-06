@@ -47,7 +47,19 @@
             <select class="form__item-style" name="id_nyukyo">
               <option value="" selected>--入居番号選択--</option>
               <% nyukyos.forEach(function (nyukyo) { %>
-              <option value="<%= nyukyo.id %>"><%= nyukyo.kubun %><%=nyukyo.id %></option>
+              <%
+                let dispvalue;
+                if ((nyukyo.ymd_kaiyaku) && (nyukyo.ymd_kaiyaku === '99991231')) {
+                    dispvalue = '【使用中】' +　nyukyo.id;
+                  } else {
+                    if (nyukyo.ymd_kaiyaku) {
+                      dispvalue = '【未使用】' + nyukyo.id + '　解約日：' + nyukyo.ymd_kaiyaku;
+                    }else{
+                      dispvalue = '【未使用】' + nyukyo.id;
+                    }
+                  };
+              %>
+              <option value="<%= nyukyo.id %>"><%= dispvalue %></option>
               <% }); %>
             </select>
           </dd>
@@ -86,10 +98,22 @@
               <option value="">--入居番号選択--</option>
               <% } %>
               <% nyukyos.forEach(function (nyukyo) { %>
+                            <%
+                let dispvalue;
+                if ((nyukyo.ymd_kaiyaku) && (nyukyo.ymd_kaiyaku === '99991231')) {
+                    dispvalue = '【使用中】' +　nyukyo.id;
+                  } else {
+                    if (nyukyo.ymd_kaiyaku) {
+                      dispvalue = '【未使用】' + nyukyo.id + '　解約日：' + nyukyo.ymd_kaiyaku;
+                    }else{
+                      dispvalue = '【未使用】' + nyukyo.id;
+                    }
+                  };
+              %>
               <% if (nyukyo.id === company.id_nyukyo) { %>
-              <option value="<%= nyukyo.id %>" selected><%= nyukyo.kubun %><%=nyukyo.id %></option>
+              <option value="<%= nyukyo.id %>" selected><%= dispvalue %></option>
               <% } else { %>
-              <option value="<%= nyukyo.id %>"><%= nyukyo.kubun %><%=nyukyo.id %></option>
+              <option value="<%= nyukyo.id %>"><%= dispvalue %></option>
               <% } %>
               <% }); %>
             </select>
@@ -155,10 +179,22 @@
                 <option value="">--入居番号選択--</option>
                 <% } %>
                 <% nyukyos.forEach(function (nyukyo) { %>
+                <%
+                  let dispvalue;
+                  if ((nyukyo.ymd_kaiyaku) && (nyukyo.ymd_kaiyaku === '99991231')) {
+                      dispvalue = '【使用中】' +　nyukyo.id;
+                    } else {
+                      if (nyukyo.ymd_kaiyaku) {
+                        dispvalue = '【未使用】' + nyukyo.id + '　解約日：' + nyukyo.ymd_kaiyaku;
+                      }else{
+                        dispvalue = '【未使用】' + nyukyo.id;
+                      }
+                    };
+                %>
                 <% if (nyukyo.id === company.id_nyukyo) { %>
-                <option value="<%= nyukyo.id %>" selected><%= nyukyo.kubun %><%=nyukyo.id %></option>
+                <option value="<%= nyukyo.id %>" selected><%= dispvalue %></option>
                 <% } else { %>
-                <option value="<%= nyukyo.id %>"><%= nyukyo.kubun %><%=nyukyo.id %></option>
+                <option value="<%= nyukyo.id %>"><%= dispvalue %></option>
                 <% } %>
                 <% }); %>
               </select>
