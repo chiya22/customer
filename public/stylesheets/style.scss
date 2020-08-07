@@ -360,10 +360,11 @@ body {
 .fix_header {
   position: fixed;
   width: 95%;
+  max-width: 900px;
+  min-width: 800px;
+  margin: 0 auto;
   top:50px;
-  left: 2%;
   background-color: #fff;
-  // margin: 0;
 }
 .top__btns {
   display: flex;
@@ -415,7 +416,7 @@ body {
   margin-top: 1rem;
 }
 .company {
-  padding-top: 50px;
+  padding-top: 65px;
 }
 dl {
   display: flex;

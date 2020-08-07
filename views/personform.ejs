@@ -105,6 +105,7 @@
           <dd><input type="text" class="form__item-style" name="bikou" value="<%= person.bikou %>"></dd>
           <div class="form__btn">
             <input type="button" class="btn-base" id="btn_insert" value="登録">
+            <a class="btn-base" href="/company/<%= person.id_company %>">戻る</a>
 
             <!-- ◆更新モード -->
             <% } else if ((mode === 'update') && (person.ymd_kaiyaku === '99991231')) { %>
@@ -172,6 +173,7 @@
             <input type="hidden" name="id" value="<%= person.id %>">
             <div class="form__btn">
               <input type="button" class="btn-base" id="btn_update" value="更新">
+              <a class="btn-base" href="/person/<%= person.id %>">戻る</a>
 
               <!-- ◆削除モード -->
               <% } else { %>
@@ -220,6 +222,7 @@
               <% if (person.ymd_kaiyaku === '99991231') { %>
               <div class="form__btn">
                 <input type="button" class="btn-base" id="btn_delete" value="削除">
+                <a class="btn-base" href="/person/<%= person.id %>">戻る</a>
               <% } %>
             </div>
             <% } %>

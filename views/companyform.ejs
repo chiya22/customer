@@ -10,11 +10,6 @@
   <%- include("./common/header.ejs") %>
   <section class="main">
     <div class="main__wrapper">
-      <div class="area-link">
-        <% if (company) { %>
-        <a class="btn-link" href="/company/<%= company.id %>">会社へ</a>
-        <% } %>
-      </div>
       <% if (company) { %>
       <div class="title">
         <% if (company.id_nyukyo) { %>
@@ -159,6 +154,7 @@
           <% } %>
           <div class="form__btn">
             <input type="button" class="btn-base" id="btn_insert" value="登録">
+            <a class="btn-base" href="/">戻る</a>
 
             <!-- ◆更新モード -->
             <% } else if ((mode === 'update') && (company.ymd_kaiyaku === '99991231')) { %>
@@ -198,7 +194,7 @@
             <input type="hidden" name="kubun_company" value="<%= company.kubun_company %>">
             <dt>会社名</dt>
             <dd><input class="form__item-style" type="text" name="name" value="<%= company.name %>" required></dd>
-            <dt>会社名（カナ）</dt>
+            <dt>会社名カナ</dt>
             <dd><input class="form__item-style" type="text" name="kana" value="<%= company.kana %>" required></dd>
             <dt><span class="tag">必須</span>入居年月日</dt>
             <dd><input type="text" class="form__item-style flatpickr" name="ymd_nyukyo"
@@ -213,42 +209,45 @@
             <input type="hidden" id="name" value="<%= company.id %>">
             <div class="form__btn">
               <input type="button" class="btn-base" id="btn_update" value="更新">
+              <a class="btn-base" href="/company/<%= company.id %>">戻る</a>
+            </div>
 
-              <!-- ◆削除モード -->
-              <% } else { %>
-              <dt>入居番号</dt>
-              <dd><input class="form__item-style bg-input-disabled" type="text" name="id_nyukyo"
-                  value="<%= company.id_nyukyo %>" disabled></dd>
-              <dt>会社区分</dt>
-              <dd><input class="form__item-style bg-input-disabled" type="text" name="kubun_company"
-                  value="<%= company.kubun_company %>" disabled></dd>
-              <input type="hidden" name="kubun_company" value="<%= company.kubun_company %>">
-              <dt>会社名</dt>
-              <dd><input class="form__item-style bg-input-disabled" type="text" name="name" value="<%= company.name %>"
-                  disabled></dd>
-              <dt>会社名（カナ）</dt>
-              <dd><input class="form__item-style bg-input-disabled" type="text" name="kana" value="<%= company.kana %>"
-                  disabled></dd>
-              <dt>入居年月日</dt>
-              <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_nyukyo"
-                  value="<%= company.ymd_nyukyo %>" disabled>
-              </dd>
-              <dt>解約年月日</dt>
-              <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_kaiyaku_disp"
-                  value="<%= company.ymd_kaiyaku %>" disabled>
-              </dd>
-              <dt>備考</dt>
-              <dd><input class="form__item-style bg-input-disabled" type="text" name="bikou" value="<%= company.bikou %>"
-                  disabled></dd>
-              <input type="hidden" name="id" value="<%= company.id %>">
-              <input type="hidden" name="ymd_kaiyaku" value="<%= company.ymd_kaiyaku %>">
-              <div class="form__btn">
-                <% if (company.ymd_kaiyaku === '99991231') { %>
-                  <input type="button" class="btn-base" id="btn_delete" value="削除">
-                <% } %>
+            <!-- ◆削除モード -->
+            <% } else { %>
+            <dt>入居番号</dt>
+            <dd><input class="form__item-style bg-input-disabled" type="text" name="id_nyukyo"
+                value="<%= company.id_nyukyo %>" disabled></dd>
+            <dt>会社区分</dt>
+            <dd><input class="form__item-style bg-input-disabled" type="text" name="kubun_company"
+                value="<%= company.kubun_company %>" disabled></dd>
+            <input type="hidden" name="kubun_company" value="<%= company.kubun_company %>">
+            <dt>会社名</dt>
+            <dd><input class="form__item-style bg-input-disabled" type="text" name="name" value="<%= company.name %>"
+                disabled></dd>
+            <dt>会社名カナ</dt>
+            <dd><input class="form__item-style bg-input-disabled" type="text" name="kana" value="<%= company.kana %>"
+                disabled></dd>
+            <dt>入居年月日</dt>
+            <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_nyukyo"
+                value="<%= company.ymd_nyukyo %>" disabled>
+            </dd>
+            <dt>解約年月日</dt>
+            <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_kaiyaku_disp"
+                value="<%= company.ymd_kaiyaku %>" disabled>
+            </dd>
+            <dt>備考</dt>
+            <dd><input class="form__item-style bg-input-disabled" type="text" name="bikou" value="<%= company.bikou %>"
+                disabled></dd>
+            <input type="hidden" name="id" value="<%= company.id %>">
+            <input type="hidden" name="ymd_kaiyaku" value="<%= company.ymd_kaiyaku %>">
+            <div class="form__btn">
+              <% if (company.ymd_kaiyaku === '99991231') { %>
+                <input type="button" class="btn-base" id="btn_delete" value="削除">
+                <a class="btn-base" href="/company/<%= company.id %>">戻る</a>
               <% } %>
-              </div>
-              <input type="hidden" id="field_mode">
+            </div>
+            <% } %>
+            <input type="hidden" id="field_mode">
         </dl>
       </form>
     </div>

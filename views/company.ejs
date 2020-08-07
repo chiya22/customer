@@ -41,16 +41,16 @@
           <dt>会社区分</dt>
           <dd><input type="text" class="form__item-readonly-style" name="kubun_company" value="<%= company.kubun_company %>" disabled>
           </dd>
+          <dt>会社名</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= company.name %>" disabled></dd>
+          <dt>会社名カナ</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="kana" value="<%= company.kana %>" disabled></dd>
           <dt>入居年月日</dt>
           <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= company.ymd_nyukyo %>" disabled>
           </dd>
           <dt>解約年月日</dt>
           <dd><input type="text" class="form__item-readonly-style" name="ymd_kaiyaku" value="<%= company.ymd_kaiyaku %>" disabled>
           </dd>
-          <dt>会社名</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= company.name %>" disabled></dd>
-          <dt>会社名カナ</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="kana" value="<%= company.kana %>" disabled></dd>
           <dt>備考</dt>
           <dd><input type="text" class="form__item-readonly-style" name="bikou" value="<%= company.bikou %>" disabled></dd>
           <% if (company.ymd_kaiyaku === '99991231') { %>
