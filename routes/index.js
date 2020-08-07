@@ -17,7 +17,7 @@ router.post("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-const count_perpage = 10;
+const count_perpage = 20;
 
 // index
 router.get('/', security.authorize(), function (req, res, next) {

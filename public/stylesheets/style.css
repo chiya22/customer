@@ -60,7 +60,7 @@ body {
   padding: 5px 10px;
   margin: 0 2px;
   border-radius: 3px;
-  transition: all .2s;
+  transition: all 0.2s;
   border: 1px solid #cd5e42;
   color: #cd5e42;
   font-size: 12px;
@@ -248,6 +248,10 @@ body {
   margin-right: 10px;
 }
 
+.width-base {
+  width: 90%;
+}
+
 .ml-small {
   margin-left: 10px;
 }
@@ -376,6 +380,14 @@ body {
   color: #fff;
 }
 
+.fix_header {
+  position: fixed;
+  width: 95%;
+  top: 50px;
+  left: 2%;
+  background-color: #fff;
+}
+
 .top__btns {
   display: flex;
   flex-wrap: nowrap;
@@ -392,23 +404,28 @@ body {
   align-items: center;
 }
 
-.search__result {
+.searchform {
   font-size: 0.75rem;
 }
 
-.search__result .search__result-disp {
+.searchform .search__result-disp {
   margin-top: 1rem;
 }
 
-.search__result .page-section {
+.searchform .page-section {
   display: flex;
   align-items: center;
   margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
-.search__result .page-section .page-disp {
+.searchform .page-section .page-disp {
   padding: 0 10px;
   font-weight: normal;
+}
+
+.search__result {
+  padding-top: 150px;
 }
 
 .search__result-item {
@@ -422,8 +439,15 @@ body {
   padding-bottom: 10px;
 }
 
-.company, .company__form, .person__form, .cancel__form {
+.company,
+.company__form,
+.person__form,
+.cancel__form {
   margin-top: 1rem;
+}
+
+.company {
+  padding-top: 50px;
 }
 
 dl {
@@ -438,7 +462,7 @@ dt {
   padding: 5px 10px 5px 0;
   font-weight: normal;
   font-size: 12px;
-  color: #CD5E42;
+  color: #cd5e42;
   font-weight: bold;
 }
 
@@ -559,11 +583,17 @@ dd {
   margin-right: 15px;
 }
 
-.admin__user, .admin__nyukyo, .admin__room, .admin__cabinet {
+.admin__user,
+.admin__nyukyo,
+.admin__room,
+.admin__cabinet {
   margin-top: 0.5rem;
   margin-left: 1.5rem;
 }
 
-.admin__user a, .admin__nyukyo a, .admin__room a, .admin__cabinet a {
+.admin__user a,
+.admin__nyukyo a,
+.admin__room a,
+.admin__cabinet a {
   margin: 0.5rem 0.5rem;
 }

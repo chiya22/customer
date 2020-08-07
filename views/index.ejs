@@ -11,51 +11,54 @@
   <div class="main">
     <div class="main__wrapper">
       <!-- /.top__link -->
-      <div class="top__btns">
-        <div class="top__btn">
-          <a class="btn-link" href="/company">会社登録</a>
-        </div>
-        <!-- /.top__btn -->
-      </div>
-      <div class="searchform">
-        <form name="searchform" method="post" action="/">
-          <div class="searchform__top">
-            <input type="text" name="searchvalue" placeholder="検索文字を入力してください" class="form__item-style"
-              value="<%= searchvalue %>">
-            <input type="button" class="btn-base ml-small" id="btn_search" value="検索" />
+      <div class="fix_header">
+        <div class="top__btns">
+          <div class="top__btn">
+            <a class="btn-link" href="/company">会社登録</a>
           </div>
-          <!-- /.searchform__top -->
-          <input type="hidden" id="page_max" name="page_max" value="<%= page_max %>">
-          <input type="hidden" id="page_current" name="page_current" value="<%= page_current %>">
-          <input type="hidden" id="count_all" name="count_all" value="<%= count_all %>">
-          <input type="hidden" id="pageaction" name="pageaction">
-        </form>
+          <!-- /.top__btn -->
+        </div>
+        <div class="searchform">
+          <form name="searchform" method="post" action="/">
+            <div class="searchform__top width-base">
+              <input type="text" name="searchvalue" placeholder="検索文字を入力してください" class="form__item-style"
+                value="<%= searchvalue %>">
+              <input type="button" class="btn-base ml-small" id="btn_search" value="検索" />
+            </div>
+            <!-- /.searchform__top -->
+            <input type="hidden" id="page_max" name="page_max" value="<%= page_max %>">
+            <input type="hidden" id="page_current" name="page_current" value="<%= page_current %>">
+            <input type="hidden" id="count_all" name="count_all" value="<%= count_all %>">
+            <input type="hidden" id="pageaction" name="pageaction">
+          </form>
+          <% if (results) { %>
+          <div class="search__result-disp">
+            <p>検索結果（<%= count_all %>件）</p>
+          </div>
+          <!-- /.result-disp -->
+          <div class="page-section">
+            <% if ((page_current !== 1) && (page_max !== 0)){ %>
+            <input type="button" class="btn-base" id="btn_prev" value="前ページ" />
+            <% } else { %>
+              <input type="button" class="btn-disabled" id="btn_prev" value="前ページ" disabled />
+            <% } %>
+            <% if (page_max > 1) { %>
+            <div class="page-disp">
+              <%= page_current %>/<%= page_max %>
+            </div>
+            <!-- /.page-disp -->
+            <% } %>
+            <% if (page_current !== page_max) { %>
+            <input type="button" class="btn-base" id="btn_next" value="次ページ" />
+            <% } else { %>
+              <input type="button" class="btn-disabled" id="btn_next" value="次ページ" disabled/>
+            <% } %>
+          </div>
+          <!-- /.page-section -->
+        </div>
       </div>
+      <!-- /.fix_header -->
       <div class="search__result">
-        <% if (results) { %>
-        <div class="search__result-disp">
-          <p>検索結果（<%= count_all %>件）</p>
-        </div>
-        <!-- /.result-disp -->
-        <div class="page-section">
-          <% if ((page_current !== 1) && (page_max !== 0)){ %>
-          <input type="button" class="btn-base" id="btn_prev" value="前ページ" />
-          <% } else { %>
-            <input type="button" class="btn-disabled" id="btn_prev" value="前ページ" disabled />
-          <% } %>
-          <% if (page_max > 1) { %>
-          <div class="page-disp">
-            <%= page_current %>/<%= page_max %>
-          </div>
-          <!-- /.page-disp -->
-          <% } %>
-          <% if (page_current !== page_max) { %>
-          <input type="button" class="btn-base" id="btn_next" value="次ページ" />
-          <% } else { %>
-            <input type="button" class="btn-disabled" id="btn_next" value="次ページ" disabled/>
-          <% } %>
-        </div>
-        <!-- /.page-section -->
         <div class="search__result-items">
           <%  results.forEach( result => { %>
           <div class="search__result-item">

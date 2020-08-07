@@ -17,7 +17,7 @@ body {
   padding: 1rem;
   background-color: $base-color;
   color: #fff;
-  font-size:1.75rem;
+  font-size: 1.75rem;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -29,7 +29,7 @@ body {
   background: transparent;
   // border-left: solid 5px $base-color;
   border-bottom: solid 2px $base-color;
-  font-size: 1.5rem;;
+  font-size: 1.5rem;
   margin-bottom: 0.75rem;
   font-weight: bold;
 }
@@ -53,23 +53,23 @@ body {
   }
 }
 .form__radio-style {
-    clip: rect(1px, 1px, 1px, 1px);
-    position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  position: absolute !important;
 }
 .form__radio-label {
-    display: inline-block;
-    padding: 5px 10px;
-    margin: 0 2px;
-    border-radius: 3px;
-    transition: all .2s;
-    border: 1px solid $base-color;
-    color: $base-color;
-    font-size: 12px;
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0 2px;
+  border-radius: 3px;
+  transition: all 0.2s;
+  border: 1px solid $base-color;
+  color: $base-color;
+  font-size: 12px;
 }
 .form__radio-style:checked + .form__radio-label {
-    background: $base-color;
-    color: #fff;
-    text-shadow: 0 0 1px rgba(0,0,0,.7);
+  background: $base-color;
+  color: #fff;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.7);
 }
 //inputタグ読み取り専用
 .form__item-readonly-style {
@@ -105,7 +105,7 @@ body {
   padding: 5px 15px;
   border-radius: 19px;
   background-clip: padding-box;
-  background-color: rgba(0,0,0,.1);
+  background-color: rgba(0, 0, 0, 0.1);
   border: 1px solid transparent;
   color: #fff;
   font-weight: bold;
@@ -152,8 +152,8 @@ body {
   width: 100%;
   height: 100%;
   position: fixed;
-  background-color: rgba(0,0,0,.7);
-  z-index:100;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 100;
   visibility: hidden;
 }
 .msgarea {
@@ -190,7 +190,7 @@ body {
   background-color: #808080;
   color: #fff;
   transform: translateY(-5px);
-  box-shadow: 0 0 30px rgba(0,0,0,.2);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
 }
 
 // メイン領域
@@ -238,23 +238,26 @@ body {
 }
 
 //部分的な設定
+.width-base {
+  width: 90%;
+}
 .ml-small {
   margin-left: 10px;
 }
 .pd-disabled {
-  padding: 9px 16px!important;
+  padding: 9px 16px !important;
 }
 .bg-input-disabled {
-  background-color: rgba(0,0,0,.1);  
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .bg-disabled {
-  background-color:#808080;
+  background-color: #808080;
 }
 .color-disabled {
   color: #808080;
 }
 .bd-disabled {
-  border-color:#808080!important;
+  border-color: #808080 !important;
 }
 .bd-left-disabled {
   border-left: solid 6px #808080;
@@ -264,7 +267,7 @@ body {
 }
 .dateinfo-small {
   font-size: 0.75rem;
-  color:#808080;
+  color: #808080;
   font-weight: normal;
 }
 
@@ -341,7 +344,7 @@ body {
         background-color: #fff;
         padding: 8px 10px;
         border-radius: 19px;
-        color:$base-color;
+        color: $base-color;
         border: 1px solid $base-color;
         margin-right: 10px;
         &:hover {
@@ -354,6 +357,14 @@ body {
 }
 
 // index
+.fix_header {
+  position: fixed;
+  width: 95%;
+  top:50px;
+  left: 2%;
+  background-color: #fff;
+  // margin: 0;
+}
 .top__btns {
   display: flex;
   flex-wrap: nowrap;
@@ -367,7 +378,7 @@ body {
   flex-wrap: nowrap;
   align-items: center;
 }
-.search__result {
+.searchform {
   font-size: 0.75rem;
   .search__result-disp {
     margin-top: 1rem;
@@ -376,15 +387,19 @@ body {
     display: flex;
     align-items: center;
     margin-top: 1rem;
+    margin-bottom: 1rem;
     .page-disp {
       padding: 0 10px;
       font-weight: normal;
     }
   }
 }
+.search__result {
+  padding-top: 150px;
+}
 .search__result-item {
-  margin:15px 10px;
-  width:98%;
+  margin: 15px 10px;
+  width: 98%;
   a {
     display: block;
     padding-top: 10px;
@@ -393,8 +408,14 @@ body {
 }
 
 // company, companyform, person, personform
-.company,.company__form, .person__form, .cancel__form {
+.company,
+.company__form,
+.person__form,
+.cancel__form {
   margin-top: 1rem;
+}
+.company {
+  padding-top: 50px;
 }
 dl {
   display: flex;
@@ -407,7 +428,7 @@ dt {
   padding: 5px 10px 5px 0;
   font-weight: normal;
   font-size: 12px;
-  color:#CD5E42;  
+  color: #cd5e42;
   font-weight: bold;
 }
 dd {
@@ -513,10 +534,13 @@ dd {
   }
 }
 // admin-user
-.admin__user, .admin__nyukyo, .admin__room, .admin__cabinet {
+.admin__user,
+.admin__nyukyo,
+.admin__room,
+.admin__cabinet {
   margin-top: 0.5rem;
   margin-left: 1.5rem;
   a {
-      margin: 0.5rem 0.5rem;
+    margin: 0.5rem 0.5rem;
   }
 }
