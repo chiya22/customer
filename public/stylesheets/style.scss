@@ -418,6 +418,14 @@ dd {
 // company-person
 .person {
   margin-bottom: 0.5rem;
+  .person__header {
+    position: relative;
+    .person__addbtn {
+      font-size: 12px;
+      position: absolute;
+      right: 0;
+    }
+  }
   .person__items {
     display: flex;
     flex-wrap: wrap;

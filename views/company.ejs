@@ -18,11 +18,6 @@
   <%- include("./common/header.ejs") %>
   <section class="main">
   <div class="main__wrapper">
-      <% if (company.ymd_kaiyaku === '99991231') { %>
-      <div class="area-link">
-        <a class="btn-link" href="/person/add/<%= company.id %>">個人登録</a>
-      </div>
-      <% } %>
       <div class="title">
         <% if (company.id_nyukyo) { %>
           <span class="tag-big"><%= company.id_nyukyo %></span>
@@ -72,7 +67,10 @@
       <!-- /.company -->
       <div class="person">
         <div class="person__header">
-          <p class="midashi">個人</p>
+          <p class="midashi">個人
+            <% if (company.ymd_kaiyaku === '99991231') { %>
+            <a class="btn-base person__addbtn" href="/person/add/<%= company.id %>">個人登録</a></p>
+            <% } %>
         </div>
         <div class="person__items">
           <% if (persons) { %>
@@ -192,7 +190,7 @@
               <option value="" selected>--キャビネット選択--</option>
               <% freecabinets.forEach(function (freecabinet) { %>
               <option value="<%= freecabinet.id %>">
-                <%= freecabinet.name %>（<%= freecabinet.place %>）
+                <%= freecabinet.place %>　<%= freecabinet.name %>
               </option>
               <% }) %>
             </select>
@@ -213,10 +211,10 @@
           %>
           <% if (cabinet.ymd_end === '99991231') { %>
           <div class="cabinet__item">
-            <span><%= cabinet.name %>（<%= cabinet.place %>）<%= dateinfo %></span>
+            <span><%= cabinet.place %>　<%= cabinet.name %>　<%= dateinfo %></span>
           <% } else { %>
           <div class="cabinet__item bd-disabled pd-disabled">
-            <span class="color-disabled"><%= cabinet.name %>（<%= cabinet.place %>）<%= dateinfo %></span>
+            <span class="color-disabled"><%= cabinet.place %>　<%= cabinet.name %>　<%= dateinfo %></span>
           <% } %>
             <% if ((company.ymd_kaiyaku === '99991231') && (cabinet.ymd_end === '99991231')) { %>
               <a class="tag" href="/company/deletecabinet/<%= company.id %>/<%= cabinet.id_cabinet %>/<%= cabinet.no_seq %>">削除</a>
