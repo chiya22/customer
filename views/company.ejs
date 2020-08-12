@@ -53,15 +53,16 @@
           </dd>
           <dt>備考</dt>
           <dd><input type="text" class="form__item-readonly-style" name="bikou" value="<%= company.bikou %>" disabled></dd>
-          <% if (company.ymd_kaiyaku === '99991231') { %>
-          <% if (locals.user.role === '社員') { %>
           <div class="form__btn">
-            <input type="button" class="btn-base" id="cancelbtn" value="解約">
-            <a class="btn-base" href="/company/update/<%= company.id %>">更新</a>
+          <% if (locals.user.role === '社員') { %>
+            <% if (company.ymd_kaiyaku === '99991231') { %>
+                <a class="btn-base" href="/company/update/<%= company.id %>">更新</a>
+                <input type="button" class="btn-base" id="cancelbtn" value="解約">
+            <% } else { %>
             <a class="btn-base" href="/company/delete/<%= company.id %>">削除</a>
+          <% } %>
+          <% } %>
           </div>
-          <% } %>
-          <% } %>
           <input type="hidden" name="id" value="<%= company.id %>">
           <input type="hidden" name="id_company" value="<%= company.id %>">
           <input type="hidden" name="id_nyukyo" value="<%= company.id_nyukyo %>">
