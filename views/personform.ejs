@@ -10,11 +10,6 @@
   <%- include("./common/header.ejs") %>
   <section class="main">
     <div class="main__wrapper">
-      <div class="area-link">
-        <% if ((person) && (person.id_company)) { %>
-        <a class="btn-link" href="/company/<%= person.id_company %>">会社へ</a>
-        <% } %>
-      </div>
       <!-- /.area-link -->
       <% if ((person) && (person.name)) { %>
       <div class="title">

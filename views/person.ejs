@@ -18,11 +18,6 @@
       </div>
     </div>
     <div class="main__wrapper">
-      <div class="area-link">
-        <% if (person.id_company) { %>
-        <a class="btn-link" href="/company/<%= person.id_company %>">会社へ</a>
-        <% } %>
-      </div>
       <div class="title">
         <span class="tag-big"><%= person.kubun_person %></span>
         <% if (person.ymd_kaiyaku !== '99991231') { %>
