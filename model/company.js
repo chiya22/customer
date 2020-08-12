@@ -28,7 +28,7 @@ const find = function (callback) {
 
 const findForSelect = function (callback) {
     (async function () {
-        await connection.query('select id, kubun_company, name, ymd_nyukyo, ymd_kaiyaku from companies where ymd_end = "99991231" order by id asc ', function (error, results, fields) {
+        await connection.query('select id, kubun_company, id_nyukyo, name, ymd_nyukyo, ymd_kaiyaku from companies where ymd_end = "99991231" order by id asc ', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {

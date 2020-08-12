@@ -111,7 +111,7 @@ router.get('/delete/:id', security.authorize(), function (req, res, next) {
     //会社情報
     let inObjC = {};
     inObjC.id = person.id_company;
-    m_company.findPKey(inObj, (err, retObj) => {
+    m_company.findPKey(inObjC, (err, retObj) => {
       if (err) { next(err); }
       res.render('personform', {
         person: person,
