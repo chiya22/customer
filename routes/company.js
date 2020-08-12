@@ -140,7 +140,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   let inObj = getCompanyData(req.body);
   inObj.ymd_start = tool.getToday();
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = req.user;
+  inObj.id_upd = req.user.id;
 
   //入力チェック
   const errors = validateData(req.body);
@@ -173,7 +173,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
 router.post('/update', security.authorize(), function (req, res, next) {
   let inObj = getCompanyData(req.body);
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = req.user;
+  inObj.id_upd = req.user.id;
 
   //入力チェック
   const errors = validateData(req.body);
@@ -258,7 +258,7 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
   inObj.id = id_company;
   inObj.ymd_kaiyaku = ymd_kaiyaku;
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = req.user;
+  inObj.id_upd = req.user.id;
 
   //会社情報の解約
   m_company.cancel(inObj, (err, retObj) => {
@@ -268,7 +268,7 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
     inObjP.id_company = id_company;
     inObjP.ymd_kaiyaku = ymd_kaiyaku;
     inObjP.ymd_upd = tool.getToday();
-    inObjP.id_upd = req.user;
+    inObjP.id_upd = req.user.id;
 
     //個人情報の解約
     m_person.cancelByCompany(inObjP, (err, retObj) => {
@@ -277,7 +277,7 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
       let inObjCR = {};
       inObjCR.ymd_end = ymd_kaiyaku;
       inObjCR.ymd_upd = tool.getToday();
-      inObjCR.id_upd = req.user;
+      inObjCR.id_upd = req.user.id;
       inObjCR.id_company = id_company;
 
       //会社⇔部屋情報の解約
@@ -288,7 +288,7 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
         inObjCC.id_company = id_company;
         inObjCC.ymd_end = ymd_kaiyaku;
         inObjCC.ymd_upd = tool.getToday();
-        inObjCC.id_upd = req.user;
+        inObjCC.id_upd = req.user.id;
 
         //入居番号⇔キャビネットの解約
         m_relation_comcabi.cancelByCompany(inObjCC, (err, retObj) => {
@@ -309,7 +309,7 @@ router.post('/addroom', security.authorize(), function (req, res, next) {
   relation_comroom.id_room = req.body.id_room;
   relation_comroom.ymd_start = tool.getToday();
   relation_comroom.ymd_upd = tool.getToday();
-  relation_comroom.id_upd = req.user;
+  relation_comroom.id_upd = req.user.id;
   m_relation_comroom.insert(relation_comroom, (err, retObj) => {
     if (err) { next(err); };
     res.redirect('/company/' + relation_comroom.id_company);
@@ -324,7 +324,7 @@ router.get('/deleteroom/:id_company/:id_room/:no_seq', security.authorize(), fun
   relation_comroom.no_seq = req.params.no_seq;
   relation_comroom.ymd_end = tool.getToday();
   relation_comroom.ymd_upd = tool.getToday();
-  relation_comroom.id_upd = req.user;
+  relation_comroom.id_upd = req.user.id;
   m_relation_comroom.remove(relation_comroom, (err, retObj) => {
     if (err) { next(err); };
     res.redirect('/company/' + req.params.id_company);
@@ -339,7 +339,7 @@ router.post('/addcabinet', security.authorize(), function (req, res, next) {
   relation_comcabi.id_cabinet = req.body.id_cabinet;
   relation_comcabi.ymd_start = tool.getToday();
   relation_comcabi.ymd_upd = tool.getToday();
-  relation_comcabi.id_upd = req.user;
+  relation_comcabi.id_upd = req.user.id;
   m_relation_comcabi.insert(relation_comcabi, (err, retObj) => {
     if (err) { next(err) };
     res.redirect('/company/' + id_company);
@@ -354,7 +354,7 @@ router.get('/deletecabinet/:id_company/:id_cabinet/:no_seq', security.authorize(
   relation_comcabi.no_seq = req.params.no_seq;
   relation_comcabi.ymd_end = tool.getToday();
   relation_comcabi.ymd_upd = tool.getToday();
-  relation_comcabi.id_upd = req.user;
+  relation_comcabi.id_upd = req.user.id;
   m_relation_comcabi.remove(relation_comcabi, (err, retObj) => {
     if (err) { next(err) };
     res.redirect('/company/' + req.params.id_company);

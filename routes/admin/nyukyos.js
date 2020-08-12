@@ -45,7 +45,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   inObj.id = req.body.id;
   inObj.ymd_start = tool.getToday();
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = req.user;
+  inObj.id_upd = req.user.id;
   m_nyukyo.insert(inObj, (err, retObj) => {
     if (err) {
       if (err.errno === 1062) {
@@ -70,7 +70,7 @@ router.post('/update', security.authorize(), function (req, res, next) {
   inObj.ymd_start = req.body.ymd_start;
   inObj.ymd_end = req.body.ymd_end;
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = req.user;
+  inObj.id_upd = req.user.id;
   m_nyukyo.update(inObj, (err, retObj) => {
     if (err) { next(err) };
     //更新時に対象レコードが存在しない場合

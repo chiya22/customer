@@ -129,10 +129,18 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   let inObj = getPersonData(req.body);
   inObj.ymd_start = tool.getToday();
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = req.user;
+  inObj.id_upd = req.user.id;
+
+  //エラー情報
+  let errors;
+
+  //権限チェック
+  if (req.user.role !== '社員') {
+    errors.role = "社員権限のみ実行できます";
+  }
 
   //入力チェック
-  const errors = validateData(req.body);
+  errors = validateData(req.body);
   if (errors) {
 
     //会社情報
@@ -178,7 +186,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
 router.post('/update', security.authorize(), function (req, res, next) {
   let inObj = getPersonData(req.body);
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = req.user;
+  inObj.id_upd = req.user.id;
 
   //会社情報
   let company = {};
@@ -189,8 +197,15 @@ router.post('/update', security.authorize(), function (req, res, next) {
     company = retObj;
   });
 
+  //エラー情報
+  let errors;
+
+  //権限チェック
+  if (req.user.role !== '社員') {
+    errors.role = "社員権限のみ実行できます";
+  }
   //入力チェック
-  const errors = validateData(req.body);
+  errors = validateData(req.body);
   if (errors) {
     m_company.findForSelect((err, retObj) => {
       if (err) { next(err) };
@@ -232,18 +247,47 @@ router.post('/update', security.authorize(), function (req, res, next) {
 
 //個人情報の削除
 router.post('/delete', security.authorize(), function (req, res, next) {
-  let inObj = {};
-  inObj.id = req.body.id;
-  inObj.ymd_kaiyaku = req.body.ymd_kaiyaku;
+
+  let inObj = getPersonData(req.body);
+  // 解約日が設定されていない場合は、解約日も設定する
   if (inObj.ymd_kaiyaku === '99991231') {
     inObj.ymd_kaiyaku = tool.getToday();
   }
   inObj.ymd_end = tool.getToday();
 
+  //会社情報
+  let company = {};
+  let inObjC = {};
+  inObjC.id = inObj.id_company;
+  m_company.findPKey(inObjC, (err, retObj) => {
+    if (err) { next(err) };
+    company = retObj;
+  });
+
+  //エラー情報
+  let errors;
+
+  //権限チェック
+  if (req.user.role !== '社員') {
+    errors.role = "社員権限のみ実行できます";
+  }
+
+  //入力チェック
+  if (errors) {
+    res.render('personform', {
+      person: inObj,
+      company: company,
+      companies: null,
+      mode: 'delete',
+      errors: errors,
+    });
+    return;
+  }
+  
   m_person.remove(inObj, (err, retObj) => {
     if (err) { next(err); }
-    if (inObj.id_company) {
-      res.redirect('/company/' + inObj.id_company);
+    if (req.body.id_company) {
+      res.redirect('/company/' + req.body.id_company);
     } else {
       res.redirect('/');
     }
@@ -261,7 +305,7 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
     inObj.ymd_kaiyaku = tool.getToday();
   }
   inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = req.user;
+  inObj.id_upd = req.user.id;
 
   m_person.cancel(inObj, (err, retObj) => {
     if (err) { next(err) }

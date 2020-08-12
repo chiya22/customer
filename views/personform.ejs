@@ -103,7 +103,6 @@
 
             <!-- ◆更新モード -->
             <% } else if ((mode === 'update') && (person.ymd_kaiyaku === '99991231')) { %>
-            <input type="hidden" name="id" value="<%= person.id %>">
             <dt>会社番号</dt>
             <dd>
               <select class="form__item-style" name="id_company">
@@ -171,7 +170,6 @@
 
               <!-- ◆削除モード -->
               <% } else { %>
-              <input type="hidden" name="id" value="<%= person.id %>">
               <dt>会社番号</dt>
               <dd><input type="text" class="form__item-style bg-input-disabled" name="id_company"
                   value="<%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %>" disabled></dd>
@@ -213,6 +211,7 @@
               <dd><input type="text" class="form__item-style bg-input-disabled" name="bikou" value="<%= person.bikou %>"
                   disabled></dd>
               <input type="hidden" name="id" value="<%= person.id %>">
+              <input type="hidden" name="id_company" value="<%= person.id_company %>">
               <% if (person.ymd_kaiyaku === '99991231') { %>
               <div class="form__btn">
                 <input type="button" class="btn-base" id="btn_delete" value="削除">

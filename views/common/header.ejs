@@ -5,15 +5,17 @@
                 <a class="header-logo" href="/"><img src="/static/images/building_logo.svg"></a>
             </div>
             <div class="header-right">
-                <div>
-                    <a class="btn-header" href="/admin">マスタ管理</a>
-                </div>
                 <% if (locals.user){ %>
-                <div>
-                    <form method="POST" action="/logout">
-                        <input class="btn-header" type="submit" button value="ログアウト" />
-                    </form>
-                </div>
+                    <% if (locals.user.role === '社員') { %>
+                    <div>
+                        <a class="btn-header" href="/admin">マスタ管理</a>
+                    </div>
+                    <% } %>
+                    <div>
+                        <form method="POST" action="/logout">
+                            <input class="btn-header" type="submit" button value="ログアウト" />
+                        </form>
+                    </div>
                 <% } %>
                 <a class="btn-header" href="javascript:history.back();">戻る</a>
             </div>

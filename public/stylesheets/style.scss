@@ -239,10 +239,13 @@ body {
 
 //部分的な設定
 .width-base {
-  width: 90%;
+  width: 70%;
 }
 .ml-small {
   margin-left: 10px;
+}
+.ml-large {
+  margin-left: 100px;
 }
 .pd-disabled {
   padding: 9px 16px !important;
@@ -366,21 +369,15 @@ body {
   top:50px;
   background-color: #fff;
 }
-.top__btns {
-  display: flex;
-  flex-wrap: nowrap;
-  padding: 5px 0;
-  .top__btn {
-    padding: 5px;
-  }
-}
-.searchform__top {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-}
+
 .searchform {
   font-size: 0.75rem;
+  .searchform__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 5px 0;
+  }
   .search__result-disp {
     margin-top: 1rem;
   }
@@ -396,7 +393,7 @@ body {
   }
 }
 .search__result {
-  padding-top: 150px;
+  padding-top: 110px;
 }
 .search__result-item {
   margin: 15px 10px;
