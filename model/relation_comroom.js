@@ -14,7 +14,7 @@ const findPKey = function (inObj, callback) {
 
 const findByCompany = function (id_company, callback) {
     (async function () {
-        const query ='select a.id_company, a.id_room, a.no_seq, a.ymd_start, a.ymd_end, a.ymd_upd, a.id_upd, b.place, b.floor, b.name from relation_comroom AS a INNER JOIN rooms AS b ON a.id_room = b.id where a.id_company = "' + id_company + '" and b.ymd_end = "99991231" order by b.id asc';
+        const query ='select a.id_company, a.id_room, a.no_seq, a.ymd_start, a.ymd_end, a.ymd_upd, a.id_upd, b.place, b.floor, b.person, b.name from relation_comroom AS a INNER JOIN rooms AS b ON a.id_room = b.id where a.id_company = "' + id_company + '" and b.ymd_end = "99991231" order by b.id asc';
         // const query ='select * from relation_comroom AS a INNER JOIN rooms AS b ON a.id_room = b.id where a.id_company = "' + id_company + '" and a.ymd_end = "99991231" and b.ymd_end = "99991231" order by b.id asc';
         await connection.query(query, function ( error, results, fields) {
             if (error) {
@@ -40,7 +40,7 @@ const find = function (callback) {
 
 const findFree = function (callback) {
     (async function () {
-        await connection.query('SELECT r.id, r.place, r.floor, r.name FROM rooms AS r WHERE r.ymd_end = "99991231" and NOT EXISTS ( SELECT * FROM relation_comroom AS re WHERE r.id = re.id_room and re.ymd_end = "99991231" ) order by r.id asc', function (error, results, fields) {
+        await connection.query('SELECT r.id, r.place, r.floor, r.person, r.name FROM rooms AS r WHERE r.ymd_end = "99991231" and NOT EXISTS ( SELECT * FROM relation_comroom AS re WHERE r.id = re.id_room and re.ymd_end = "99991231" ) order by r.id asc', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -52,7 +52,7 @@ const findFree = function (callback) {
 
 const findForSelect = function (callback) {
     (async function () {
-        await connection.query('(SELECT "【未使用】" as kubun, r.id, r.place, r.floor, r.name FROM rooms AS r WHERE r.ymd_end = "99991231" and NOT EXISTS ( SELECT * FROM relation_comroom AS re WHERE r.id = re.id_room and re.ymd_end = "99991231" )) UNION ALL (SELECT "【使用中】" as kubun, r.id, r.place, r.floor, r.name FROM rooms AS r WHERE r.ymd_end = "99991231" and EXISTS ( SELECT * FROM relation_comroom AS re WHERE r.id = re.id_room and re.ymd_end = "99991231" ))', function (error, results, fields) {
+        await connection.query('(SELECT "【未使用】" as kubun, r.id, r.place, r.floor, r.person, r.name FROM rooms AS r WHERE r.ymd_end = "99991231" and NOT EXISTS ( SELECT * FROM relation_comroom AS re WHERE r.id = re.id_room and re.ymd_end = "99991231" )) UNION ALL (SELECT "【使用中】" as kubun, r.id, r.place, r.floor, r.person, r.name FROM rooms AS r WHERE r.ymd_end = "99991231" and EXISTS ( SELECT * FROM relation_comroom AS re WHERE r.id = re.id_room and re.ymd_end = "99991231" ))', function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {

@@ -111,7 +111,7 @@
             if (!isExit) { %>
               <option value="<%= selectroom.id %>">
                 <%= selectroom.kubun %><%= selectroom.name %>（<%= selectroom.place %> /
-                <%= selectroom.floor %>）
+                <%= selectroom.floor %> / <%= selectroom.person %>名）
               </option>
             <% }
           }); %>
@@ -127,9 +127,9 @@
           let roomname;
           let dateinfo;
           if (room.place) {
-            roomname = room.name + '（' + room.place + '：' + room.floor + '）'
+            roomname = room.name + '（' + room.place + ' / ' + room.floor + ' / ' + room.person + '名）'
           } else {
-            roomname = room.name
+            roomname = room.name + '（' + room.person + '名）'
           }
           if (room.ymd_end === '99991231') {
             dateinfo = '開始：' + room.ymd_start
