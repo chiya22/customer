@@ -34,7 +34,7 @@
             <input type="button" id="btn_insert" value="登録">
           <% } else { %>
           <dt>部屋番号</dt>
-          <dd><input class="form__item-style bg-disabled" type="text" name="id" value="<%= room.id %>" disabled></dd>
+          <dd><input class="form__item-style bg-input-disabled" type="text" name="id" value="<%= room.id %>" disabled></dd>
           <input class="form__item-style" type="hidden" name="id" value="<%= room.id %>">
           <dt>場所</dt>
           <dd><input class="form__item-style" type="text" name="place" value="<%= room.place %>" required></dd>

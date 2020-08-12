@@ -30,19 +30,30 @@
             <dt>パスワード</dt>
             <dd><input class="form__item-style" type="password" name="password" required></dd>
             <dt>権限</dt>
-            <dd><input class="form__item-style" type="text" name="role"></dd>
+            <dd>
+              <input id="role_1" class="form__radio-style" type="radio" value="社員" checked="checked" name="role"><label for="role_1" class="form__radio-label">社員</label>
+              <input id="role_2" class="form__radio-style" type="radio" value="バイト" name="role"><label for="role_2" class="form__radio-label">バイト</label>
+            </dd>
             <div class="form__btn">
             <input class="btn-base" type="button" id="btn_insert" value="登録">
             <% } else { %>
             <dt>ID</dt>
-            <dd><input class="form__item-style bg-disabled" type="text" name="id" value="<%= user.id %>" disabled></dd>
+            <dd><input class="form__item-style bg-input-disabled" type="text" name="id" value="<%= user.id %>" disabled></dd>
             <input type="hidden" name="id" value="<%= user.id %>">
             <dt>名前</dt>
             <dd><input class="form__item-style" type="text" name="name" value="<%= user.name %>" required></dd>
             <dt>パスワード</dt>
             <dd><input class="form__item-style" type="password" name="password" value="" required></dd>
             <dt>権限</dt>
-            <dd><input class="form__item-style" type="text" name="role" value="<%= user.role %>"></dd>
+            <dd>
+            <% if (user.role === '社員') { %>
+              <input id="role_1" class="form__radio-style" type="radio" value="社員" checked="checked" name="role"><label for="role_1" class="form__radio-label">社員</label>
+              <input id="role_2" class="form__radio-style" type="radio" value="バイト" name="role"><label for="role_2" class="form__radio-label">バイト</label>
+            <% } else { %>
+              <input id="role_1" class="form__radio-style" type="radio" value="社員" name="role"><label for="role_1" class="form__radio-label">社員</label>
+              <input id="role_2" class="form__radio-style" type="radio" value="バイト" checked="checked" name="role"><label for="role_2" class="form__radio-label">バイト</label>
+            <% } %>
+            </dd>
             <dt>適用開始日</dt>
             <dd><input class="form__item-style flatpickr" type="text" name="ymd_start" value="<%= user.ymd_start %>"></dd>
             <dt>適用終了日</dt>
