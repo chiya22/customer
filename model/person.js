@@ -1,6 +1,5 @@
 var connection = require('../db/mysqlconfig.js');
 const tool = require('../util/tool');
-const { PayloadTooLarge } = require('http-errors');
 
 const findPKey = function (inObj, callback) {
     (async function () {
