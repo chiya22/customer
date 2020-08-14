@@ -7,32 +7,102 @@ const tool = require('../util/tool');
 const m_sq = require('../model/sq');
 const m_outai = require('../model/outais');
 const m_company = require('../model/company');
+const connection = require('../db/mysqlconfig.js');
 
 
-//すべての応対履歴一覧表示へ
+//応対履歴検索画面の初期表示
 router.get('/', security.authorize(), function (req, res, next) {
 
-  let inObj = {};
-  inObj.id = req.params.id_company;
-  m_outai.find(inObj, (err, retObj) => {
+  m_company.findForSelect((err, retObj) => {
     if (err) { next(err) };
     res.render('outais', {
-      outais: retObj,
-      errors: null,
+      results: null,
+      searchvalue: null,
+      selectCompany: null,
+      companies: retObj,
+      page_current: 0,
+      page_max: 0,
+      count_all: 0,
     });
   });
+
 });
 
-//会社IDをもとに応対履歴一覧表示へ
-router.get('/company/:id_company', security.authorize(), function (req, res, next) {
+const count_perpage = 20;
 
-  let inObj = {};
-  inObj.id = req.params.id_company;
-  m_outai.findByCompany(inObj, (err, retObj) => {
-    if (err) { next(err) };
-    res.render('outais', {
-      outais: retObj,
-      errors: null,
+//検索文字列を指定して、応対履歴検索
+router.post('/', security.authorize(), function (req, res, next) {
+
+  const searchvalue = req.body.searchvalue;        //検索文字列
+  const pagecount_current = req.body.page_current; //現在表示されているページ
+  const page_action = req.body.pageaction;         //ページングアクション
+
+  const id_company = req.body.id_company;
+
+  //ページングアクションにより、表示対象のページ数を確定する
+  let pagecount_target;
+  if (page_action === 'next') {
+    pagecount_target = parseInt(pagecount_current) + 1;
+  } else if (page_action === 'prev') {
+    pagecount_target = parseInt(pagecount_current) - 1;
+  } else {
+    pagecount_target = 1;
+  }
+  //表示開始位置を確定する
+  const offset = (pagecount_target - 1) * count_perpage;
+
+  let query;
+  let query2;
+  if (id_company) {
+    query = 'select count(*) as count_all from outais where id_company = "' + id_company + '" and content like "%' + searchvalue + '%"'
+    query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where id_company = "' + id_company + '" and content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymd_add desc limit ' + count_perpage + ' offset ' + offset
+  } else {
+    query = 'select count(*) as count_all from outais where content like "%' + searchvalue + '%"'
+    query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymd_add desc limit ' + count_perpage + ' offset ' + offset
+  }
+
+  connection.query(query, function (error, results, fields) {
+    if (error) { next(error) };
+    let count_all;
+    count_all = results[0].count_all;
+    let pagecount_max = parseInt(count_all / count_perpage);
+    if ((count_all % count_perpage) > 0) {
+      pagecount_max += 1;
+    }
+    connection.query(query2, function (error, results, fields) {
+      if (error) { next(error) };
+      let outais = results;
+      let companies;
+      m_company.findForSelect((err, retObj) => {
+        if (error) { next(error) };
+        companies = retObj;
+        if (id_company) {
+          let inObjC = {};
+          inObjC.id = id_company;
+          m_company.findPKey(inObjC, (err, retObj) => {
+            if (error) { next(error) };
+            res.render('outais', {
+              results: outais,
+              searchvalue: searchvalue,
+              selectCompany: retObj,
+              companies: companies,
+              page_current: pagecount_target,
+              page_max: pagecount_max,
+              count_all: count_all,
+            });
+          });
+        } else {
+          res.render('outais', {
+            results: outais,
+            searchvalue: searchvalue,
+            selectCompany: null,
+            companies: companies,
+            page_current: pagecount_target,
+            page_max: pagecount_max,
+            count_all: count_all,
+          });
+        }
+      });
     });
   });
 });
@@ -116,38 +186,24 @@ router.get('/insert/:id_company', security.authorize(), function (req, res, next
 
   let company = {};
 
-  if (req.params.id_company) {
-    let inObj = {};
-    inObj.id = req.params.id_company;
+  let inObj = {};
+  inObj.id = req.params.id_company;
 
-    m_company.findPKey(inObj, (err, retObj) => {
-      if (err) { next(err) };
-      company = retObj;
+  m_company.findPKey(inObj, (err, retObj) => {
+    if (err) { next(err) };
+    company = retObj;
 
-      m_company.findForSelect((err, retObj) => {
-        if (err) { next(err) };
-        res.render('outaiform', {
-          outai: null,
-          companies: retObj,
-          selectCompany: company,
-          mode: 'insert',
-          errors: null,
-        });
-      });
-    });
-
-  } else {
     m_company.findForSelect((err, retObj) => {
       if (err) { next(err) };
       res.render('outaiform', {
         outai: null,
         companies: retObj,
-        selectCompany: null,
+        selectCompany: company,
         mode: 'insert',
         errors: null,
       });
     });
-  }
+  });
 });
 
 // 応対履歴情報の登録
@@ -175,7 +231,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
       let inObjC = {};
       inObjC.id = inObj.id_company;
 
-      m_company.findPKey( inObjC, (err, retObj) => {
+      m_company.findPKey(inObjC, (err, retObj) => {
         if (err) { next(err) };
         company = retObj;
 
@@ -191,7 +247,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
         });
       });
 
-    //会社を選択していない場合
+      //会社を選択していない場合
     } else {
       m_company.findForSelect((err, retObj) => {
         if (err) { next(err) };

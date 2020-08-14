@@ -6,6 +6,12 @@
             </div>
             <div class="header-right">
                 <% if (locals.user){ %>
+                    <div>
+                        <a class="btn-header" href="/">入居者検索</a>
+                    </div>
+                    <div>
+                        <a class="btn-header" href="/outai">応対履歴検索</a>
+                    </div>
                     <% if (locals.user.role === '社員') { %>
                     <div>
                         <a class="btn-header" href="/admin">マスタ管理</a>

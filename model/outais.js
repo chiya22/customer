@@ -3,7 +3,7 @@ const tool = require('../util/tool');
 
 const findPKey = function (inObj, callback) {
     (async function () {
-        const query = 'select * from outais where id = "' + inObj.id + '"';
+        const query = 'select o.*, u1.name as name_add, u2.name as name_upd from (select * from outais where id = "' + inObj.id + '") as o left outer join users u1 on u1.id = o.id_add left outer join users u2 on u2.id = o.id_upd';
         await connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
@@ -16,7 +16,8 @@ const findPKey = function (inObj, callback) {
 
 const find = function (callback) {
     (async function () {
-        await connection.query('select * from outais order by id asc', function (error, results, fields) {
+        const query = 'select o.*, u1.name as name_add, u2.name as name_upd from ( select * from outais order by ymd_add desc) as o left outer join users u1 on u1.id = o.id_add left outer join users u2 on u2.id = o.id_upd';
+        await connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -28,7 +29,7 @@ const find = function (callback) {
 
 const findByCompany = function (inObj, callback) {
     (async function () {
-        const query = 'select * from outais where id_company = ' + tool.returnvalue(inObj.id_company) + ' order by ymd_add desc';
+        const query = 'select o.*, u1.name as name_add, u2.name as name_upd from ( select * from outais where id_company = ' + tool.returnvalue(inObj.id_company) + ' order by ymd_add desc) as o left outer join users u1 on u1.id = o.id_add left outer join users u2 on u2.id = o.id_upd';
         await connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);

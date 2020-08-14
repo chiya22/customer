@@ -244,6 +244,9 @@ body {
 .ml-small {
   margin-left: 10px;
 }
+.ml-middle {
+  margin-left: 50px;
+}
 .ml-large {
   margin-left: 100px;
 }
@@ -269,7 +272,8 @@ body {
   font-size: 0.75rem;
 }
 .dateinfo-small {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
+  // font-size: 0.75rem;
   color: #808080;
   font-weight: normal;
 }
@@ -372,6 +376,9 @@ body {
 
 .searchform {
   font-size: 0.75rem;
+  select {
+    margin-bottom: 10px;
+  }
   .searchform__top {
     display: flex;
     flex-wrap: wrap;
@@ -391,6 +398,9 @@ body {
       font-weight: normal;
     }
   }
+}
+.search__result-outai {
+  padding-top: 160px;
 }
 .search__result {
   padding-top: 110px;
@@ -476,6 +486,8 @@ dd.area__outai-content {
     height: 150px;
     padding: 20px 5%;
     resize: none;
+    letter-spacing: 2px;
+    line-height: 1.2rem;
   }
 }
 

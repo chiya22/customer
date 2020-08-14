@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>トップページ</title>
+  <title>応対履歴一覧</title>
   <%- include("./common/stylesheets.ejs") %>
 </head>
 
@@ -12,14 +12,27 @@
     <div class="main__wrapper">
       <div class="fix_header">
         <div class="searchform">
-          <form name="searchform" method="post" action="/">
+          <form name="searchform" method="post" action="/outai">
             <div class="searchform__top">
+              <select class="form__item-style width-base" name="id_company">
+                <% if (!selectCompany) { %>
+                <option value="" selected>--会社選択--</option>
+                <% } else { %>
+                <option value="">--会社選択--</option>
+                <% } %>
+                <% companies.forEach(function (company) { %>
+                <% if ((selectCompany) && (company.id === selectCompany.id)) { %>
+                <option value="<%= company.id %>" selected><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
+                <% } else { %>
+                <option value="<%= company.id %>"><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
+                <% } %>
+                <% }); %>
+              </select>
               <input class="form__item-style width-base" type="text" name="searchvalue" placeholder="検索文字を入力してください"
                 value="<%= searchvalue %>">
               <input class="btn-base ml-small" type="button" id="btn_search" value="検索" />
-              <% if (locals.user.role === '社員') { %>
-                <a class="btn-link ml-small" href="/company">会社登録</a>
-              <% } %>
+              <!-- ダミーの会社IDを設定する -->
+              <a class="btn-link ml-small" href="/outai/insert/O999999999">応対履歴登録</a>
             </div>
             <!-- /.searchform__top -->
             <input type="hidden" id="page_max" name="page_max" value="<%= page_max %>">
@@ -50,58 +63,38 @@
               <input type="button" class="btn-disabled" id="btn_next" value="次ページ" disabled/>
             <% } %>
           </div>
+          <% } %>
           <!-- /.page-section -->
         </div>
         <!-- /.search__form -->
       </div>
       <!-- /.fix_header -->
-      <div class="search__result">
+      <% if (results) { %>
+      <div class="search__result-outai">
         <div class="search__result-items">
           <%  results.forEach( result => { %>
           <div class="search__result-item">
-              <% if ((result.ymd_kaiyaku) && (result.ymd_kaiyaku !== '99991231')) { %>
-                  <% if (result.header === '個人') { %>
-                  <a class="btn-link bd-left-disabled" href="./person/<%= result.id %>"><p class="tag bg-disabled"><%= result.header %></p>
-                  <% } else { %>
-                  <div class="result__row">
-                  <a class="btn-link bd-left-disabled" href="./company/<%= result.id %>"><p class="tag bg-disabled"><%= result.header %> <%= result.id_nyukyo %></p>
-                  <% } %>
-                  <p class="tag bg-disabled"><%= result.kubun %></p>
-                  <p class="tag bg-disabled">解約</p>
-                  <span class="color-disabled"><%= result.name %></span>
-                  <span class="dateinfo color-disabled">入居：<%= result.ymd_nyukyo %>　
-                    解約：<%= result.ymd_kaiyaku %></span>
-                  </a>
-                  <% if (result.header !== '個人') { %>
-                  <a href="./outai/company/<%= result.id %>" class="btn-outai color-disabled">一覧</a>
-                  <a href="./outai/insert/<%= result.id %>" class="btn-outai color-disabled">追加</a>
-                  </div>
-                  <% } %>
-              <% } else { %>
-                  <% if (result.header === '個人') { %>
-                  <a class="btn-link" href="./person/<%= result.id %>"><p class="tag"><%= result.header %></p>
-                  <% } else { %>
-                  <div class="result__row">
-                  <a class="btn-link" href="./company/<%= result.id %>"><p class="tag"><%= result.header %> <%= result.id_nyukyo %></p>
-                  <% } %>
-                  <p class="tag"><%= result.kubun %></p>
-                  <%= result.name %>
-                  <span class="dateinfo">入居：<%= result.ymd_nyukyo %></span>
-                  </a>
-                  <% if (result.header !== '個人') { %>
-                  <a href="./outai/company/<%= result.id %>" class="btn-outai">一覧</a>
-                  <a href="./outai/insert/<%= result.id %>" class="btn-outai">追加</a>
-                  </div>
-                  <% } %>
-              <% } %>
+            <a class="btn-link" href="./outai/<%= result.id %>">
+            <%
+            let title = '【' + result.name_company + '】';
+            if (result.content.length  > 15) {
+              title += result.content.slice(0,15) + '...'
+            } else {
+              title += result.content
+            }
+            %>
+            <span><%= title %></span>
+            <span class="dateinfo-small">　　登録：<%= result.ymd_add %>（<%= result.name_add %>）
+              更新：<%= result.ymd_upd %>（<%= result.name_upd %>）</span>
+            </a>
           </div>
           <!-- /.search__result-item -->
-          <% }) %>
+          <% }); %>
         </div>
         <!-- /.search__result-items -->
-        <% } %>
       </div>
       <!-- /.search__result -->
+      <% } %>
     </div>
     <!-- /.main__wrpper -->
   </div>

@@ -31,7 +31,7 @@
               <option value="">--会社選択--</option>
               <% } %>
               <% companies.forEach(function (company) { %>
-              <% if ((company.id === selectCompany.id)) { %>
+              <% if ((selectCompany) && (company.id === selectCompany.id)) { %>
               <option value="<%= company.id %>" selected><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
               <% } else { %>
               <option value="<%= company.id %>"><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
@@ -93,7 +93,7 @@
             </dd>
             <dt class="area__outai-content">内容</dt>
             <dd class="area__outai-content">
-            <textarea class="form__item-style"><%= outai.content %></textarea>
+            <textarea name="content" class="form__item-style"><%= outai.content %></textarea>
             </dd>
             <dt>ステータス</dt>
             <dd>
@@ -110,16 +110,21 @@
             <dd>
             </dd>
             <dt>登録日</dt>
-            <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_add" value="<%= outai.ymd_add %>" disabled></dd>
+            <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outai.ymd_add %>" disabled></dd>
             <dt>登録者</dt>
-            <dd><input type="text" class="form__item-style bg-input-disabled" name="id_add" value="<%= outai.id_add %>" disabled></dd>
+            <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outai.name_add %>" disabled></dd>
             <dt>更新日</dt>
-            <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_upd" value="<%= outai.ymd_upd %>" disabled></dd>
+            <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outai.ymd_upd %>" disabled></dd>
             <dt>更新者</dt>
-            <dd><input type="text" class="form__item-style bg-input-disabled" name="id_upd" value="<%= outai.id_upd %>" disabled></dd>
+            <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outai.name_upd %>" disabled></dd>
             <div class="form__btn">
               <input type="button" class="btn-base" id="btn_update" value="更新">
               <a class="btn-base" href="/outai/<%= outai.id %>">戻る</a>
+              <input type="hidden" name="id" value="<%= outai.id %>">
+              <input type="hidden" name="ymd_add" value="<%= outai.ymd_add %>">
+              <input type="hidden" name="id_add" value="<%= outai.id_add %>">
+              <input type="hidden" name="ymd_upd" value="<%= outai.ymd_upd %>">
+              <input type="hidden" name="id_upd" value="<%= outai.id_upd %>">
             <% } %>
             </div>
             <input type="hidden" id="field_mode">

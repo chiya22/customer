@@ -256,6 +256,10 @@ body {
   margin-left: 10px;
 }
 
+.ml-middle {
+  margin-left: 50px;
+}
+
 .ml-large {
   margin-left: 100px;
 }
@@ -289,7 +293,7 @@ body {
 }
 
 .dateinfo-small {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #808080;
   font-weight: normal;
 }
@@ -398,6 +402,10 @@ body {
   font-size: 0.75rem;
 }
 
+.searchform select {
+  margin-bottom: 10px;
+}
+
 .searchform .searchform__top {
   display: flex;
   flex-wrap: wrap;
@@ -419,6 +427,10 @@ body {
 .searchform .page-section .page-disp {
   padding: 0 10px;
   font-weight: normal;
+}
+
+.search__result-outai {
+  padding-top: 160px;
 }
 
 .search__result {
@@ -518,6 +530,8 @@ dd.area__outai-content textarea {
   height: 150px;
   padding: 20px 5%;
   resize: none;
+  letter-spacing: 2px;
+  line-height: 1.2rem;
 }
 
 .person {

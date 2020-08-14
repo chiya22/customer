@@ -28,19 +28,15 @@
         <dt>登録日</dt>
         <dd><input type="text" class="form__item-readonly-style" name="ymd_add" value="<%= outai.ymd_add %>" disabled></dd>
         <dt>登録者</dt>
-        <dd><input type="text" class="form__item-readonly-style" name="id_add" value="<%= outai.id_add %>" disabled></dd>
+        <dd><input type="text" class="form__item-readonly-style" name="id_add" value="<%= outai.name_add %>" disabled></dd>
         <dt>更新日</dt>
         <dd><input type="text" class="form__item-readonly-style" name="ymd_upd" value="<%= outai.ymd_upd %>" disabled></dd>
         <dt>更新者</dt>
-        <dd><input type="text" class="form__item-readonly-style" name="id_upd" value="<%= outai.id_upd %>" disabled></dd>
+        <dd><input type="text" class="form__item-readonly-style" name="id_upd" value="<%= outai.name_upd %>" disabled></dd>
       </dl>
           <div class="form__btn">
             <a class="btn-base" href="/outai/update/<%= outai.id %>">更新</a>
-            <% if (outai.id_company) { %>
-              <a class="btn-base" href="/outai/<%= outai.id_company %>">戻る</a>
-            <% } else { %>
-              <a class="btn-base" href="/outai">戻る</a>
-            <% } %>
+            <a class="btn-base" href="javascript:history.back();">戻る</a>
           </div>
     </div>
   </section>
