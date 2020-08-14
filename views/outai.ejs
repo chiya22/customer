@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>応対履歴</title>
+  <%- include("./common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("./common/header.ejs") %>
+  <section class="main">
+    <div class="main__wrapper area__outai">
+      <dl>
+        <dt class="area__outai-company">会社</dt>
+        <dd class="area__outai-company">
+        <% if (selectCompany) { %>
+          <input type="text" class="form__item-readonly-style" value="<%= selectCompany.id_nyukyo %>【<%= selectCompany.kubun_company %>】<%= selectCompany.name %>" disabled>
+        <% } %>
+        </dd>
+        <dt class="area__outai-content">内容</dt>
+        <dd class="area__outai-content">
+        <textarea class="form__item-readonly-style" disabled><%= outai.content %></textarea>
+        </dd>
+        <dt>ステータス</dt>
+        <dd><input type="text" class="form__item-readonly-style" name="status" value="<%= outai.status %>" disabled></dd>
+        <dt></dt>
+        <dd></dd>
+        <dt>登録日</dt>
+        <dd><input type="text" class="form__item-readonly-style" name="ymd_add" value="<%= outai.ymd_add %>" disabled></dd>
+        <dt>登録者</dt>
+        <dd><input type="text" class="form__item-readonly-style" name="id_add" value="<%= outai.id_add %>" disabled></dd>
+        <dt>更新日</dt>
+        <dd><input type="text" class="form__item-readonly-style" name="ymd_upd" value="<%= outai.ymd_upd %>" disabled></dd>
+        <dt>更新者</dt>
+        <dd><input type="text" class="form__item-readonly-style" name="id_upd" value="<%= outai.id_upd %>" disabled></dd>
+      </dl>
+          <div class="form__btn">
+            <a class="btn-base" href="/outai/update/<%= outai.id %>">更新</a>
+            <% if (outai.id_company) { %>
+              <a class="btn-base" href="/outai/<%= outai.id_company %>">戻る</a>
+            <% } else { %>
+              <a class="btn-base" href="/outai">戻る</a>
+            <% } %>
+          </div>
+    </div>
+  </section>
+</body>
+
+<%- include("./common/javascripts.ejs") %>
+
+</html>

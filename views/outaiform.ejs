@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>応対履歴（編集）</title>
+  <%- include("./common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("./common/header.ejs") %>
+  <section class="main">
+    <div class="main__wrapper area__outai">
+      <!-- /.area-link -->
+      <form class="outai__form" name="outaiform" method="POST">
+        <% if (errors) { %>
+        <div class="alert alert-danger">
+          <%  for (let key in errors) { %>
+          <div><%= errors[key] %></div>
+          <% } %>
+        </div>
+        <% } %>
+        <dl>
+          <!-- ◆登録モード -->
+          <% if (mode === 'insert') { %>
+          <dt class="area__outai-company">会社</dt>
+          <dd class="area__outai-company">
+            <select class="form__item-style" name="id_company">
+              <% if (!selectCompany) { %>
+              <option value="" selected>--会社選択--</option>
+              <% } else { %>
+              <option value="">--会社選択--</option>
+              <% } %>
+              <% companies.forEach(function (company) { %>
+              <% if ((company.id === selectCompany.id)) { %>
+              <option value="<%= company.id %>" selected><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
+              <% } else { %>
+              <option value="<%= company.id %>"><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
+              <% } %>
+              <% }); %>
+            </select>
+          </dd>
+          <dt class="area__outai-content">内容</dt>
+          <% if (outai) { %>
+            <dd class="area__outai-content">
+            <textarea name="content" class="form__item-style"><%= outai.content %></textarea>
+            </dd>
+          <% } else { %>
+            <dd class="area__outai-content">
+            <textarea name="content" class="form__item-style"></textarea>
+            </dd>
+          <% } %>
+          <dt>ステータス</dt>
+          <dd>
+            <input id="status_1" class="form__radio-style" type="radio" value="完了" checked="checked" name="status"><label for="status_1" class="form__radio-label">完了</label>
+            <input id="status_2" class="form__radio-style" type="radio" value="未完了" name="status"><label for="status_2" class="form__radio-label">未完了</label>
+          </dd>
+          <dt>
+          </dt>
+          <dd>
+          </dd>
+          <dt>登録日</dt>
+          <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_add" value="" disabled></dd>
+          <dt>登録者</dt>
+          <dd><input type="text" class="form__item-style bg-input-disabled" name="id_add" value="" disabled></dd>
+          <dt>更新日</dt>
+          <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_upd" value="" disabled></dd>
+          <dt>更新者</dt>
+          <dd><input type="text" class="form__item-style bg-input-disabled" name="id_upd" value="" disabled></dd>
+          <div class="form__btn">
+            <input type="button" class="btn-base" id="btn_insert" value="登録">
+            <% if ((outai) && (outai.id_company)) { %>
+              <a class="btn-base" href="/outai/company/<%= outai.id_company %>">戻る</a>
+            <% } else { %>
+              <a class="btn-base" href="/outai">戻る</a>
+            <% } %> 
+
+            <!-- ◆更新モード -->
+            <% } else { %>
+            <dt class="area__outai-company">会社</dt>
+            <dd class="area__outai-company">
+              <select class="form__item-style" name="id_company">
+                <% if (!outai.id_company) { %>
+                <option value="" selected>--会社選択--</option>
+                <% } %>
+                <% companies.forEach(function (company) { %>
+                <% if (company.id === outai.id_company) { %>
+                <option value="<%= company.id %>" selected><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
+                <% } else { %>
+                <option value="<%= company.id %>"><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
+                <% } %>
+                <% }); %>
+              </select>
+            </dd>
+            <dt class="area__outai-content">内容</dt>
+            <dd class="area__outai-content">
+            <textarea class="form__item-style"><%= outai.content %></textarea>
+            </dd>
+            <dt>ステータス</dt>
+            <dd>
+              <% if (outai.status !== '完了') { %>
+              <input id="status_1" class="form__radio-style" type="radio" value="完了" checked="checked" name="status"><label for="status_1" class="form__radio-label">完了</label>
+              <input id="status_2" class="form__radio-style" type="radio" value="未完了" name="status"><label for="status_2" class="form__radio-label">未完了</label>
+              <% } else { %>
+              <input id="status_1" class="form__radio-style" type="radio" value="完了" name="status"><label for="status_1" class="form__radio-label">完了</label>
+              <input id="status_2" class="form__radio-style" type="radio" value="未完了" checked="checked" name="status"><label for="status_2" class="form__radio-label">未完了</label>
+              <% } %>
+            </dd>
+            <dt>
+            </dt>
+            <dd>
+            </dd>
+            <dt>登録日</dt>
+            <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_add" value="<%= outai.ymd_add %>" disabled></dd>
+            <dt>登録者</dt>
+            <dd><input type="text" class="form__item-style bg-input-disabled" name="id_add" value="<%= outai.id_add %>" disabled></dd>
+            <dt>更新日</dt>
+            <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_upd" value="<%= outai.ymd_upd %>" disabled></dd>
+            <dt>更新者</dt>
+            <dd><input type="text" class="form__item-style bg-input-disabled" name="id_upd" value="<%= outai.id_upd %>" disabled></dd>
+            <div class="form__btn">
+              <input type="button" class="btn-base" id="btn_update" value="更新">
+              <a class="btn-base" href="/outai/<%= outai.id %>">戻る</a>
+            <% } %>
+            </div>
+            <input type="hidden" id="field_mode">
+        </dl>
+      </form>
+    </div>
+  </section>
+  <script>
+    let insertbtn = document.getElementById("btn_insert");
+    if (insertbtn) {
+      insertbtn.addEventListener("click", function () {
+        document.outaiform.action = "/outai/insert";
+        document.outaiform.submit();
+      })
+    }
+    let updatebtn = document.getElementById("btn_update");
+    if (updatebtn) {
+      updatebtn.addEventListener("click", function () {
+        document.outaiform.action = "/outai/update";
+        document.outaiform.submit();
+      })
+    }
+  </script>
+</body>
+<%- include("./common/javascripts.ejs") %>
+
+</html>

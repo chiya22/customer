@@ -63,6 +63,7 @@
                   <% if (result.header === '個人') { %>
                   <a class="btn-link bd-left-disabled" href="./person/<%= result.id %>"><p class="tag bg-disabled"><%= result.header %></p>
                   <% } else { %>
+                  <div class="result__row">
                   <a class="btn-link bd-left-disabled" href="./company/<%= result.id %>"><p class="tag bg-disabled"><%= result.header %> <%= result.id_nyukyo %></p>
                   <% } %>
                   <p class="tag bg-disabled"><%= result.kubun %></p>
@@ -70,17 +71,24 @@
                   <span class="color-disabled"><%= result.name %></span>
                   <span class="dateinfo color-disabled">入居：<%= result.ymd_nyukyo %>　
                     解約：<%= result.ymd_kaiyaku %></span>
+                  </a>
               <% } else { %>
                   <% if (result.header === '個人') { %>
                   <a class="btn-link" href="./person/<%= result.id %>"><p class="tag"><%= result.header %></p>
                   <% } else { %>
+                  <div class="result__row">
                   <a class="btn-link" href="./company/<%= result.id %>"><p class="tag"><%= result.header %> <%= result.id_nyukyo %></p>
                   <% } %>
                   <p class="tag"><%= result.kubun %></p>
                   <%= result.name %>
                   <span class="dateinfo">入居：<%= result.ymd_nyukyo %></span>
+                  </a>
               <% } %>
-                </a>
+              <% if (result.header !== '個人') { %>
+              <a href="./outai/company/<%= result.id %>" class="btn-outai">一覧</a>
+              <a href="./outai/insert/<%= result.id %>" class="btn-outai">追加</a>
+              </div>
+              <% } %>
           </div>
           <!-- /.search__result-item -->
           <% }) %>
