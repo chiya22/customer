@@ -257,13 +257,13 @@ body {
   background-color: #808080;
 }
 .color-disabled {
-  color: #808080;
+  color: #808080 !important;
 }
 .bd-disabled {
   border-color: #808080 !important;
 }
 .bd-left-disabled {
-  border-left: solid 6px #808080!important;
+  border-left: solid 6px #808080 !important;
 }
 .dateinfo {
   font-size: 0.75rem;
@@ -415,16 +415,22 @@ body {
   .btn-outai {
     background: #f7f7f7;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
-    color: #333;
+    // color: #333;
     display: inline-block;
     flex: 0 0 35px;
+    color: $base-color;
     font-size: 0.75rem;
+    font-weight: bold;
     margin-left: 5px;
     padding: 13px 0;
     text-align: center;
     text-decoration: none;
     &:hover {
-      background-color: #e1e1e1;
+      opacity: 0.7;
+    }
+    &:active {
+      box-shadow: inset 0 0 2px rgba(128, 128, 128, 0.1);
+      transform: translateY(2px);
     }
   }
 }
@@ -472,7 +478,6 @@ dd.area__outai-content {
     resize: none;
   }
 }
-
 
 // company-person
 .person {

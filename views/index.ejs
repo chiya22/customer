@@ -72,6 +72,11 @@
                   <span class="dateinfo color-disabled">入居：<%= result.ymd_nyukyo %>　
                     解約：<%= result.ymd_kaiyaku %></span>
                   </a>
+                  <% if (result.header !== '個人') { %>
+                  <a href="./outai/company/<%= result.id %>" class="btn-outai color-disabled">一覧</a>
+                  <a href="./outai/insert/<%= result.id %>" class="btn-outai color-disabled">追加</a>
+                  </div>
+                  <% } %>
               <% } else { %>
                   <% if (result.header === '個人') { %>
                   <a class="btn-link" href="./person/<%= result.id %>"><p class="tag"><%= result.header %></p>
@@ -83,11 +88,11 @@
                   <%= result.name %>
                   <span class="dateinfo">入居：<%= result.ymd_nyukyo %></span>
                   </a>
-              <% } %>
-              <% if (result.header !== '個人') { %>
-              <a href="./outai/company/<%= result.id %>" class="btn-outai">一覧</a>
-              <a href="./outai/insert/<%= result.id %>" class="btn-outai">追加</a>
-              </div>
+                  <% if (result.header !== '個人') { %>
+                  <a href="./outai/company/<%= result.id %>" class="btn-outai">一覧</a>
+                  <a href="./outai/insert/<%= result.id %>" class="btn-outai">追加</a>
+                  </div>
+                  <% } %>
               <% } %>
           </div>
           <!-- /.search__result-item -->
