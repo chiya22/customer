@@ -21,18 +21,37 @@
                 <option value="">--会社選択--</option>
                 <% } %>
                 <% companies.forEach(function (company) { %>
+                <%
+                let title;
+                if ((company.ymd_kaiyaku) && (company.ymd_kaiyaku !== '99991231')) {
+                  title = company.id_nyukyo + '【解約】【' + company.kubun_company + '】' + company.name;
+                } else {
+                  title = company.id_nyukyo + '【' + company.kubun_company + '】' + company.name;
+                }
+                %>
                 <% if ((selectCompany) && (company.id === selectCompany.id)) { %>
-                <option value="<%= company.id %>" selected><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
+                <option value="<%= company.id %>" selected><%= title %></option>
                 <% } else { %>
-                <option value="<%= company.id %>"><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
+                <option value="<%= company.id %>"><%= title %></option>
                 <% } %>
                 <% }); %>
               </select>
+              <div class="form__check">
+              <% if (includecomplete) { %>
+                <input type="checkbox" id="includecomplete" name="includecomplete" checked value="完了"><label for="includecomplete">完了含む</label>
+              <% } else { %>
+                <input type="checkbox" id="includecomplete" name="includecomplete" value="完了"><label for="includecomplete">完了含む</label>
+              <% } %>
+              </div>
               <input class="form__item-style width-base" type="text" name="searchvalue" placeholder="検索文字を入力してください"
                 value="<%= searchvalue %>">
               <input class="btn-base ml-small" type="button" id="btn_search" value="検索" />
               <!-- ダミーの会社IDを設定する -->
-              <a class="btn-link ml-small" href="/outai/insert/O999999999">応対履歴登録</a>
+              <% if (selectCompany) { %>
+                <a class="btn-link ml-small" href="/outai/insert/<%= selectCompany.id %>">応対履歴登録</a>
+              <% } else { %>
+                <a class="btn-link ml-small" href="/outai/insert/C99999">応対履歴登録</a>
+              <% } %>
             </div>
             <!-- /.searchform__top -->
             <input type="hidden" id="page_max" name="page_max" value="<%= page_max %>">
@@ -74,7 +93,6 @@
         <div class="search__result-items">
           <%  results.forEach( result => { %>
           <div class="search__result-item">
-            <a class="btn-link" href="./outai/<%= result.id %>">
             <%
             let title = '【' + result.name_company + '】';
             if (result.content.length  > 15) {
@@ -83,10 +101,19 @@
               title += result.content
             }
             %>
-            <span><%= title %></span>
-            <span class="dateinfo-small">　　登録：<%= result.ymd_add %>（<%= result.name_add %>）
-              更新：<%= result.ymd_upd %>（<%= result.name_upd %>）</span>
-            </a>
+            <% if (result.status === '完了') { %>
+              <a class="btn-link bd-left-disabled" href="./outai/<%= result.id %>">
+              <span class="color-disabled"><%= title %></span>
+              <span class="dateinfo-small">　　登録：<%= result.ymd_add %>（<%= result.name_add %>）
+                更新：<%= result.ymd_upd %>（<%= result.name_upd %>）</span>
+              </a>
+            <% } else { %>
+              <a class="btn-link" href="./outai/<%= result.id %>">
+              <span><%= title %></span>
+              <span class="dateinfo-small">　　登録：<%= result.ymd_add %>（<%= result.name_add %>）
+                更新：<%= result.ymd_upd %>（<%= result.name_upd %>）</span>
+              </a>
+            <% } %>
           </div>
           <!-- /.search__result-item -->
           <% }); %>

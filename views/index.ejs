@@ -73,7 +73,11 @@
                     解約：<%= result.ymd_kaiyaku %></span>
                   </a>
                   <% if (result.header !== '個人') { %>
-                  <a href="./outai/company/<%= result.id %>" class="btn-outai color-disabled">一覧</a>
+                  <form method="POST" action="/outai">
+                    <input type="hidden" name="id_company" value="<%= result.id %>" >
+                    <input type="hidden" name="searchvalue" value="" >
+                    <input type="submit" class="btn-outai color-disabled" value="一覧">
+                  </form>
                   <a href="./outai/insert/<%= result.id %>" class="btn-outai color-disabled">追加</a>
                   </div>
                   <% } %>
@@ -89,7 +93,11 @@
                   <span class="dateinfo">入居：<%= result.ymd_nyukyo %></span>
                   </a>
                   <% if (result.header !== '個人') { %>
-                  <a href="./outai/company/<%= result.id %>" class="btn-outai">一覧</a>
+                  <form method="POST" action="/outai">
+                    <input type="hidden" name="id_company" value="<%= result.id %>" >
+                    <input type="hidden" name="searchvalue" value="" >
+                    <input type="submit" class="btn-outai" value="一覧">
+                  </form>
                   <a href="./outai/insert/<%= result.id %>" class="btn-outai">追加</a>
                   </div>
                   <% } %>

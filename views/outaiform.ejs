@@ -97,7 +97,7 @@
             </dd>
             <dt>ステータス</dt>
             <dd>
-              <% if (outai.status !== '完了') { %>
+              <% if (outai.status === '完了') { %>
               <input id="status_1" class="form__radio-style" type="radio" value="完了" checked="checked" name="status"><label for="status_1" class="form__radio-label">完了</label>
               <input id="status_2" class="form__radio-style" type="radio" value="未完了" name="status"><label for="status_2" class="form__radio-label">未完了</label>
               <% } else { %>
