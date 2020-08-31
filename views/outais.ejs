@@ -104,14 +104,14 @@
             <% if (result.status === '完了') { %>
               <a class="btn-link bd-left-disabled" href="./outai/<%= result.id %>">
               <span class="color-disabled"><%= title %></span>
-              <span class="dateinfo-small">　　登録：<%= result.ymd_add %>（<%= result.name_add %>）
-                更新：<%= result.ymd_upd %>（<%= result.name_upd %>）</span>
+              <span class="dateinfo-small">　　登録：<%= result.ymdhms_add %>（<%= result.name_add %>）
+                更新：<%= result.ymdhms_upd %>（<%= result.name_upd %>）</span>
               </a>
             <% } else { %>
               <a class="btn-link" href="./outai/<%= result.id %>">
               <span><%= title %></span>
-              <span class="dateinfo-small">　　登録：<%= result.ymd_add %>（<%= result.name_add %>）
-                更新：<%= result.ymd_upd %>（<%= result.name_upd %>）</span>
+              <span class="dateinfo-small">　　登録：<%= result.ymdhms_add %>（<%= result.name_add %>）
+                更新：<%= result.ymdhms_upd %>（<%= result.name_upd %>）</span>
               </a>
             <% } %>
           </div>

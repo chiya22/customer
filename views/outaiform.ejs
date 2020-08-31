@@ -59,11 +59,11 @@
           <dd>
           </dd>
           <dt>登録日</dt>
-          <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_add" value="" disabled></dd>
+          <dd><input type="text" class="form__item-style bg-input-disabled" name="ymdhms_add" value="" disabled></dd>
           <dt>登録者</dt>
           <dd><input type="text" class="form__item-style bg-input-disabled" name="id_add" value="" disabled></dd>
           <dt>更新日</dt>
-          <dd><input type="text" class="form__item-style bg-input-disabled" name="ymd_upd" value="" disabled></dd>
+          <dd><input type="text" class="form__item-style bg-input-disabled" name="ymdhms_upd" value="" disabled></dd>
           <dt>更新者</dt>
           <dd><input type="text" class="form__item-style bg-input-disabled" name="id_upd" value="" disabled></dd>
           <div class="form__btn">
@@ -110,20 +110,20 @@
             <dd>
             </dd>
             <dt>登録日</dt>
-            <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outai.ymd_add %>" disabled></dd>
+            <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outai.ymdhms_add %>" disabled></dd>
             <dt>登録者</dt>
             <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outai.name_add %>" disabled></dd>
             <dt>更新日</dt>
-            <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outai.ymd_upd %>" disabled></dd>
+            <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outai.ymdhms_upd %>" disabled></dd>
             <dt>更新者</dt>
             <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outai.name_upd %>" disabled></dd>
             <div class="form__btn">
               <input type="button" class="btn-base" id="btn_update" value="更新">
               <a class="btn-base" href="/outai/<%= outai.id %>">戻る</a>
               <input type="hidden" name="id" value="<%= outai.id %>">
-              <input type="hidden" name="ymd_add" value="<%= outai.ymd_add %>">
+              <input type="hidden" name="ymdhms_add" value="<%= outai.ymdhms_add %>">
               <input type="hidden" name="id_add" value="<%= outai.id_add %>">
-              <input type="hidden" name="ymd_upd" value="<%= outai.ymd_upd %>">
+              <input type="hidden" name="ymdhms_upd" value="<%= outai.ymdhms_upd %>">
               <input type="hidden" name="id_upd" value="<%= outai.id_upd %>">
             <% } %>
             </div>
