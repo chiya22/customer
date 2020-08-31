@@ -10,7 +10,9 @@ const m_person = require('../model/person');
 const m_relation_comroom = require('../model/relation_comroom');
 const m_relation_comcabi = require('../model/relation_comcabi');
 const m_relation_nyucabi = require('../model/relation_nyucabi');
+const m_relation_combicycle = require('../model/relation_combicycle');
 const m_sq = require('../model/sq');
+const bicycles = require('../model/bicycles');
 
 // TOPページから「登録」ボタンでの遷移
 router.get('/', security.authorize(), function (req, res, next) {
@@ -36,6 +38,8 @@ router.get('/:id', security.authorize(), function (req, res, next) {
   let freecabinets;
   let rooms;
   let nyukyocompanies;
+  let bicycles;
+  let freebicycles;
 
   //会社情報の取得
   m_company.findPKey(inObj, (err, retObj) => {
@@ -68,27 +72,41 @@ router.get('/:id', security.authorize(), function (req, res, next) {
             //空いているキャビネット情報の取得
             m_relation_comcabi.findFree((err, retObj) => {
               // m_relation_nyucabi.findFree((err, retObj) => {
-                if (err) { next(err); }
+              if (err) { next(err); }
               freecabinets = retObj;
 
-              //部屋情報の取得
-              m_relation_comroom.findByCompany(inObj.id, (err, retObj) => {
+              //駐輪場情報
+              m_relation_combicycle.findByCompany(company.id, (err, retObj) => {
                 if (err) { next(err); }
-                rooms = retObj;
+                bicycles = retObj;
 
-                //使用／未使用の区分をつけてすべての部屋情報の取得
-                m_relation_comroom.findForSelect((err, retObj) => {
-                  // m_relation_comroom.findFree((err, retObj) => {
-                  if (err) { next(err); };
-                  res.render('company', {
-                    company: company,
-                    persons: persons,
-                    nyukyo: nyukyo,
-                    nyukyocompanies: nyukyocompanies,
-                    cabinets: cabinets,
-                    freecabinets: freecabinets,
-                    rooms: rooms,
-                    selectrooms: retObj,
+                //空いている駐輪場情報
+                m_relation_combicycle.findFree((err, retObj) => {
+                  if (err) { next(err); }
+                  freebicycles = retObj;
+
+                  //部屋情報の取得
+                  m_relation_comroom.findByCompany(inObj.id, (err, retObj) => {
+                    if (err) { next(err); }
+                    rooms = retObj;
+
+                    //使用／未使用の区分をつけてすべての部屋情報の取得
+                    m_relation_comroom.findForSelect((err, retObj) => {
+                      // m_relation_comroom.findFree((err, retObj) => {
+                      if (err) { next(err); };
+                      res.render('company', {
+                        company: company,
+                        persons: persons,
+                        nyukyo: nyukyo,
+                        nyukyocompanies: nyukyocompanies,
+                        cabinets: cabinets,
+                        freecabinets: freecabinets,
+                        rooms: rooms,
+                        selectrooms: retObj,
+                        bicycles: bicycles,
+                        freebicycles: freebicycles,
+                      });
+                    });
                   });
                 });
               });
@@ -360,6 +378,36 @@ router.get('/deletecabinet/:id_company/:id_cabinet/:no_seq', security.authorize(
     res.redirect('/company/' + req.params.id_company);
   });
 });
+
+// 会社⇔駐輪場情報の追加
+router.post('/addbicycle', security.authorize(), function (req, res, next) {
+  let relation_combicycle = {};
+  relation_combicycle.id_company = req.body.id_company;
+  relation_combicycle.id_bicycle = req.body.id_bicycle;
+  relation_combicycle.ymd_start = tool.getToday();
+  relation_combicycle.ymd_upd = tool.getToday();
+  relation_combicycle.id_upd = req.user.id;
+  m_relation_combicycle.insert(relation_combicycle, (err, retObj) => {
+    if (err) { next(err); };
+    res.redirect('/company/' + relation_combicycle.id_company);
+  });
+});
+
+// 会社⇔駐輪場情報の削除
+router.get('/deletebicycle/:id_company/:id_bicycle/:no_seq', security.authorize(), function (req, res, next) {
+  let relation_combicycle = {};
+  relation_combicycle.id_company = req.params.id_company;
+  relation_combicycle.id_bicycle = req.params.id_bicycle;
+  relation_combicycle.no_seq = req.params.no_seq;
+  relation_combicycle.ymd_end = tool.getToday();
+  relation_combicycle.ymd_upd = tool.getToday();
+  relation_combicycle.id_upd = req.user.id;
+  m_relation_combicycle.remove(relation_combicycle, (err, retObj) => {
+    if (err) { next(err); };
+    res.redirect('/company/' + req.params.id_company);
+  });
+});
+
 
 function validateData(body) {
 

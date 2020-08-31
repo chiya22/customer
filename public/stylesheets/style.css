@@ -258,7 +258,7 @@ body {
   width: 95%;
   max-width: 900px;
   min-width: 800px;
-  margin: 0 auto;
+  margin: 0 auto 20px auto;
 }
 
 .alert {
@@ -670,6 +670,35 @@ dd.area__outai-content textarea {
 }
 
 .cabinet .cabinet__items .cabinet__item a:hover {
+  opacity: 0.7;
+}
+
+.bicycle {
+  margin-bottom: 0.5rem;
+}
+
+.bicycle .bicycle__form {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.bicycle .bicycle__items {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.bicycle .bicycle__items .bicycle__item {
+  background-color: #f7f7f7;
+  color: #cd5e42;
+  font-weight: bold;
+  padding: 0.5em 1rem;
+  border: solid 1px #cd5e42;
+  margin: 5px 15px 5px 0;
+  font-size: 0.75rem;
+}
+
+.bicycle .bicycle__items .bicycle__item a:hover {
   opacity: 0.7;
 }
 

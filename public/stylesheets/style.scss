@@ -245,7 +245,7 @@ body {
   width: 95%;
   max-width: 900px;
   min-width: 800px;
-  margin: 0 auto;
+  margin: 0 auto 20px auto;
 }
 
 // エラーメッセージ領域
@@ -609,6 +609,32 @@ dd.area__outai-content {
       border: solid 1px $base-color;
       font-size: 0.75rem;
       margin: 5px 15px 5px 0;
+      a:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+}
+// company-room
+.bicycle {
+  margin-bottom: 0.5rem;
+  .bicycle__form {
+    display: flex;
+    margin-bottom: 0.5rem;
+  }
+  .bicycle__items {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    .bicycle__item {
+      background-color: #f7f7f7;
+      color: $base-color;
+      font-weight: bold;
+      padding: 0.5em 1rem;
+      border: solid 1px $base-color;
+      // border-radius: 8px;
+      margin: 5px 15px 5px 0;
+      font-size: 0.75rem;
       a:hover {
         opacity: 0.7;
       }
