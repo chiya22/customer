@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>駐輪場管理（編集）</title>
+  <%- include("../common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("../common/header.ejs") %>
+  <div class="main">
+    <div class="main__wrapper">
+      <div class="area-admin-link">
+        <a class="btn-base" href="/admin/bicycles">戻る</a>
+      </div>
+      <% if (message && message.length !== 0) { %>
+      <div class="alert alert-danger">
+        <%= message %>
+      </div>
+      <% } %>
+      <div class="admin__bicycle">
+        <form name="bicycleform" method="POST">
+          <dl>
+          <% if (mode === 'insert') { %>
+          <dt>駐輪場番号</dt>
+          <dd><input class="form__item-style" type="text" name="id" required></dd>
+          <dt>名前</dt>
+          <dd><input class="form__item-style" type="text" name="name" required></dd>
+          <div class="form__btn">
+            <input class="btn-base" type="button" id="btn_insert" value="登録">
+          <% } else { %>
+          <dt>駐輪場番号</dt>
+          <dd><input class="form__item-style bg-input-disabled" type="text" name="id" value="<%= bicycle.id %>" disabled></dd>
+          <input class="form__item-style" type="hidden" name="id" value="<%= bicycle.id %>">
+          <dt>名前</dt>
+          <dd><input class="form__item-style" type="text" name="name" value="<%= bicycle.name %>" required></dd>
+          <dt>適用開始日</dt>
+          <dd><input class="form__item-style flatpickr" type="text" name="ymd_start" value="<%= bicycle.ymd_start %>" required></dd>
+          <dt>適用終了日</dt>
+          <dd><input class="form__item-style flatpickr" type="text" name="ymd_end" value="<%= bicycle.ymd_end %>" required></dd>
+          <div class="form__btn">
+            <input class="btn-base" type="button" id="btn_update" value="更新">
+            <input class="btn-base" type="button" id="btn_delete" value="削除">
+          <% } %>
+          </div>
+          <input type="hidden" id="field_mode">
+          </dl>
+        </form>
+      </div>
+      <!-- /.admin__room -->
+    </div>
+    <!-- /.main__wrapper -->
+  </div>
+  <!-- /.main -->
+  <script>
+    let insertbtn = document.getElementById("btn_insert");
+    if (insertbtn) {
+      insertbtn.addEventListener("click", function () {
+        document.bicycleform.action = "/admin/bicycles/insert";
+        document.bicycleform.submit();
+      })
+    }
+    let updatebtn = document.getElementById("btn_update");
+    if (updatebtn) {
+      updatebtn.addEventListener("click", function () {
+        document.bicycleform.action = "/admin/bicycles/update";
+        document.bicycleform.submit();
+      })
+    }
+    let deletebtn = document.getElementById("btn_delete");
+    if (deletebtn) {
+      deletebtn.addEventListener("click", function () {
+        document.bicycleform.action = "/admin/bicycles/delete";
+        document.bicycleform.submit();
+      })
+    }
+  </script>
+</body>
+<%- include("../common/javascripts.ejs") %>
+
+</html>

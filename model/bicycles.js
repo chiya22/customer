@@ -25,6 +25,19 @@ const find = function (callback) {
     })();
 };
 
+const findForAdmin = function (callback) {
+    (async function () {
+        const query = 'SELECT b.*, re.ymd_start AS relation_ymd_start, re.ymd_end AS relation_ymd_end, c.name AS companyname FROM bicycles b LEFT OUTER JOIN relation_combicycle re ON re.ymd_end = "99991231" AND b.id = re.id_bicycle LEFT OUTER JOIN companies c ON re.id_company = c.id';
+        await connection.query(query, function (error, results, fields) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+        });
+    })();
+};
+
 const insert = function (inObj, callback) {
     (async function () {
         const query = 'insert into bicycles values (' + tool.returnvalue(inObj.id) + ',' + tool.returnvalue(inObj.name) + ', "' + inObj.ymd_start + '", "99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '")';
@@ -66,6 +79,7 @@ const remove = function (pkey, callback) {
 
 module.exports = {
     find,
+    findForAdmin,
     findPKey,
     insert,
     update,

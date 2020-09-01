@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>駐輪場管理</title>
+  <%- include("../common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("../common/header.ejs") %>
+  <div class="main">
+    <div class="main__wrapper">
+      <div class="area-admin-link">
+        <a class="btn-base" href="/admin/bicycles/insert">登録</a>
+      </div>
+      <div class="admin__bicycles">
+        <% if (bicycles) { %>
+        <%  bicycles.forEach( bicycle => { %>
+        <div class="admin__bicycle">
+          <a class="btn-link" href="/admin/bicycles/update/<%= bicycle.id %>">
+            <%= bicycle.id %>　<%= bicycle.name %><span
+              class="dateinfo-small">　開始：<%= bicycle.ymd_start %>　終了：<%= bicycle.ymd_end %></span>
+              <% if (bicycle.companyname) { %>
+                【使用会社】<%= bicycle.companyname %>
+              <% } %>
+          </a>
+        </div>
+        <%  }) %>
+        <% } %>
+      </div>
+      <!-- /.admin__bicycles -->
+    </div>
+    <!-- /.main__wrapper -->
+  </div>
+  <!-- /.main -->
+</body>
+<%- include("../common/javascripts.ejs") %>
+
+</html>

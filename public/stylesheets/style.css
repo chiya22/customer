@@ -723,6 +723,7 @@ dd.area__outai-content textarea {
 .admin__user,
 .admin__nyukyo,
 .admin__room,
+.admin__bicycle,
 .admin__cabinet {
   margin-top: 0.5rem;
   margin-left: 1.5rem;
@@ -731,6 +732,7 @@ dd.area__outai-content textarea {
 .admin__user a,
 .admin__nyukyo a,
 .admin__room a,
+.admin__bicycle a,
 .admin__cabinet a {
   margin: 0.5rem 0.5rem;
 }
