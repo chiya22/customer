@@ -13,14 +13,17 @@
       <div class="area-admin-link">
         <a class="btn-base" href="/admin/rooms/insert">登録</a>
       </div>
-      <div class="admin__room">
+      <div class="admin__rooms">
         <% if (rooms) { %>
-          <%  rooms.forEach( room => { %>
-            <a class="btn-link" href="/admin/rooms/update/<%= room.id %>">
-              <%= room.name %><span class="dateinfo-small">　開始：<%= room.ymd_start %>　終了：<%= room.ymd_end %></span>
-            </a>
-          <%  }) %>
-          <% } %>
+        <%  rooms.forEach( room => { %>
+        <div class="admin_room">
+          <a class="btn-link" href="/admin/rooms/update/<%= room.id %>">
+            <%= room.name %><span class="dateinfo-small">　開始：<%= room.ymd_start %>　終了：<%= room.ymd_end %></span>
+            <% if (room.companyname) { %><%= room.companyname %><% } %>
+          </a>
+        </div>
+        <%  }) %>
+        <% } %>
       </div>
       <!-- /.admin__room -->
     </div>
@@ -29,4 +32,5 @@
   <!-- /.main -->
 </body>
 <%- include("../common/javascripts.ejs") %>
+
 </html>

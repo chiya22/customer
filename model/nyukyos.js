@@ -26,6 +26,19 @@ const find = function (callback) {
     })();
 };
 
+const findForAdmin = function (callback) {
+    (async function () {
+        const query = 'SELECT n.*, c.id as id_company, c.name AS name_company from nyukyos n left outer JOIN companies c ON n.id = c.id_nyukyo AND c.ymd_kaiyaku = "99991231" order by id asc';
+        await connection.query(query, function (error, results, fields) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+        });
+    })();
+};
+
 const findForSelect = function (callback) {
     (async function () {
         // const query = '(select "【使用中】" AS kubun, nyukyos.id AS id FROM nyukyos WHERE ymd_end = "99991231" and EXISTS (SELECT * FROM companies WHERE companies.ymd_kaiyaku = "99991231" and companies.id_nyukyo = nyukyos.id)) UNION ALL (SELECT "【未使用】" AS kubun, nyukyos.id AS id FROM nyukyos WHERE nyukyos.ymd_end = "99991231" and NOT EXISTS (SELECT * FROM companies WHERE companies.ymd_kaiyaku = "99991231" and companies.id_nyukyo = nyukyos.id)) ORDER BY kubun DESC, id asc';
@@ -82,6 +95,7 @@ const remove = function (pkey, callback) {
 module.exports = {
     find,
     findPKey,
+    findForAdmin,
     findForSelect,
     insert,
     update,

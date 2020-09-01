@@ -8,7 +8,7 @@ const m_cabinet = require('../../model/cabinet');
 
 // TOPページ
 router.get('/', security.authorize(), function (req, res, next) {
-  m_cabinet.find((err, retObj) => {
+  m_cabinet.findForAdmin((err, retObj) => {
     if (err) { next(err) };
     res.render('admin/cabinets', {
       cabinets: retObj,

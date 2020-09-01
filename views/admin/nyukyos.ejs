@@ -13,12 +13,15 @@
       <div class="area-admin-link">
         <a class="btn-base" href="/admin/nyukyos/insert">登録</a>
       </div>
-      <div class="admin__nyukyo">
+      <div class="admin__nyukyos">
           <% if (nyukyos) { %>
           <%  nyukyos.forEach( nyukyo => { %>
-          <a class="btn-link" href="/admin/nyukyos/update/<%= nyukyo.id %>">
-            <%= nyukyo.id %><span class="dateinfo-small">　開始：<%= nyukyo.ymd_start %>　終了：<%= nyukyo.ymd_end %></span>
-          </a>
+          <div class="admin_nyukyo">
+            <a class="btn-link" href="/admin/nyukyos/update/<%= nyukyo.id %>">
+              <%= nyukyo.id %><span class="dateinfo-small">　開始：<%= nyukyo.ymd_start %>　終了：<%= nyukyo.ymd_end %></span>
+              <%= nyukyo.id_company %><%= nyukyo.name_company %>
+            </a>
+          </div>
           <%  }) %>
           <% } %>
       </div>

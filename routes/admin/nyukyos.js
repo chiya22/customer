@@ -8,7 +8,7 @@ const m_nyukyo = require('../../model/nyukyos');
 
 // TOPページ
 router.get('/', security.authorize(), function (req, res, next) {
-  m_nyukyo.find((err, retObj) => {
+  m_nyukyo.findForAdmin((err, retObj) => {
     if (err) { next(err) };
     res.render('admin/nyukyos', {
       nyukyos: retObj,

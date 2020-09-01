@@ -8,7 +8,7 @@ const m_room = require('../../model/rooms');
 
 // TOPページ
 router.get('/', security.authorize(), function (req, res, next) {
-  m_room.find( (err, retObj) => {
+  m_room.findForAdmin( (err, retObj) => {
     if (err) { next(err) };
     res.render('admin/rooms', {
       rooms: retObj,

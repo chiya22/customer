@@ -13,12 +13,15 @@
       <div class="area-admin-link">
         <a class="btn-base" href="/admin/cabinets/insert">登録</a>
       </div>
-      <div class="admin__cabinet">
+      <div class="admin__cabinets">
         <% if (cabinets) { %>
           <%  cabinets.forEach( cabinet => { %>
-          <a class="btn-link" href="/admin/cabinets/update/<%= cabinet.id %>">
-            <%= cabinet.place %> <%= cabinet.name %><span class="dateinfo-small">　開始：<%= cabinet.ymd_start %>　終了：<%= cabinet.ymd_end %></span>
-          </a>
+            <div class="admin__cabinet">
+              <a class="btn-link" href="/admin/cabinets/update/<%= cabinet.id %>">
+                <%= cabinet.place %> <%= cabinet.name %><span class="dateinfo-small">　開始：<%= cabinet.ymd_start %>　終了：<%= cabinet.ymd_end %></span>
+                <%= cabinet.name_company %>
+              </a>
+            </div>
           <%  }) %>
           <% } %>
       </div>

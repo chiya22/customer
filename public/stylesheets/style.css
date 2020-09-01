@@ -721,19 +721,19 @@ dd.area__outai-content textarea {
 }
 
 .admin__user,
-.admin__nyukyo,
-.admin__room,
-.admin__bicycle,
-.admin__cabinet {
+.admin__nyukyos,
+.admin__rooms,
+.admin__bicycles,
+.admin__cabinets {
   margin-top: 0.5rem;
   margin-left: 1.5rem;
 }
 
 .admin__user a,
-.admin__nyukyo a,
-.admin__room a,
-.admin__bicycle a,
-.admin__cabinet a {
+.admin__nyukyos a,
+.admin__rooms a,
+.admin__bicycles a,
+.admin__cabinets a {
   margin: 0.5rem 0.5rem;
 }
 

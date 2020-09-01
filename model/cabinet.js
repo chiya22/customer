@@ -25,6 +25,19 @@ const find = function (callback) {
     })();
 };
 
+const findForAdmin = function (callback) {
+    (async function () {
+        const query = 'select ca.*, re.id_company, c.name AS name_company from cabinets ca left outer join relation_comcabi re ON ca.id = re.id_cabinet AND re.ymd_end = "99991231" left outer join companies c ON  re.id_company = c.id ORDER BY ca.id ASC'
+        await connection.query(query, function (error, results, fields) {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+        });
+    })();
+};
+
 const findFree = function (callback) {
     (async function () {
         await connection.query('SELECT c.id, c.place, c.name FROM cabinets AS c WHERE c.ymd_end = "99991231" and NOT EXISTS ( SELECT * FROM nyukyos AS n WHERE n.ymd_end = "99991231" and c.id_nyukyo = n.id ) order by c.id asc', function (error, results, fields) {
@@ -90,6 +103,7 @@ const remove = function (pkey, callback) {
 
 module.exports = {
     find,
+    findForAdmin,
     findFree,
     findPKey,
     findByNyukyo,

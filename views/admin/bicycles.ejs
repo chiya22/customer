@@ -21,7 +21,7 @@
             <%= bicycle.id %>　<%= bicycle.name %><span
               class="dateinfo-small">　開始：<%= bicycle.ymd_start %>　終了：<%= bicycle.ymd_end %></span>
               <% if (bicycle.companyname) { %>
-                【使用会社】<%= bicycle.companyname %>
+                <%= bicycle.companyname %>
               <% } %>
           </a>
         </div>
