@@ -40,7 +40,8 @@ const find = function (callback) {
 
 const findFree = function (callback) {
     (async function () {
-        await connection.query('select id, name, ymd_start, ymd_end, ymd_upd, id_upd from bicycles where NAME = "" ORDER BY id', function (error, results, fields) {
+        const query = 'SELECT b.id, b.name, b.ymd_start, b.ymd_end, b.ymd_upd, b.id_upd FROM bicycles AS b WHERE b.ymd_end = "99991231" and NOT EXISTS ( SELECT * FROM relation_combicycle AS re WHERE b.id = re.id_bicycle and re.ymd_end = "99991231" )'
+        await connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
             } else {
@@ -65,7 +66,7 @@ const findFree = function (callback) {
 
 const insert = function (inObj, callback) {
     (async function() {
-        const query = 'insert into relation_combicycle values ("' + inObj.id_company + '","' + inObj.id_bicycle + '",", (select IFNULL(MAX(b.no_seq),0)+1 from relation_combicycle AS b WHERE b.id_company = "' + inObj.id_company + '" AND b.id_bicycle = "' + inObj.id_bicycle + '") ,"' + inObj.ymd_start + '", "99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '")';
+        const query = 'insert into relation_combicycle values ("' + inObj.id_company + '","' + inObj.id_bicycle + '", (select IFNULL(MAX(b.no_seq),0)+1 from relation_combicycle AS b WHERE b.id_company = "' + inObj.id_company + '" AND b.id_bicycle = "' + inObj.id_bicycle + '") ,"' + inObj.ymd_start + '", "99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '")';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);

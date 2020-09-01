@@ -12,7 +12,7 @@ const m_relation_comcabi = require('../model/relation_comcabi');
 const m_relation_nyucabi = require('../model/relation_nyucabi');
 const m_relation_combicycle = require('../model/relation_combicycle');
 const m_sq = require('../model/sq');
-const bicycles = require('../model/bicycles');
+const m_bicycles = require('../model/bicycles');
 
 // TOPページから「登録」ボタンでの遷移
 router.get('/', security.authorize(), function (req, res, next) {
@@ -390,7 +390,7 @@ router.post('/addbicycle', security.authorize(), function (req, res, next) {
   m_relation_combicycle.insert(relation_combicycle, (err, retObj) => {
     if (err) { next(err); };
     res.redirect('/company/' + relation_combicycle.id_company);
-  });
+  })
 });
 
 // 会社⇔駐輪場情報の削除

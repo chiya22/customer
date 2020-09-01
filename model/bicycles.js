@@ -27,7 +27,7 @@ const find = function (callback) {
 
 const insert = function (inObj, callback) {
     (async function () {
-        const query = 'insert into bicycles values (' + tool.returnvalue(inObj.id) + ',' + tool.returnvalue(inObj.name) + ',"' + inObj.ymd_start + '", "99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '")';
+        const query = 'insert into bicycles values (' + tool.returnvalue(inObj.id) + ',' + tool.returnvalue(inObj.name) + ', "' + inObj.ymd_start + '", "99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '")';
         connection.query(query, function (error, results, fields) {
             if (error) {
                 callback(error, null);
