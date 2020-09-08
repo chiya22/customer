@@ -241,7 +241,7 @@
             <input type="hidden" name="id" value="<%= company.id %>">
             <input type="hidden" name="ymd_kaiyaku" value="<%= company.ymd_kaiyaku %>">
             <div class="form__btn">
-              <% if (company.ymd_kaiyaku === '99991231') { %>
+              <% if (company.ymd_kaiyaku !== '99991231') { %>
                 <input type="button" class="btn-base" id="btn_delete" value="削除">
                 <a class="btn-base" href="/company/<%= company.id %>">戻る</a>
               <% } %>
