@@ -9,10 +9,8 @@ const m_company = require('../model/company');
 const m_person = require('../model/person');
 const m_relation_comroom = require('../model/relation_comroom');
 const m_relation_comcabi = require('../model/relation_comcabi');
-const m_relation_nyucabi = require('../model/relation_nyucabi');
 const m_relation_combicycle = require('../model/relation_combicycle');
 const m_sq = require('../model/sq');
-const m_bicycles = require('../model/bicycles');
 
 // TOPページから「登録」ボタンでの遷移
 router.get('/', security.authorize(), function (req, res, next) {
