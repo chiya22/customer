@@ -6,7 +6,6 @@ const findPKey = function (inObj, callback) {
         const client = knex.connect();
         const retObj = await client.from("companies").where({ id: inObj.id, ymd_end: "99991231" }).catch((err) => { });
         callback(null, retObj[0]);
-
     })();
 };
 
