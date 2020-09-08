@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const security = require('../util/security');
-var connection = require('../db/mysqlconfig.js');
+const company = require("../model/company");
 
 //認証画面の初期表示
 router.get('/login', function (req, res) {
@@ -49,20 +49,20 @@ router.post('/', security.authorize(), function (req, res, next) {
   const offset = (pagecount_target - 1) * count_perpage;
 
   const query = 'select count(*) as count_all from ((select "company" AS kubun, c.id, c.name, c.kana from companies as c where ((c.name like "%' + searchvalue + '%") or (c.kana like "%' + searchvalue + '%") or (c.id_nyukyo like "%' + searchvalue + '%")) and c.ymd_end = "99991231") union all (select "person" AS kubun, p.id, p.name, p.kana from persons as p where ((p.name like "%' + searchvalue + '%") or (p.kana like "%' + searchvalue + '%")) and p.ymd_end = "99991231")) as total'
-  connection.query(query, function (error, results, fields) {
-    if (error) { next(error) };
+  company.selectSQL(query, (err, retObj) => {
+    if (err) { next(err) };
     let count_all;
-    count_all = results[0].count_all;
+    count_all = retObj[0].count_all;
     let pagecount_max = parseInt(count_all / count_perpage);
     if ((count_all % count_perpage) > 0) {
       pagecount_max += 1;
     }
     const query2 = '(select "会社" AS header, c.id, c.id_nyukyo as id_nyukyo, c.kubun_company as kubun, c.name, c.kana, c.ymd_nyukyo, c.ymd_kaiyaku from companies as c where ((c.name like "%' + searchvalue + '%") or (c.kana like "%' + searchvalue + '%") or (c.id_nyukyo like "%' + searchvalue + '%")) and c.ymd_end = "99991231") union all (select "個人" AS header, p.id, NULL as id_nyukyo, p.kubun_person as kubun, p.name, p.kana, p.ymd_nyukyo, p.ymd_kaiyaku from persons as p where ((p.name like "%' + searchvalue + '%") or (p.kana like "%' + searchvalue + '%")) and p.ymd_end = "99991231") order by header asc, id_nyukyo asc, ymd_kaiyaku desc, ymd_nyukyo asc limit ' + count_perpage + ' offset ' + offset
-    connection.query(query2, function (error, results, fields) {
-      if (error) { next(error) };
+    company.selectSQL(query2, (err, retObj) => {
+      if (err) { next(err) };
       res.render('index', {
         searchvalue: searchvalue,
-        results: results,
+        results: retObj,
         page_current: pagecount_target,
         page_max: pagecount_max,
         count_all: count_all,

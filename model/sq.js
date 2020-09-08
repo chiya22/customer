@@ -1,4 +1,5 @@
 const connection = require('../db/mysqlconfig.js');
+const knex = require("../db/knex.js");
 
 const getSqCompany = function (callback) {
     (async function () {

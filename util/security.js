@@ -1,8 +1,8 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const hash = require("./hash.js").digest;
-const connection = require('../db/mysqlconfig.js');
 
+const users = require("../model/users");
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -18,28 +18,26 @@ passport.use("local-strategy", new LocalStrategy({
     passReqToCallback: true
 }, (req, username, password, done) => {
     const today = new Date();
-    const dateinfo = today.getHours() + "時" + today.getMinutes() + "分" + ('0' +today.getSeconds()).slice(-2) + "秒";
+    const dateinfo = today.getHours() + "時" + today.getMinutes() + "分" + ('0' + today.getSeconds()).slice(-2) + "秒";
     console.log(dateinfo + " ) " + 'username:' + username + ' password:' + password);
-    connection.query('select * from users where id = "' + username + '"', function (error, results, fields) {
-        if (error) {
-            done(error);
+
+    users.find(username, (err, retObj) => {
+        if (err) { throw err };
+        if (!retObj) {
+            done(null, false, req.flash("message", "ユーザー名　または　パスワード　が間違っています。"));
         } else {
-            if (results.length === 0) {
-                done(null, false, req.flash("message", "ユーザー名　または　パスワード　が間違っています。"));
+            if (retObj[0].password === hash(password)) {
+                req.session.regenerate((err) => {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done(null, retObj[0]);
+                    }
+                });
             } else {
-                if (results[0].password === hash(password)) {
-                    req.session.regenerate((err) => {
-                        if (err) {
-                            done(err);
-                        } else {
-                            done(null, results[0]);
-                        }
-                    });
-                } else {
-                    done(null, false, req.flash("message", "ユーザー名　または　パスワード　が間違っています。"));
-                }
+                done(null, false, req.flash("message", "ユーザー名　または　パスワード　が間違っています。"));
             }
-        };
+        }
     });
 }));
 
@@ -61,7 +59,7 @@ const authenticate = function () {
         "local-strategy", {
         successRedirect: "/",
         failureRedirect: "/login"
-        }
+    }
     );
 };
 

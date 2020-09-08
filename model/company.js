@@ -1,6 +1,8 @@
 var connection = require('../db/mysqlconfig.js');
 const tool = require('../util/tool');
 
+const knex = require("../db/knex.js");
+
 const findPKey = function (inObj, callback) {
     (async function () {
         const query = 'select * from companies where id = "' + inObj.id + '" and ymd_end = "99991231"';
@@ -141,6 +143,15 @@ const cancel = function (inObj, callback) {
     })();
 }
 
+const selectSQL = function (sql, callback) {
+    (async function () {
+        const client = knex.connect();
+        let retObj = await client.raw(sql);
+        callback(null, retObj[0]);
+    })();
+}
+
+
 module.exports = {
     find,
     findPKey,
@@ -153,4 +164,5 @@ module.exports = {
     update,
     remove,
     cancel,
+    selectSQL,
 };
