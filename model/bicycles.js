@@ -9,7 +9,7 @@ const findPKey = function (pkey, callback) {
             callback(null, retObj[0]);
         })
         .catch( (err) => {
-            callbacl(err, null);
+            callback(err, null);
         })
     })();
 };
@@ -22,7 +22,7 @@ const find = function (callback) {
             callback(null, retObj[0]);
         })
         .catch( (err) => {
-            callbacl(err, null);
+            callback(err, null);
         })
     })();
 };
@@ -36,7 +36,7 @@ const findForAdmin = function (callback) {
             callback(null, retObj[0]);
         })
         .catch( (err) => {
-            callbacl(err, null);
+            callback(err, null);
         })
     })();
 };
@@ -64,7 +64,7 @@ const update = function (inObj, callback) {
             callback(null, retObj[0]);
         })
         .catch( (err) => {
-            callbacl(err, null);
+            callback(err, null);
         })
     })();
 };
@@ -78,7 +78,7 @@ const remove = function (pkey, callback) {
             callback(null, retObj[0]);
         })
         .catch( (err) => {
-            callbacl(err, null);
+            callback(err, null);
         })
     })();
 };
