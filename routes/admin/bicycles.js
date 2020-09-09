@@ -44,7 +44,7 @@ router.post('/insert', security.authorize(), function (req, res, next) {
 
   let inObj = {};
   inObj.id = req.body.id;
-  inObj.place = req.body.name;
+  inObj.name = req.body.name;
   inObj.ymd_start = tool.getToday();
   inObj.ymd_upd = tool.getToday();
   inObj.id_upd = req.user.id;
@@ -70,6 +70,9 @@ router.post('/update', security.authorize(), function (req, res, next) {
   let inObj = {};
   inObj.id = req.body.id;
   inObj.name = req.body.name;
+  inObj.ymd_start = req.body.ymd_start;
+  inObj.ymd_end = req.body.ymd_end;
+  inObj.before_ymd_end = req.body.before_ymd_end;
   inObj.ymd_upd = tool.getToday();
   inObj.id_upd = req.user.id;
   m_bicycle.update(inObj, (err,retObj) => {
