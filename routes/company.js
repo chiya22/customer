@@ -44,65 +44,70 @@ router.get('/:id', security.authorize(), function (req, res, next) {
     if (err) { next(err); }
     company = retObj;
 
-    //個人情報の取得
-    let inObjP = {};
-    inObjP.id_company = req.params.id;
-    m_person.findByCompany(inObjP, (err, retObj) => {
-      if (err) { next(err); }
-      persons = retObj;
+    if (!company) {
+      res.redirect('/');
+    } else {
 
-      //入居情報の取得
-      m_nyukyo.findPKey(company.id_nyukyo, (err, retObj) => {
-        if (err) { next(err) };
-        nyukyo = retObj;
+      //個人情報の取得
+      let inObjP = {};
+      inObjP.id_company = req.params.id;
+      m_person.findByCompany(inObjP, (err, retObj) => {
+        if (err) { next(err); }
+        persons = retObj;
 
-        //入居番号の会社
-        m_company.findByNyukyo(company.id_nyukyo, (err, retObj) => {
-          if (err) { next(err); }
-          nyukyocompanies = retObj;
+        //入居情報の取得
+        m_nyukyo.findPKey(company.id_nyukyo, (err, retObj) => {
+          if (err) { next(err) };
+          nyukyo = retObj;
 
-          //キャビネット情報の取得
-          m_relation_comcabi.findByCompany(company.id, (err, retObj) => {
-            // m_relation_nyucabi.findByNyukyo(company.id_nyukyo, (err, retObj) => {
+          //入居番号の会社
+          m_company.findByNyukyo(company.id_nyukyo, (err, retObj) => {
             if (err) { next(err); }
-            cabinets = retObj;
+            nyukyocompanies = retObj;
 
-            //空いているキャビネット情報の取得
-            m_relation_comcabi.findFree((err, retObj) => {
-              // m_relation_nyucabi.findFree((err, retObj) => {
+            //キャビネット情報の取得
+            m_relation_comcabi.findByCompany(company.id, (err, retObj) => {
+              // m_relation_nyucabi.findByNyukyo(company.id_nyukyo, (err, retObj) => {
               if (err) { next(err); }
-              freecabinets = retObj;
+              cabinets = retObj;
 
-              //駐輪場情報
-              m_relation_combicycle.findByCompany(company.id, (err, retObj) => {
+              //空いているキャビネット情報の取得
+              m_relation_comcabi.findFree((err, retObj) => {
+                // m_relation_nyucabi.findFree((err, retObj) => {
                 if (err) { next(err); }
-                bicycles = retObj;
+                freecabinets = retObj;
 
-                //空いている駐輪場情報
-                m_relation_combicycle.findFree((err, retObj) => {
+                //駐輪場情報
+                m_relation_combicycle.findByCompany(company.id, (err, retObj) => {
                   if (err) { next(err); }
-                  freebicycles = retObj;
+                  bicycles = retObj;
 
-                  //部屋情報の取得
-                  m_relation_comroom.findByCompany(inObj.id, (err, retObj) => {
+                  //空いている駐輪場情報
+                  m_relation_combicycle.findFree((err, retObj) => {
                     if (err) { next(err); }
-                    rooms = retObj;
+                    freebicycles = retObj;
 
-                    //使用／未使用の区分をつけてすべての部屋情報の取得
-                    m_relation_comroom.findForSelect((err, retObj) => {
-                      // m_relation_comroom.findFree((err, retObj) => {
-                      if (err) { next(err); };
-                      res.render('company', {
-                        company: company,
-                        persons: persons,
-                        nyukyo: nyukyo,
-                        nyukyocompanies: nyukyocompanies,
-                        cabinets: cabinets,
-                        freecabinets: freecabinets,
-                        rooms: rooms,
-                        selectrooms: retObj,
-                        bicycles: bicycles,
-                        freebicycles: freebicycles,
+                    //部屋情報の取得
+                    m_relation_comroom.findByCompany(inObj.id, (err, retObj) => {
+                      if (err) { next(err); }
+                      rooms = retObj;
+
+                      //使用／未使用の区分をつけてすべての部屋情報の取得
+                      m_relation_comroom.findForSelect((err, retObj) => {
+                        // m_relation_comroom.findFree((err, retObj) => {
+                        if (err) { next(err); };
+                        res.render('company', {
+                          company: company,
+                          persons: persons,
+                          nyukyo: nyukyo,
+                          nyukyocompanies: nyukyocompanies,
+                          cabinets: cabinets,
+                          freecabinets: freecabinets,
+                          rooms: rooms,
+                          selectrooms: retObj,
+                          bicycles: bicycles,
+                          freebicycles: freebicycles,
+                        });
                       });
                     });
                   });
@@ -112,7 +117,7 @@ router.get('/:id', security.authorize(), function (req, res, next) {
           });
         });
       });
-    });
+    }
   });
 });
 
@@ -237,21 +242,18 @@ router.post('/delete', security.authorize(), function (req, res, next) {
   inObj.ymd_end = tool.getToday();
 
   m_company.remove(inObj, (err, retObj) => {
-    if (err) {
-      if (err.errno === 1451) {
-        m_company.findPKey(inObj, (err, retObj) => {
-          if (err) { next(err) };
-          let errors = {};
-          errors.common = '削除対象の会社は使用されています';
-          res.render('companyform', {
-            company: retObj,
-            mode: 'delete',
-            errors: errors,
-          });
-        })
-      } else {
-        next(err);
-      }
+    if (err) { next(err) }
+    if (retObj.changedRows === 0) {
+      m_company.findPKey(inObj, (err, retObj) => {
+        if (err) { next(err) };
+        let errors = {};
+        errors.common = '更新対象がすでに削除されています';
+        res.render('companyform', {
+          company: retObj,
+          mode: 'delete',
+          errors: errors,
+        });
+      });
     } else {
       res.redirect('/');
     }
