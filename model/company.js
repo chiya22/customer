@@ -9,7 +9,7 @@ const findPKey = function (inObj, callback) {
                 callback(null, retObj[0]);
             })
             .catch((err) => {
-                callbacl(err, null);
+                callback(err, null);
             })
     })();
 };
@@ -22,7 +22,7 @@ const find = function (callback) {
                 callback(null, retObj[0]);
             })
             .catch((err) => {
-                callbacl(err, null);
+                callback(err, null);
             })
     })();
 };
@@ -36,7 +36,7 @@ const findForSelect = function (callback) {
                 callback(null, retObj[0]);
             })
             .catch((err) => {
-                callbacl(err, null);
+                callback(err, null);
             })
     })();
 }
@@ -49,7 +49,7 @@ const findByNyukyo = function (id_nyukyo, callback) {
                 callback(null, retObj[0]);
             })
             .catch((err) => {
-                callbacl(err, null);
+                callback(err, null);
             })
     })();
 };
@@ -62,7 +62,7 @@ const findByNyukyoWithoutKaiyaku = function (id_nyukyo, callback) {
                 callback(null, retObj[0]);
             })
             .catch((err) => {
-                callbacl(err, null);
+                callback(err, null);
             })
     })();
 };
@@ -76,7 +76,7 @@ const findLikeCount = function (likevalue, callback) {
                 callback(null, retObj[0]);
             })
             .catch((err) => {
-                callbacl(err, null);
+                callback(err, null);
             })
     })();
 };
@@ -90,7 +90,7 @@ const findLikeForPaging = function (likevalue, percount, offset, callback) {
                 callback(null, retObj[0]);
             })
             .catch((err) => {
-                callbacl(err, null);
+                callback(err, null);
             })
     })();
 };
@@ -104,7 +104,7 @@ const insert = function (inObj, callback) {
                 callback(null, retObj[0]);
             })
             .catch((err) => {
-                callbacl(err, null);
+                callback(err, null);
             })
     })();
 };
@@ -118,7 +118,7 @@ const update = function (inObj, callback) {
                 callback(null, retObj[0]);
             })
             .catch((err) => {
-                callbacl(err, null);
+                callback(err, null);
             })
     })();
 };
@@ -132,7 +132,7 @@ const remove = function (inObj, callback) {
                 callback(null, retObj[0]);
             })
             .catch((err) => {
-                callbacl(err, null);
+                callback(err, null);
             })
     })();
 };
@@ -146,7 +146,7 @@ const cancel = function (inObj, callback) {
                 callback(null, retObj[0]);
             })
             .catch((err) => {
-                callbacl(err, null);
+                callback(err, null);
             })
     })();
 }
@@ -159,7 +159,7 @@ const selectSQL = function (sql, callback) {
                 callback(null, retObj[0]);
             })
             .catch((err) => {
-                callbacl(err, null);
+                callback(err, null);
             })
     })();
 }
