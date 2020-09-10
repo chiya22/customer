@@ -73,8 +73,11 @@ router.post('/update', security.authorize(), function (req, res, next) {
   inObj.id = req.body.id;
   inObj.place = req.body.place;
   inObj.name = req.body.name;
+  inObj.ymd_start = req.body.ymd_start;
+  inObj.ymd_end = req.body.ymd_end;
   inObj.ymd_upd = tool.getToday();
   inObj.id_upd = req.user.id;
+  inObj.before_ymd_end = req.body.before_ymd_end;
   m_cabinet.update(inObj, (err, retObj) => {
     if (err) { next(err) };
     //更新時に対象レコードが存在しない場合
