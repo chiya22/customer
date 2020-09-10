@@ -34,6 +34,7 @@
             <dt>適用終了日</dt>
             <dd><input class="form__item-style flatpickr" type="text" name="ymd_end" value="<%= nyukyo.ymd_end %>"></dd>
             <input type="hidden" name="id" value="<%= nyukyo.id %>">
+            <input type="hidden" name="before_ymd_end" value="<%= nyukyo.ymd_end %>">
             <div class="form__btn">
               <input class="btn-base" type="button" id="btn_update" value="更新">
               <input class="btn-base" type="button" id="btn_delete" value="削除">
