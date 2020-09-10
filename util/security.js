@@ -21,17 +21,17 @@ passport.use("local-strategy", new LocalStrategy({
     const dateinfo = today.getHours() + "時" + today.getMinutes() + "分" + ('0' + today.getSeconds()).slice(-2) + "秒";
     console.log(dateinfo + " ) " + 'username:' + username + ' password:' + password);
 
-    users.find(username, (err, retObj) => {
+    users.findPKey(username, (err, retObj) => {
         if (err) { throw err };
         if (!retObj) {
             done(null, false, req.flash("message", "ユーザー名　または　パスワード　が間違っています。"));
         } else {
-            if (retObj.password === hash(password)) {
+            if (retObj[0].password === hash(password)) {
                 req.session.regenerate((err) => {
                     if (err) {
                         done(err);
                     } else {
-                        done(null, retObj);
+                        done(null, retObj[0]);
                     }
                 });
             } else {
