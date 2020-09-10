@@ -26,12 +26,12 @@ passport.use("local-strategy", new LocalStrategy({
         if (!retObj) {
             done(null, false, req.flash("message", "ユーザー名　または　パスワード　が間違っています。"));
         } else {
-            if (retObj[0].password === hash(password)) {
+            if (retObj.password === hash(password)) {
                 req.session.regenerate((err) => {
                     if (err) {
                         done(err);
                     } else {
-                        done(null, retObj[0]);
+                        done(null, retObj);
                     }
                 });
             } else {
