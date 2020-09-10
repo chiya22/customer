@@ -7,8 +7,9 @@ const connect = () => {
         user: 'pfs',
         password: 'ps10001sp',
         database: 'pfs',
+        // port: 58020,
     };
-  
+
     const knex = Knex({
         client: "mysql",
         connection: config,
