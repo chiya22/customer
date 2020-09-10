@@ -44,7 +44,7 @@ const findForSelect = function (callback) {
 const findByNyukyo = function (id_nyukyo, callback) {
     (async function () {
         const client = knex.connect();
-        await client.from('companies').where({ id_nyukyo: id_nyukyo }).orderBy('ymd_kaiyaku', 'asc')
+        await client.from('companies').where({ id_nyukyo: id_nyukyo }).orderBy("ymd_kaiyaku", "asc")
             .then((retObj) => {
                 callback(null, retObj);
             })
@@ -57,7 +57,7 @@ const findByNyukyo = function (id_nyukyo, callback) {
 const findByNyukyoWithoutKaiyaku = function (id_nyukyo, callback) {
     (async function () {
         const client = knex.connect();
-        await client.from('companies').where({ id_nyukyo: id_nyukyo, ymd_kaiyaku: '99991231' }).orderBy('ymd_kaiyaku', 'asc')
+        await client.from('companies').where({ id_nyukyo: id_nyukyo, ymd_kaiyaku: '99991231' }).orderBy("ymd_kaiyaku", "asc")
             .then((retObj) => {
                 callback(null, retObj[0]);
             })

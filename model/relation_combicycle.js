@@ -1,4 +1,3 @@
-var connection = require('../db/mysqlconfig');
 const knex = require("../db/knex.js");
 
 const findPKey = function (inObj, callback) {
@@ -36,7 +35,7 @@ const findByCompany = function (id_company, callback) {
 const find = function (callback) {
     (async function () {
         const client = knex.connect();
-        await client.from("relation_combicycle").where({ymd_end: "99991231"}).orderBy({id_company: "asc"})
+        await client.from("relation_combicycle").where({ymd_end: "99991231"}).orderBy("id_company","asc")
         .then( (retObj) => {
             callback(null, retObj[0]);
         })
@@ -104,14 +103,15 @@ const remove = function (inObj, callback) {
 
 const cancelByCompany = function (inObj, callback) {
     (async function() {
+        const client = knex.connect();
         const query = 'update relation_combicycle set ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_company = "' + inObj.id_company + '" and ymd_end = "99991231"';
-        connection.query(query, function (error, results, fields) {
-            if (error) {
-                callback(error, null);
-            } else {
-                callback(null, results);
-            }
-        });
+        await client.raw(query)
+        .then( (retObj) => {
+            callback(null, retObj[0]);
+        })
+        .catch( (err) => {
+            callback(err, null);
+        })
     })();
 };
 

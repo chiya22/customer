@@ -5,7 +5,7 @@ const find = ((username, callback) => {
         const client = knex.connect();
         await client.from("users").where({
             id: username,
-            ymd_end: '99991231',
+            ymd_end: "99991231",
         })
         .then( (retObj) => {
             callback(null, retObj[0]);

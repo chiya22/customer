@@ -16,7 +16,7 @@ const findPKey = function (pkey, callback) {
 const find = function (callback) {
     (async function () {
         const client = knex.connect();
-        await client.from("nyukyos").orderBy({id: "asc"})
+        await client.from("nyukyos").orderBy("id","asc")
         .then( (retObj) => {
             callback(null, retObj[0]);
         })
