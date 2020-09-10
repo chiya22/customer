@@ -46,7 +46,7 @@ const findByNyukyo = function (id_nyukyo, callback) {
         const client = knex.connect();
         await client.from('companies').where({ id_nyukyo: id_nyukyo }).orderBy('ymd_kaiyaku', 'asc')
             .then((retObj) => {
-                callback(null, retObj[0]);
+                callback(null, retObj);
             })
             .catch((err) => {
                 callback(err, null);
