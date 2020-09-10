@@ -100,6 +100,18 @@ const update = function (inObj, callback) {
     })();
 };
 
+const selectSQL = function (sql, callback) {
+    (async function () {
+        const client = knex.connect();
+        await client.raw(sql)
+            .then((retObj) => {
+                callback(null, retObj[0]);
+            })
+            .catch((err) => {
+                callback(err, null);
+            })
+    })();
+}
 module.exports = {
     find,
     findPKey,
@@ -108,4 +120,5 @@ module.exports = {
     findLikeForPaging,
     insert,
     update,
+    selectSQL,
 };

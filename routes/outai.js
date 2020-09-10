@@ -7,8 +7,6 @@ const tool = require('../util/tool');
 const m_sq = require('../model/sq');
 const m_outai = require('../model/outais');
 const m_company = require('../model/company');
-const connection = require('../db/mysqlconfig.js');
-
 
 //応対履歴検索画面の初期表示
 router.get('/', security.authorize(), function (req, res, next) {
@@ -26,7 +24,6 @@ router.get('/', security.authorize(), function (req, res, next) {
       includecomplete: null,
     });
   });
-
 });
 
 const count_perpage = 20;
@@ -73,26 +70,26 @@ router.post('/', security.authorize(), function (req, res, next) {
     }
   }
 
-  connection.query(query, function (error, results, fields) {
-    if (error) { next(error) };
+  m_outai.selectSQL(query, (err, retObj) => {
+    if (err) { next(err) };
     let count_all;
-    count_all = results[0].count_all;
+    count_all = retObj[0].count_all;
     let pagecount_max = parseInt(count_all / count_perpage);
     if ((count_all % count_perpage) > 0) {
       pagecount_max += 1;
     }
-    connection.query(query2, function (error, results, fields) {
-      if (error) { next(error) };
-      let outais = results;
+    m_outai.selectSQL(query2, (err, retObj) => {
+      if (err) { next(err) };
+      let outais = retObj;
       let companies;
       m_company.findForSelect((err, retObj) => {
-        if (error) { next(error) };
+        if (err) { next(err) };
         companies = retObj;
         if (id_company) {
           let inObjC = {};
           inObjC.id = id_company;
           m_company.findPKey(inObjC, (err, retObj) => {
-            if (error) { next(error) };
+            if (err) { next(err) };
             res.render('outais', {
               results: outais,
               searchvalue: searchvalue,
