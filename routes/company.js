@@ -431,6 +431,12 @@ function validateData(body) {
       errors.name = "会社名は100桁以下で入力してください。";
     }
   }
+  if (body.name_other) {
+    if (body.name_other.length > 100) {
+      isValidated = false;
+      errors.name_other = "会社名（別名）は100桁以下で入力してください。";
+    }
+  }
   if (body.id_kaigi) {
     if (body.id_kaigi.length > 5) {
       isValidated = false;
@@ -464,6 +470,7 @@ function getCompanyData(body) {
   inObj.id_kaigi = body.id_kaigi;
   inObj.kubun_company = body.kubun_company;
   inObj.name = body.name;
+  inObj.name_other = body.name_other;
   inObj.kana = body.kana;
   inObj.ymd_nyukyo = body.ymd_nyukyo;
   inObj.ymd_kaiyaku = body.ymd_kaiyaku;
