@@ -641,6 +641,32 @@ dd.area__outai-content {
     }
   }
 }
+// company-car
+.car {
+  margin-bottom: 0.5rem;
+  .car__form {
+    display: flex;
+    margin-bottom: 0.5rem;
+  }
+  .car__items {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    .car__item {
+      background-color: #f7f7f7;
+      color: $base-color;
+      font-weight: bold;
+      padding: 0.5em 1rem;
+      border: solid 1px $base-color;
+      // border-radius: 8px;
+      margin: 5px 15px 5px 0;
+      font-size: 0.75rem;
+      a:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+}
 
 // admin
 .area-admin {
@@ -662,6 +688,7 @@ dd.area__outai-content {
 .admin__nyukyos,
 .admin__rooms   ,
 .admin__bicycles,
+.admin__cars,
 .admin__cabinets {
   margin-top: 0.5rem;
   margin-left: 1.5rem;

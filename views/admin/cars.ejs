@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>駐車場管理</title>
+  <%- include("../common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("../common/header.ejs") %>
+  <div class="main">
+    <div class="main__wrapper">
+      <div class="area-admin-link">
+        <a class="btn-base" href="/admin/cars/insert">登録</a>
+      </div>
+      <div class="admin__cars">
+        <% if (cars) { %>
+        <%  cars.forEach( car => { %>
+        <div class="admin__car">
+          <a class="btn-link" href="/admin/cars/update/<%= car.id %>">
+            <%= car.id %>　<%= car.name %><span
+              class="dateinfo-small">　開始：<%= car.ymd_start %>　終了：<%= car.ymd_end %></span>
+              <% if (car.companyname) { %>
+                <%= car.companyname %>
+              <% } %>
+          </a>
+        </div>
+        <%  }) %>
+        <% } %>
+      </div>
+      <!-- /.admin__cars -->
+    </div>
+    <!-- /.main__wrapper -->
+  </div>
+  <!-- /.main -->
+</body>
+<%- include("../common/javascripts.ejs") %>
+
+</html>

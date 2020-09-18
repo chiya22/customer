@@ -10,6 +10,7 @@ const m_person = require('../model/person');
 const m_relation_comroom = require('../model/relation_comroom');
 const m_relation_comcabi = require('../model/relation_comcabi');
 const m_relation_combicycle = require('../model/relation_combicycle');
+const m_relation_comcar = require('../model/relation_comcar');
 const m_sq = require('../model/sq');
 
 // TOPページから「登録」ボタンでの遷移
@@ -38,6 +39,8 @@ router.get('/:id', security.authorize(), function (req, res, next) {
   let nyukyocompanies;
   let bicycles;
   let freebicycles;
+  let cars;
+  let freecars;
 
   //会社情報の取得
   m_company.findPKey(inObj, (err, retObj) => {
@@ -78,35 +81,49 @@ router.get('/:id', security.authorize(), function (req, res, next) {
                 freecabinets = retObj;
 
                 //駐輪場情報
-                m_relation_combicycle.findByCompany(company.id, (err, retObj) => {
+                m_relation_comcar.findByCompany(company.id, (err, retObj) => {
                   if (err) { next(err); }
-                  bicycles = retObj;
+                  cars = retObj;
 
                   //空いている駐輪場情報
-                  m_relation_combicycle.findFree((err, retObj) => {
+                  m_relation_comcar.findFree((err, retObj) => {
                     if (err) { next(err); }
-                    freebicycles = retObj;
+                    freecars = retObj;
 
-                    //部屋情報の取得
-                    m_relation_comroom.findByCompany(inObj.id, (err, retObj) => {
+                    //駐輪場情報
+                    m_relation_combicycle.findByCompany(company.id, (err, retObj) => {
                       if (err) { next(err); }
-                      rooms = retObj;
+                      bicycles = retObj;
 
-                      //使用／未使用の区分をつけてすべての部屋情報の取得
-                      m_relation_comroom.findForSelect((err, retObj) => {
-                        // m_relation_comroom.findFree((err, retObj) => {
-                        if (err) { next(err); };
-                        res.render('company', {
-                          company: company,
-                          persons: persons,
-                          nyukyo: nyukyo,
-                          nyukyocompanies: nyukyocompanies,
-                          cabinets: cabinets,
-                          freecabinets: freecabinets,
-                          rooms: rooms,
-                          selectrooms: retObj,
-                          bicycles: bicycles,
-                          freebicycles: freebicycles,
+                      //空いている駐輪場情報
+                      m_relation_combicycle.findFree((err, retObj) => {
+                        if (err) { next(err); }
+                        freebicycles = retObj;
+
+                        //部屋情報の取得
+                        m_relation_comroom.findByCompany(inObj.id, (err, retObj) => {
+                          if (err) { next(err); }
+                          rooms = retObj;
+
+                          //使用／未使用の区分をつけてすべての部屋情報の取得
+                          m_relation_comroom.findForSelect((err, retObj) => {
+                            // m_relation_comroom.findFree((err, retObj) => {
+                            if (err) { next(err); };
+                            res.render('company', {
+                              company: company,
+                              persons: persons,
+                              nyukyo: nyukyo,
+                              nyukyocompanies: nyukyocompanies,
+                              cabinets: cabinets,
+                              freecabinets: freecabinets,
+                              rooms: rooms,
+                              selectrooms: retObj,
+                              bicycles: bicycles,
+                              freebicycles: freebicycles,
+                              cars: cars,
+                              freecars: freecars,
+                            });
+                          });
                         });
                       });
                     });
@@ -408,6 +425,34 @@ router.get('/deletebicycle/:id_company/:id_bicycle/:no_seq', security.authorize(
   });
 });
 
+// 会社⇔駐車場情報の追加
+router.post('/addcar', security.authorize(), function (req, res, next) {
+  let relation_comcar = {};
+  relation_comcar.id_company = req.body.id_company;
+  relation_comcar.id_car = req.body.id_car;
+  relation_comcar.ymd_start = tool.getToday();
+  relation_comcar.ymd_upd = tool.getToday();
+  relation_comcar.id_upd = req.user.id;
+  m_relation_comcar.insert(relation_comcar, (err, retObj) => {
+    if (err) { next(err); };
+    res.redirect('/company/' + relation_comcar.id_company);
+  })
+});
+
+// 会社⇔駐車場情報の削除
+router.get('/deletecar/:id_company/:id_car/:no_seq', security.authorize(), function (req, res, next) {
+  let relation_comcar = {};
+  relation_comcar.id_company = req.params.id_company;
+  relation_comcar.id_car = req.params.id_car;
+  relation_comcar.no_seq = req.params.no_seq;
+  relation_comcar.ymd_end = tool.getToday();
+  relation_comcar.ymd_upd = tool.getToday();
+  relation_comcar.id_upd = req.user.id;
+  m_relation_comcar.remove(relation_comcar, (err, retObj) => {
+    if (err) { next(err); };
+    res.redirect('/company/' + req.params.id_company);
+  });
+});
 
 function validateData(body) {
 

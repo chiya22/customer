@@ -702,6 +702,35 @@ dd.area__outai-content textarea {
   opacity: 0.7;
 }
 
+.car {
+  margin-bottom: 0.5rem;
+}
+
+.car .car__form {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.car .car__items {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.car .car__items .car__item {
+  background-color: #f7f7f7;
+  color: #cd5e42;
+  font-weight: bold;
+  padding: 0.5em 1rem;
+  border: solid 1px #cd5e42;
+  margin: 5px 15px 5px 0;
+  font-size: 0.75rem;
+}
+
+.car .car__items .car__item a:hover {
+  opacity: 0.7;
+}
+
 .area-admin {
   margin-top: 2rem;
   margin-left: 1.5rem;
@@ -724,6 +753,7 @@ dd.area__outai-content textarea {
 .admin__nyukyos,
 .admin__rooms,
 .admin__bicycles,
+.admin__cars,
 .admin__cabinets {
   margin-top: 0.5rem;
   margin-left: 1.5rem;
@@ -733,6 +763,7 @@ dd.area__outai-content textarea {
 .admin__nyukyos a,
 .admin__rooms a,
 .admin__bicycles a,
+.admin__cars a,
 .admin__cabinets a {
   margin: 0.5rem 0.5rem;
 }

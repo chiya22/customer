@@ -50,7 +50,8 @@
             <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= company.name %>" disabled>
             </dd>
             <dt>会社名（追加）</dt>
-            <dd><input type="text" class="form__item-readonly-style" name="name_other" value="<%= company.name_other %>" disabled>
+            <dd><input type="text" class="form__item-readonly-style" name="name_other" value="<%= company.name_other %>"
+                disabled>
             </dd>
             <dt>会社名カナ</dt>
             <dd><input type="text" class="form__item-readonly-style" name="kana" value="<%= company.kana %>" disabled>
@@ -250,7 +251,7 @@
           } else {
             dateinfo = '開始：' + cabinet.ymd_start + '　終了：' + cabinet.ymd_end
           }
-        %>
+          %>
             <% if (cabinet.ymd_end === '99991231') { %>
             <div class="cabinet__item">
               <span><%= cabinet.place %>　<%= cabinet.name %>　<%= dateinfo %></span>
@@ -324,16 +325,70 @@
                 <% }) %>
                 <% } %>
               </div>
-              <!-- /.bicycle__item -->
+              <!-- /.bicycle__items -->
             </div>
-            <!-- /.bicycle__items -->
-          </div>
-          <!-- /.bicycle -->
+            <!-- /.bicycle -->
 
+            <div class="car">
+              <div class="car__header">
+                <p class="midashi">駐車場</p>
+              </div>
+              <!-- /.car__header -->
+              <% if (company.ymd_kaiyaku === '99991231') { %>
+              <% if (locals.user.role === '社員') { %>
+              <form name="carForm" class="car__form" method="POST" action="/company/addcar">
+                <select name="id_car" class="form__item-style car__select">
+                  <option value="" selected>--駐車場選択--</option>
+                  <% freecars.forEach( selectcar => { %>
+                  <option value="<%= selectcar.id %>">
+                    <%= selectcar.id %> <%= selectcar.name %>
+                  </option>
+                  <% }); %>
+                </select>
+                <input class="btn-base ml-small" type="submit" value="追加">
+                <input type="hidden" name="id_company" value="<%= company.id %>">
+              </form>
+              <% } %>
+              <% } %>
+              <div class="car__items">
+                <% if (cars) { %>
+                <%  cars.forEach( car => { %>
+                <% 
+            let carname;
+            carname = car.id + ' ' + car.name
+            let dateinfo;
+            if (car.ymd_end === '99991231') {
+              dateinfo = '開始：' + car.ymd_start
+            } else {
+              dateinfo = '開始：' + car.ymd_start + '　終了：' + car.ymd_end
+            }
+            %>
+                <% if (car.ymd_end === '99991231') { %>
+                <div class="car__item">
+                  <span><%= carname %>　<%= dateinfo %></span>
+                  <% } else { %>
+                  <div class="car__item bd-disabled pd-disabled">
+                    <span class="color-disabled"><%= carname %>　<%= dateinfo %></span>
+                    <% } %>
+                    <% if ((company.ymd_kaiyaku === '99991231') && (car.ymd_end === '99991231')) { %>
+                    <% if (locals.user.role === '社員') { %>
+                    <a class="tag"
+                      href="/company/deletecar/<%= car.id_company %>/<%= car.id_car %>/<%= car.no_seq %>">削除</a>
+                    <% } %>
+                    <% } %>
+                  </div>
+                  <% }) %>
+                  <% } %>
+                </div>
+                <!-- /.car__items -->
+              </div>
+              <!-- /.car -->
+            </div>
+
+          </div>
+          <!-- /.main-wrapper -->
         </div>
-        <!-- /.main-wrapper -->
-      </div>
-      <!-- /.main -->
+        <!-- /.main -->
 </body>
 <script>
 

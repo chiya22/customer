@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>駐車場管理（編集）</title>
+  <%- include("../common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("../common/header.ejs") %>
+  <div class="main">
+    <div class="main__wrapper">
+      <div class="area-admin-link">
+        <a class="btn-base" href="/admin/cars">戻る</a>
+      </div>
+      <% if (message && message.length !== 0) { %>
+      <div class="alert alert-danger">
+        <%= message %>
+      </div>
+      <% } %>
+      <div class="admin__car">
+        <form name="carform" method="POST">
+          <dl>
+          <% if (mode === 'insert') { %>
+          <dt>駐車場番号</dt>
+          <dd><input class="form__item-style" type="text" name="id" required></dd>
+          <dt>名前</dt>
+          <dd><input class="form__item-style" type="text" name="name" required></dd>
+          <div class="form__btn">
+            <input class="btn-base" type="button" id="btn_insert" value="登録">
+          <% } else { %>
+          <dt>駐車場番号</dt>
+          <dd><input class="form__item-style bg-input-disabled" type="text" name="id" value="<%= car.id %>" disabled></dd>
+          <input class="form__item-style" type="hidden" name="id" value="<%= car.id %>">
+          <dt>名前</dt>
+          <dd><input class="form__item-style" type="text" name="name" value="<%= car.name %>" required></dd>
+          <dt>適用開始日</dt>
+          <dd><input class="form__item-style flatpickr" type="text" name="ymd_start" value="<%= car.ymd_start %>" required></dd>
+          <dt>適用終了日</dt>
+          <dd><input class="form__item-style flatpickr" type="text" name="ymd_end" value="<%= car.ymd_end %>" required></dd>
+          <input type="hidden" name="before_ymd_end" value="<%= car.ymd_end %>">
+          <div class="form__btn">
+            <input class="btn-base" type="button" id="btn_update" value="更新">
+            <input class="btn-base" type="button" id="btn_delete" value="削除">
+          <% } %>
+          </div>
+          <input type="hidden" id="field_mode">
+          </dl>
+        </form>
+      </div>
+      <!-- /.admin__room -->
+    </div>
+    <!-- /.main__wrapper -->
+  </div>
+  <!-- /.main -->
+  <script>
+    let insertbtn = document.getElementById("btn_insert");
+    if (insertbtn) {
+      insertbtn.addEventListener("click", function () {
+        document.carform.action = "/admin/cars/insert";
+        document.carform.submit();
+      })
+    }
+    let updatebtn = document.getElementById("btn_update");
+    if (updatebtn) {
+      updatebtn.addEventListener("click", function () {
+        document.carform.action = "/admin/cars/update";
+        document.carform.submit();
+      })
+    }
+    let deletebtn = document.getElementById("btn_delete");
+    if (deletebtn) {
+      deletebtn.addEventListener("click", function () {
+        document.carform.action = "/admin/cars/delete";
+        document.carform.submit();
+      })
+    }
+  </script>
+</body>
+<%- include("../common/javascripts.ejs") %>
+
+</html>
