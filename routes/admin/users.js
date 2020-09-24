@@ -98,8 +98,10 @@ router.post('/update/update', security.authorize(), function (req, res, next) {
 
 //ユーザ情報の削除
 router.post('/update/delete', security.authorize(), function (req, res, next) {
-  const id = req.body.id;
-  users.remove(id, (err,retObj)=>{
+  let inObj = {};
+  inObj.id = req.body.id;
+  inObj.id_upd = req.user.id;
+  users.remove(inObj, (err,retObj)=>{
     if (err) {
       // 外部制約参照エラーの場合
       if (err.errno === 1451) {

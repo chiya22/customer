@@ -76,6 +76,7 @@ const insert = function (inObj, callback) {
     (async function () {
         const client = knex.connect();
         const query = 'insert into outais values ("' + inObj.id + '",' + tool.returnvalue(inObj.id_company) + ',"' + inObj.content + '",' + tool.returnvalue(inObj.status) + ',"' + inObj.ymdhms_add + '","' + inObj.id_add + '","' + inObj.ymdhms_upd + '","' + inObj.id_upd + '")';
+        logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
             .then((retObj) => {
                 callback(null, retObj);
@@ -90,6 +91,7 @@ const update = function (inObj, callback) {
     (async function () {
         const client = knex.connect();
         const query = 'update outais set id_company = ' + tool.returnvalue(inObj.id_company) + ', content = "' + inObj.content + '", status = ' + tool.returnvalue(inObj.status) + ', ymdhms_upd = "' + inObj.ymdhms_upd + '", id_upd = "' + inObj.id_upd + '" where id = ' + tool.returnvalue(inObj.id);
+        logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
             .then((retObj) => {
                 callback(null, retObj);

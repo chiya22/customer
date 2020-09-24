@@ -63,6 +63,7 @@ const insert = function (inObj, callback) {
     (async function () {
         const client = knex.connect();
         const query = 'insert into relation_nyucabi values ("' + inObj.id_nyukyo + '","' + inObj.id_cabinet + '", (select IFNULL(MAX(b.no_seq),0)+1 from relation_nyucabi AS b WHERE b.id_nyukyo = "' + inObj.id_nyukyo + '" and b.id_cabinet = "' + inObj.id_cabinet + '") ,"' + inObj.ymd_start + '", "99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '")';
+        logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
             .then((retObj) => {
                 callback(null, retObj[0]);
@@ -77,6 +78,7 @@ const update = function (inObj, callback) {
     (async function () {
         const client = knex.connect();
         const query = 'update relation_nyucabi set id_nyukyo = "' + inObj.id_nyukyo + '", id_cabinet = "' + inObj.id_cabinet + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_nyukyo = "' + inObj.id_nyukyo + '" and id_cabinet = "' + inObj.id_cabinet + '" and no_seq = ' + inObj.no_seq + ' and ymd_end = "99991231"';
+        logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
             .then((retObj) => {
                 callback(null, retObj[0]);
@@ -91,6 +93,7 @@ const remove = function (inObj, callback) {
     (async function () {
         const client = knex.connect();
         const query = 'update relation_nyucabi set ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_nyukyo = "' + inObj.id_nyukyo + '" and id_cabinet = "' + inObj.id_cabinet + '" and no_seq = ' + inObj.no_seq + ' and ymd_end = "99991231"';
+        logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
             .then((retObj) => {
                 callback(null, retObj[0]);
@@ -105,6 +108,7 @@ const cancelByNyukyo = function (inObj, callback) {
     (async function () {
         const client = knex.connect();
         const query = 'update relation_nyucabi set ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_nyukyo = "' + inObj.id_nyukyo + '" and ymd_end = "99991231"';
+        logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
             .then((retObj) => {
                 callback(null, retObj[0]);

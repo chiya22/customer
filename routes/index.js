@@ -3,6 +3,9 @@ const router = express.Router();
 const security = require('../util/security');
 const company = require("../model/company");
 
+const log4js = require("log4js");
+const logger = log4js.configure('./config/log4js-config.json').getLogger();
+
 //認証画面の初期表示
 router.get('/login', function (req, res) {
   res.render("./login.ejs", { message: req.flash("message") });
@@ -49,6 +52,8 @@ router.post('/', security.authorize(), function (req, res, next) {
   const offset = (pagecount_target - 1) * count_perpage;
 
   const query = 'select count(*) as count_all from ((select "company" AS kubun, c.id, c.name, c.kana from companies as c where ((c.name like "%' + searchvalue + '%") or (c.name_other like "%' + searchvalue + '%") or (c.kana like "%' + searchvalue + '%") or (c.id_nyukyo like "%' + searchvalue + '%")) and c.ymd_end = "99991231") union all (select "person" AS kubun, p.id, p.name, p.kana from persons as p where ((p.name like "%' + searchvalue + '%") or (p.kana like "%' + searchvalue + '%")) and p.ymd_end = "99991231")) as total'
+  logger.info('[' + req.user.id + ']' + query);
+
   company.selectSQL(query, (err, retObj) => {
     if (err) { next(err) };
     let count_all;
@@ -58,6 +63,8 @@ router.post('/', security.authorize(), function (req, res, next) {
       pagecount_max += 1;
     }
     const query2 = '(select "会社" AS header, c.id, c.id_nyukyo as id_nyukyo, c.kubun_company as kubun, c.name, c.kana, c.ymd_nyukyo, c.ymd_kaiyaku from companies as c where ((c.name like "%' + searchvalue + '%") or (c.name_other like "%' + searchvalue + '%") or (c.kana like "%' + searchvalue + '%") or (c.id_nyukyo like "%' + searchvalue + '%")) and c.ymd_end = "99991231") union all (select "個人" AS header, p.id, NULL as id_nyukyo, p.kubun_person as kubun, p.name, p.kana, p.ymd_nyukyo, p.ymd_kaiyaku from persons as p where ((p.name like "%' + searchvalue + '%") or (p.kana like "%' + searchvalue + '%")) and p.ymd_end = "99991231") order by header asc, id_nyukyo asc, ymd_kaiyaku desc, ymd_nyukyo asc limit ' + count_perpage + ' offset ' + offset
+    logger.info('[' + req.user.id + ']' + query2);
+
     company.selectSQL(query2, (err, retObj) => {
       if (err) { next(err) };
       res.render('index', {

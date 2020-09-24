@@ -95,9 +95,11 @@ router.post('/update', security.authorize(), function (req, res, next) {
 
 //キャビネット情報の削除
 router.post('/delete', security.authorize(), function (req, res, next) {
-  const id = req.body.id;
+  let inObj = {};
+  inObj.id = req.body.id;
+  inObj.id_upd = req.user.id;
   let cabinet;
-  m_cabinet.remove(id, (err, retObj) => {
+  m_cabinet.remove(inObj, (err, retObj) => {
     if (err) {
       // 外部制約参照エラーの場合
       if (err.errno === 1451) {

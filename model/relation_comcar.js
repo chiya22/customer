@@ -63,6 +63,7 @@ const insert = function (inObj, callback) {
     (async function() {
         const client = knex.connect();
         const query = 'insert into relation_comcar values ("' + inObj.id_company + '","' + inObj.id_car + '", (select IFNULL(MAX(b.no_seq),0)+1 from relation_comcar AS b WHERE b.id_company = "' + inObj.id_company + '" AND b.id_car = "' + inObj.id_car + '") ,"' + inObj.ymd_start + '", "99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '")';
+        logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
         .then( (retObj) => {
             callback(null, retObj[0]);
@@ -77,6 +78,7 @@ const update = function (inObj, callback) {
     (async function() {
         const client = knex.connect();
         const query = 'update relation_comcar set id_company = "' + inObj.id_company + '", id_car = "' + inObj.id_car + ', ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_company = "' + inObj.id_company + '" and id_car = "' + inObj.id_car + '" and ymd_end = "99991231"';
+        logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
         .then( (retObj) => {
             callback(null, retObj[0]);
@@ -91,6 +93,7 @@ const remove = function (inObj, callback) {
     (async function() {
         const client = knex.connect();
         const query = 'update relation_comcar set ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_company = "' + inObj.id_company+ '" and id_car = "' + inObj.id_car + '" and no_seq = ' + inObj.no_seq + ' and ymd_end = "99991231"';
+        logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
         .then( (retObj) => {
             callback(null, retObj[0]);
@@ -105,6 +108,7 @@ const cancelByCompany = function (inObj, callback) {
     (async function() {
         const client = knex.connect();
         const query = 'update relation_comcar set ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_company = "' + inObj.id_company + '" and ymd_end = "99991231"';
+        logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
         .then( (retObj) => {
             callback(null, retObj[0]);

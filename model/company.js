@@ -1,6 +1,9 @@
 const tool = require('../util/tool');
 const knex = require("../db/knex.js");
 
+const log4js = require("log4js");
+const logger = log4js.configure('./config/log4js-config.json').getLogger();
+
 const findPKey = function (inObj, callback) {
     (async function () {
         const client = knex.connect();
@@ -98,6 +101,7 @@ const findLikeForPaging = function (likevalue, percount, offset, callback) {
 const insert = function (inObj, callback) {
     (async function () {
         const query = 'insert into companies values ("' + inObj.id + '",' + tool.returnvalue(inObj.id_nyukyo) + ',' + tool.returnvalue(inObj.id_kaigi) + ',"' + inObj.kubun_company + '","' + inObj.name + '", "' + inObj.name_other + '", ' + tool.returnvalue(inObj.kana) + ',"' + inObj.ymd_nyukyo + '","99991231","' + inObj.ymd_start + '","99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '", ' + tool.returnvalue(inObj.bikou) + ')';
+        logger.info('[' + inObj.id_upd + ']' + query);
         const client = knex.connect();
         await client.raw(query)
             .then((retObj) => {
@@ -112,6 +116,7 @@ const insert = function (inObj, callback) {
 const update = function (inObj, callback) {
     (async function () {
         const query = 'update companies set kubun_company = ' + tool.returnvalue(inObj.kubun_company) + ', id_nyukyo = ' + tool.returnvalue(inObj.id_nyukyo) + ', id_kaigi = ' + tool.returnvalue(inObj.id_kaigi) + ', name = ' + tool.returnvalue(inObj.name) + ', name_other = ' + tool.returnvalue(inObj.name_other) + ', kana = ' + tool.returnvalue(inObj.kana) + ', bikou = ' + tool.returnvalue(inObj.bikou) + ', ymd_nyukyo = "' + inObj.ymd_nyukyo + '", ymd_kaiyaku = "' + inObj.ymd_kaiyaku + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id = "' + inObj.id + '" and ymd_end = "99991231"';
+        logger.info('[' + inObj.id_upd + ']' + query);
         const client = knex.connect();
         await client.raw(query)
             .then((retObj) => {
@@ -126,6 +131,7 @@ const update = function (inObj, callback) {
 const remove = function (inObj, callback) {
     (async function () {
         const query = 'update companies set ymd_end = "' + inObj.ymd_end + '", ymd_kaiyaku = "' + inObj.ymd_kaiyaku + '" where id = "' + inObj.id + '" and ymd_end ="99991231"';
+        logger.info('[' + inObj.id_upd + ']' + query);
         const client = knex.connect();
         await client.raw(query)
             .then((retObj) => {
@@ -140,6 +146,7 @@ const remove = function (inObj, callback) {
 const cancel = function (inObj, callback) {
     (async function () {
         const query = 'update companies set ymd_kaiyaku = "' + inObj.ymd_kaiyaku + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id = ' + tool.returnvalue(inObj.id) + ' and ymd_end = "99991231"';
+        logger.info('[' + inObj.id_upd + ']' + query);
         const client = knex.connect();
         await client.raw(query)
             .then((retObj) => {

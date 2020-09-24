@@ -44,6 +44,7 @@ const findForAdmin = function (callback) {
 const insert = function (inObj, callback) {
     (async function () {
         const query = 'insert into bicycles values (' + tool.returnvalue(inObj.id) + ',' + tool.returnvalue(inObj.name) + ', "' + inObj.ymd_start + '", "99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '")';
+        logger.info('[' + inObj.id_upd + ']' + query);
         const client = knex.connect();
         await client.raw(query)
         .then((retObj) => {
@@ -58,6 +59,7 @@ const insert = function (inObj, callback) {
 const update = function (inObj, callback) {
     (async function () {
         const query = 'update bicycles set name = ' + tool.returnvalue(inObj.name) + ', ymd_start = "' + inObj.ymd_start + '", ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id = ' + tool.returnvalue(inObj.id) + ' and ymd_end = "' + inObj.before_ymd_end + '"';
+        logger.info('[' + inObj.id_upd + ']' + query);
         const client = knex.connect();
         await client.raw(query)
         .then( (retObj) => {
@@ -69,9 +71,10 @@ const update = function (inObj, callback) {
     })();
 };
 
-const remove = function (pkey, callback) {
+const remove = function (inObj, callback) {
     (async function () {
-        const query = 'delete from bicycles where id = "' + pkey + '"';
+        const query = 'delete from bicycles where id = "' + inObj.id + '"';
+        logger.info('[' + inObj.id_upd + ']' + query);
         const client = knex.connect();
         await client.raw(query)
         .then( (retObj) => {
