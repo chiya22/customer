@@ -1,6 +1,9 @@
 const tool = require('../util/tool');
 const knex = require('../db/knex');
 
+const log4js = require("log4js");
+const logger = log4js.configure('./config/log4js-config.json').getLogger();
+
 const findPKey = function (inObj, callback) {
     (async function () {
         const client = knex.connect();
