@@ -141,6 +141,24 @@ body {
     border: 1px solid $base-color;
   }
 }
+//遷移するボタン
+.btn-move {
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 19px;
+  background-clip: padding-box;
+  background-color: #fff;
+  border: 1px solid $base-color;
+  color:$base-color;
+  font-weight: bold;
+  text-align: center;
+  font-size: 0.75rem;
+  &:hover {
+    background-color: $base-color;
+    color: #fff;
+    border: 1px solid transparent;
+  }
+}
 //非活性ボタン
 .btn-disabled {
   display: inline-block;
@@ -185,7 +203,7 @@ body {
 .form__btn {
   width: 100%;
   text-align: center;
-  .btn-base {
+  .btn-base, .btn-move {
     margin: 20px;
   }
 }
@@ -264,7 +282,7 @@ body {
   background-color: $base-color;
   border-radius: 28px;
   font-size: 12px;
-  padding: 4px 7px 2px;
+  padding: 2px 7px 2px;
   margin-right: 5px;
   font-weight: normal;
 }

@@ -158,7 +158,7 @@
           <% } %>
           <div class="form__btn">
             <input type="button" class="btn-base" id="btn_insert" value="登録">
-            <a class="btn-base" href="/">戻る</a>
+            <a class="btn-move" href="/">入居者検索へ</a>
 
             <!-- ◆更新モード -->
             <% } else if ((mode === 'update') && (company.ymd_kaiyaku === '99991231')) { %>
@@ -215,7 +215,7 @@
             <input type="hidden" id="name" value="<%= company.id %>">
             <div class="form__btn">
               <input type="button" class="btn-base" id="btn_update" value="更新">
-              <a class="btn-base" href="/company/<%= company.id %>">戻る</a>
+              <a class="btn-move" href="/company/<%= company.id %>">会社情報へ</a>
             </div>
 
             <!-- ◆削除モード -->
@@ -249,7 +249,7 @@
             <div class="form__btn">
               <% if (company.ymd_kaiyaku !== '99991231') { %>
                 <input type="button" class="btn-base" id="btn_delete" value="削除">
-                <a class="btn-base" href="/company/<%= company.id %>">戻る</a>
+                <a class="btn-move" href="/company/<%= company.id %>">会社情報へ</a>
               <% } %>
             </div>
             <% } %>

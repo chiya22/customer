@@ -69,9 +69,9 @@
           <div class="form__btn">
             <input type="button" class="btn-base" id="btn_insert" value="登録">
             <% if ((outai) && (outai.id_company)) { %>
-              <a class="btn-base" href="/outai/company/<%= outai.id_company %>">戻る</a>
+              <a class="btn-move" href="/outai/company/<%= outai.id_company %>">応対履歴検索へ</a>
             <% } else { %>
-              <a class="btn-base" href="/outai">戻る</a>
+              <a class="btn-move" href="/outai">応対履歴検索へ</a>
             <% } %> 
 
             <!-- ◆更新モード -->
@@ -119,7 +119,7 @@
             <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outai.name_upd %>" disabled></dd>
             <div class="form__btn">
               <input type="button" class="btn-base" id="btn_update" value="更新">
-              <a class="btn-base" href="/outai/<%= outai.id %>">戻る</a>
+              <a class="btn-move" href="/outai/<%= outai.id %>">戻る</a>
               <input type="hidden" name="id" value="<%= outai.id %>">
               <input type="hidden" name="ymdhms_add" value="<%= outai.ymdhms_add %>">
               <input type="hidden" name="id_add" value="<%= outai.id_add %>">

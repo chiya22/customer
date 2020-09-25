@@ -99,7 +99,8 @@
           <dd><input type="text" class="form__item-style" name="bikou" value="<%= person.bikou %>"></dd>
           <div class="form__btn">
             <input type="button" class="btn-base" id="btn_insert" value="登録">
-            <a class="btn-base" href="/company/<%= person.id_company %>">戻る</a>
+            <a class="btn-move" href="/company/<%= person.id_company %>">会社情報へ</a>
+            <a class="btn-move" href="/">入居者検索へ</a>
 
             <!-- ◆更新モード -->
             <% } else if ((mode === 'update') && (person.ymd_kaiyaku === '99991231')) { %>
@@ -166,8 +167,8 @@
             <input type="hidden" name="id" value="<%= person.id %>">
             <div class="form__btn">
               <input type="button" class="btn-base" id="btn_update" value="更新">
-              <a class="btn-base" href="/person/<%= person.id %>">戻る</a>
-
+              <a class="btn-move" href="/company/<%= person.id_company %>">会社情報へ</a>
+  
               <!-- ◆削除モード -->
               <% } else { %>
               <dt>会社番号</dt>
@@ -215,8 +216,8 @@
               <% if (person.ymd_kaiyaku === '99991231') { %>
               <div class="form__btn">
                 <input type="button" class="btn-base" id="btn_delete" value="削除">
-                <a class="btn-base" href="/person/<%= person.id %>">戻る</a>
-              <% } %>
+                <a class="btn-move" href="/company/<%= person.id_company %>">会社情報へ</a>
+                <% } %>
             </div>
             <% } %>
               <input type="hidden" id="field_mode">

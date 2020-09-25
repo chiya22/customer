@@ -145,6 +145,25 @@ body {
   border: 1px solid #cd5e42;
 }
 
+.btn-move {
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 19px;
+  background-clip: padding-box;
+  background-color: #fff;
+  border: 1px solid #cd5e42;
+  color: #cd5e42;
+  font-weight: bold;
+  text-align: center;
+  font-size: 0.75rem;
+}
+
+.btn-move:hover {
+  background-color: #cd5e42;
+  color: #fff;
+  border: 1px solid transparent;
+}
+
 .btn-disabled {
   display: inline-block;
   padding: 5px 15px;
@@ -195,7 +214,7 @@ body {
   text-align: center;
 }
 
-.form__btn .btn-base {
+.form__btn .btn-base, .form__btn .btn-move {
   margin: 20px;
 }
 
@@ -276,7 +295,7 @@ body {
   background-color: #cd5e42;
   border-radius: 28px;
   font-size: 12px;
-  padding: 4px 7px 2px;
+  padding: 2px 7px 2px;
   margin-right: 5px;
   font-weight: normal;
 }

@@ -76,7 +76,8 @@
             <% } else { %>
               <a class="btn-base" href="/person/delete/<%= person.id %>">削除</a>
             <% } %>
-            <a class="btn-base" href="/company/<%= person.id_company %>">戻る</a>
+            <a class="btn-move" href="/company/<%= person.id_company %>">会社情報へ</a>
+            <a class="btn-move" href="/">入居者検索へ</a>
             <input type="hidden" name="id" value="<%= person.id %>">
             <input type="hidden" name="id_company" value="<%= person.id_company %>">
             <input type="hidden" name="selected_ymd_kaiyaku" id="selected_ymd_kaiyaku" value="">
