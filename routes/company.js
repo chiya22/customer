@@ -339,20 +339,28 @@ router.post('/cancel', security.authorize(), function (req, res, next) {
 
 // 会社⇔部屋情報の追加
 router.post('/addroom', security.authorize(), function (req, res, next) {
-  let relation_comroom = {};
-  relation_comroom.id_company = req.body.id_company;
-  relation_comroom.id_room = req.body.id_room;
-  relation_comroom.ymd_start = tool.getToday();
-  relation_comroom.ymd_upd = tool.getToday();
-  relation_comroom.id_upd = req.user.id;
-  m_relation_comroom.insert(relation_comroom, (err, retObj) => {
-    if (err) { next(err); };
-    res.redirect('/company/' + relation_comroom.id_company);
-  });
+
+  const id_company = req.body.id_company;
+
+  if (req.body.id_room !== '') {
+    let relation_comroom = {};
+    relation_comroom.id_company = id_company;
+    relation_comroom.id_room = req.body.id_room;
+    relation_comroom.ymd_start = tool.getToday();
+    relation_comroom.ymd_upd = tool.getToday();
+    relation_comroom.id_upd = req.user.id;
+    m_relation_comroom.insert(relation_comroom, (err, retObj) => {
+      if (err) { next(err); };
+      res.redirect('/company/' + id_company);
+    });
+  } else {
+    res.redirect('/company/' + id_company);
+  }
 });
 
 // 会社⇔部屋情報の削除
 router.get('/deleteroom/:id_company/:id_room/:no_seq', security.authorize(), function (req, res, next) {
+
   let relation_comroom = {};
   relation_comroom.id_company = req.params.id_company;
   relation_comroom.id_room = req.params.id_room;
@@ -368,17 +376,23 @@ router.get('/deleteroom/:id_company/:id_room/:no_seq', security.authorize(), fun
 
 // 会社⇔キャビネットの追加
 router.post('/addcabinet', security.authorize(), function (req, res, next) {
+
   const id_company = req.body.id_company;
-  let relation_comcabi = {};
-  relation_comcabi.id_company = req.body.id_company;
-  relation_comcabi.id_cabinet = req.body.id_cabinet;
-  relation_comcabi.ymd_start = tool.getToday();
-  relation_comcabi.ymd_upd = tool.getToday();
-  relation_comcabi.id_upd = req.user.id;
-  m_relation_comcabi.insert(relation_comcabi, (err, retObj) => {
-    if (err) { next(err) };
+
+  if (req.body.id_cabinet !== '') {
+    let relation_comcabi = {};
+    relation_comcabi.id_company = id_company;
+    relation_comcabi.id_cabinet = req.body.id_cabinet;
+    relation_comcabi.ymd_start = tool.getToday();
+    relation_comcabi.ymd_upd = tool.getToday();
+    relation_comcabi.id_upd = req.user.id;
+    m_relation_comcabi.insert(relation_comcabi, (err, retObj) => {
+      if (err) { next(err) };
+      res.redirect('/company/' + id_company);
+    });
+  } else {
     res.redirect('/company/' + id_company);
-  });
+  }
 });
 
 // 会社⇔キャビネットの削除
@@ -398,16 +412,24 @@ router.get('/deletecabinet/:id_company/:id_cabinet/:no_seq', security.authorize(
 
 // 会社⇔駐輪場情報の追加
 router.post('/addbicycle', security.authorize(), function (req, res, next) {
-  let relation_combicycle = {};
-  relation_combicycle.id_company = req.body.id_company;
-  relation_combicycle.id_bicycle = req.body.id_bicycle;
-  relation_combicycle.ymd_start = tool.getToday();
-  relation_combicycle.ymd_upd = tool.getToday();
-  relation_combicycle.id_upd = req.user.id;
-  m_relation_combicycle.insert(relation_combicycle, (err, retObj) => {
-    if (err) { next(err); };
-    res.redirect('/company/' + relation_combicycle.id_company);
-  })
+
+  const id_company = req.body.id_company;
+
+  if (req.body.id_bicycle !== '') {
+    let relation_combicycle = {};
+    relation_combicycle.id_company = id_company;
+    relation_combicycle.id_bicycle = req.body.id_bicycle;
+    relation_combicycle.ymd_start = tool.getToday();
+    relation_combicycle.ymd_upd = tool.getToday();
+    relation_combicycle.id_upd = req.user.id;
+    m_relation_combicycle.insert(relation_combicycle, (err, retObj) => {
+      if (err) { next(err); };
+      res.redirect('/company/' + id_company);
+    })
+  } else {
+    res.redirect('/company/' + id_company);
+  }
+
 });
 
 // 会社⇔駐輪場情報の削除
@@ -427,16 +449,23 @@ router.get('/deletebicycle/:id_company/:id_bicycle/:no_seq', security.authorize(
 
 // 会社⇔駐車場情報の追加
 router.post('/addcar', security.authorize(), function (req, res, next) {
-  let relation_comcar = {};
-  relation_comcar.id_company = req.body.id_company;
-  relation_comcar.id_car = req.body.id_car;
-  relation_comcar.ymd_start = tool.getToday();
-  relation_comcar.ymd_upd = tool.getToday();
-  relation_comcar.id_upd = req.user.id;
-  m_relation_comcar.insert(relation_comcar, (err, retObj) => {
-    if (err) { next(err); };
-    res.redirect('/company/' + relation_comcar.id_company);
-  })
+
+  const id_company = req.body.id_company;
+
+  if (req.body.id_car !== '') {
+    let relation_comcar = {};
+    relation_comcar.id_company = id_company;
+    relation_comcar.id_car = req.body.id_car;
+    relation_comcar.ymd_start = tool.getToday();
+    relation_comcar.ymd_upd = tool.getToday();
+    relation_comcar.id_upd = req.user.id;
+    m_relation_comcar.insert(relation_comcar, (err, retObj) => {
+      if (err) { next(err); };
+      res.redirect('/company/' + id_company);
+    })
+  } else {
+    res.redirect('/company/' + id_company);
+  }
 });
 
 // 会社⇔駐車場情報の削除

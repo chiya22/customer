@@ -227,10 +227,9 @@
           <!-- /.cabinet__header -->
           <% if (company.ymd_kaiyaku === '99991231') { %>
           <% if (locals.user.role === '社員') { %>
-          <form name="cabinetForm" class="cabinet__form" method="POST" action="/company/addcabinet"
-            onsubmit="return checkCancel();">
+          <form name="cabinetForm" class="cabinet__form" method="POST" action="/company/addcabinet" >
             <select name="id_cabinet" class="form__item-style cabinet__select">
-              <option value="" selected>--キャビネット選択--</option>
+              <option value="" selected>-- キャビネット選択 --</option>
               <% freecabinets.forEach(function (freecabinet) { %>
               <option value="<%= freecabinet.id %>">
                 <%= freecabinet.place %>　<%= freecabinet.name %>
@@ -284,7 +283,7 @@
             <% if (locals.user.role === '社員') { %>
             <form name="bicycleForm" class="bicycle__form" method="POST" action="/company/addbicycle">
               <select name="id_bicycle" class="form__item-style bicycle__select">
-                <option value="" selected>--駐輪場選択--</option>
+                <option value="" selected>--　駐輪場選択　--</option>
                 <% freebicycles.forEach( selectbicycle => { %>
                 <option value="<%= selectbicycle.id %>">
                   <%= selectbicycle.id %> <%= selectbicycle.name %>
@@ -339,7 +338,7 @@
               <% if (locals.user.role === '社員') { %>
               <form name="carForm" class="car__form" method="POST" action="/company/addcar">
                 <select name="id_car" class="form__item-style car__select">
-                  <option value="" selected>--駐車場選択--</option>
+                  <option value="" selected>--　駐車場選択　--</option>
                   <% freecars.forEach( selectcar => { %>
                   <option value="<%= selectcar.id %>">
                     <%= selectcar.id %> <%= selectcar.name %>
