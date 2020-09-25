@@ -44,7 +44,7 @@
             </div>
             <!-- /.page-disp -->
             <% } %>
-            <% if (page_current !== page_max) { %>
+            <% if ((page_max !== 0) && (page_current !== page_max)) { %>
             <input type="button" class="btn-base" id="btn_next" value="次ページ" />
             <% } else { %>
               <input type="button" class="btn-disabled" id="btn_next" value="次ページ" disabled/>
