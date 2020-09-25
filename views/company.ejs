@@ -128,7 +128,7 @@
         <% if (locals.user.role === '社員') { %>
         <form name="roomForm" class="room__form" method="POST" action="/company/addroom">
           <select name="id_room" class="form__item-style room__select">
-            <option value="" selected>--部屋選択--</option>
+            <option value="" selected>--　部屋選択　--</option>
             <% selectrooms.forEach( selectroom => {
                   let isExit = false;
                   rooms.forEach( room => {
