@@ -1,11 +1,12 @@
 const knex = require("../db/knex.js");
+const client = knex.connect();
 
 const log4js = require("log4js");
 const logger = log4js.configure('./config/log4js-config.json').getLogger();
 
 const findPKey = function (inObj, callback) {
     (async function () {
-        const client = knex.connect();
+        // const client = knex.connect();
         await client.from("relation_comcabi").where({
             id_company: inObj.id_company,
             id_cabinet: inObj.id_cabinet,
@@ -22,7 +23,7 @@ const findPKey = function (inObj, callback) {
 
 const findByCompany = function (id_company, callback) {
     (async function () {
-        const client = knex.connect();
+        // const client = knex.connect();
         // const query = 'select * from relation_nyucabi AS a INNER JOIN cabinets AS b ON a.id_cabinet = b.id where a.id_nyukyo = "' + id_nyukyo + '" and a.ymd_end = "99991231" and b.ymd_end = "99991231" order by b.id asc'
         const query = 'select a.id_company, a.id_cabinet, a.no_seq, a.ymd_start, a.ymd_end, a.ymd_upd, a.id_upd, b.place, b.name from relation_comcabi AS a INNER JOIN cabinets AS b ON a.id_cabinet = b.id where a.id_company = "' + id_company + '" and b.ymd_end = "99991231" order by b.id asc'
         await client.raw(query)
@@ -37,7 +38,7 @@ const findByCompany = function (id_company, callback) {
 
 const find = function (callback) {
     (async function () {
-        const client = knex.connect();
+        // const client = knex.connect();
         await client.from("relation_comcabi").where({ ymd_end: "99991231" }).orderBy([{ column: "id_company", order: "asc" }, { column: "id_cabinet", order: "asc" }])
             .then((retObj) => {
                 callback(null, retObj[0]);
@@ -50,7 +51,7 @@ const find = function (callback) {
 
 const findFree = function (callback) {
     (async function () {
-        const client = knex.connect();
+        // const client = knex.connect();
         const query = 'SELECT c.id, c.place, c.name, c.ymd_start, c.ymd_end FROM cabinets AS c WHERE c.ymd_end = "99991231" and NOT EXISTS ( SELECT * FROM relation_comcabi AS re WHERE c.id = re.id_cabinet and re.ymd_end = "99991231" ) order by c.id asc';
         await client.raw(query)
             .then((retObj) => {
@@ -64,7 +65,7 @@ const findFree = function (callback) {
 
 const insert = function (inObj, callback) {
     (async function () {
-        const client = knex.connect();
+        // const client = knex.connect();
         const query = 'insert into relation_comcabi values ("' + inObj.id_company + '","' + inObj.id_cabinet + '", (select IFNULL(MAX(b.no_seq),0)+1 from relation_comcabi AS b WHERE b.id_company = "' + inObj.id_company + '" and b.id_cabinet = "' + inObj.id_cabinet + '") ,"' + inObj.ymd_start + '", "99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '")';
         logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
@@ -79,7 +80,7 @@ const insert = function (inObj, callback) {
 
 const update = function (inObj, callback) {
     (async function () {
-        const client = knex.connect();
+        // const client = knex.connect();
         const query = 'update relation_comcabi set id_nyukyo = "' + inObj.id_company + '", id_cabinet = "' + inObj.id_cabinet + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_company = "' + inObj.id_company + '" and id_cabinet = "' + inObj.id_cabinet + '" and no_seq = ' + inObj.no_seq + ' and ymd_end = "99991231"';
         logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
@@ -94,7 +95,7 @@ const update = function (inObj, callback) {
 
 const remove = function (inObj, callback) {
     (async function () {
-        const client = knex.connect();
+        // const client = knex.connect();
         const query = 'update relation_comcabi set ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_company = "' + inObj.id_company + '" and id_cabinet = "' + inObj.id_cabinet + '" and no_seq = ' + inObj.no_seq + ' and ymd_end = "99991231"';
         logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
@@ -109,7 +110,7 @@ const remove = function (inObj, callback) {
 
 const cancelByCompany = function (inObj, callback) {
     (async function () {
-        const client = knex.connect();
+        // const client = knex.connect();
         const query = 'update relation_comcabi set ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_company = "' + inObj.id_company + '" and ymd_end = "99991231"';
         logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
