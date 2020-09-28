@@ -1,5 +1,4 @@
 const Knex = require("knex");
-const process = require("process");
 
 const connect = () => {
     const config = {
@@ -25,4 +24,4 @@ const connect = () => {
 
 module.exports = {
     connect: connect,
-};
+}
