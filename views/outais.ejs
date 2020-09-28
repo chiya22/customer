@@ -37,20 +37,22 @@
                 <% }); %>
               </select>
               <div class="form__check">
-              <% if (includecomplete) { %>
-                <input type="checkbox" id="includecomplete" name="includecomplete" checked value="完了"><label for="includecomplete">完了含む</label>
-              <% } else { %>
-                <input type="checkbox" id="includecomplete" name="includecomplete" value="完了"><label for="includecomplete">完了含む</label>
-              <% } %>
+                <% if (includecomplete) { %>
+                <input type="checkbox" id="includecomplete" name="includecomplete" checked value="完了"><label
+                  for="includecomplete">完了含む</label>
+                <% } else { %>
+                <input type="checkbox" id="includecomplete" name="includecomplete" value="完了"><label
+                  for="includecomplete">完了含む</label>
+                <% } %>
               </div>
               <input class="form__item-style width-base" type="text" name="searchvalue" placeholder="検索文字を入力してください"
                 value="<%= searchvalue %>">
               <input class="btn-base ml-small" type="button" id="btn_search" value="検索" />
               <!-- ダミーの会社IDを設定する -->
               <% if (selectCompany) { %>
-                <a class="btn-link ml-small" href="/outai/insert/<%= selectCompany.id %>">応対履歴登録</a>
+              <a class="btn-link ml-small" href="/outai/insert/<%= selectCompany.id %>">応対履歴登録</a>
               <% } else { %>
-                <a class="btn-link ml-small" href="/outai/insert/C99999">応対履歴登録</a>
+              <a class="btn-link ml-small" href="/outai/insert/C99999">応対履歴登録</a>
               <% } %>
             </div>
             <!-- /.searchform__top -->
@@ -68,7 +70,7 @@
             <% if ((page_current !== 1) && (page_max !== 0)){ %>
             <input type="button" class="btn-base" id="btn_prev" value="前ページ" />
             <% } else { %>
-              <input type="button" class="btn-disabled" id="btn_prev" value="前ページ" disabled />
+            <input type="button" class="btn-disabled" id="btn_prev" value="前ページ" disabled />
             <% } %>
             <% if (page_max > 1) { %>
             <div class="page-disp">
@@ -76,10 +78,10 @@
             </div>
             <!-- /.page-disp -->
             <% } %>
-            <% if (page_current !== page_max) { %>
+            <% if ((page_max !== 0) && (page_current !== page_max)) { %>
             <input type="button" class="btn-base" id="btn_next" value="次ページ" />
             <% } else { %>
-              <input type="button" class="btn-disabled" id="btn_next" value="次ページ" disabled/>
+            <input type="button" class="btn-disabled" id="btn_next" value="次ページ" disabled />
             <% } %>
           </div>
           <% } %>
@@ -102,17 +104,17 @@
             }
             %>
             <% if (result.status === '完了') { %>
-              <a class="btn-link bd-left-disabled" href="./outai/<%= result.id %>">
+            <a class="btn-link bd-left-disabled" href="./outai/<%= result.id %>">
               <span class="color-disabled"><%= title %></span>
               <span class="dateinfo-small">　　登録：<%= result.ymdhms_add %>（<%= result.name_add %>）
                 更新：<%= result.ymdhms_upd %>（<%= result.name_upd %>）</span>
-              </a>
+            </a>
             <% } else { %>
-              <a class="btn-link" href="./outai/<%= result.id %>">
+            <a class="btn-link" href="./outai/<%= result.id %>">
               <span><%= title %></span>
               <span class="dateinfo-small">　　登録：<%= result.ymdhms_add %>（<%= result.name_add %>）
                 更新：<%= result.ymdhms_upd %>（<%= result.name_upd %>）</span>
-              </a>
+            </a>
             <% } %>
           </div>
           <!-- /.search__result-item -->
