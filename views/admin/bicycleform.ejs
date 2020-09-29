@@ -33,11 +33,13 @@
           <dd><input class="form__item-style bg-input-disabled" type="text" name="id" value="<%= bicycle.id %>" disabled></dd>
           <input class="form__item-style" type="hidden" name="id" value="<%= bicycle.id %>">
           <dt>名前</dt>
-          <dd><input class="form__item-style" type="text" name="name" value="<%= bicycle.name %>" required></dd>
+          <dd><input class="form__item-style" type="text" name="name" value="<%= bicycle.name %>"></dd>
           <dt>適用開始日</dt>
           <dd><input class="form__item-style flatpickr" type="text" name="ymd_start" value="<%= bicycle.ymd_start %>" required></dd>
           <dt>適用終了日</dt>
           <dd><input class="form__item-style flatpickr" type="text" name="ymd_end" value="<%= bicycle.ymd_end %>" required></dd>
+          <dt>備考</dt>
+          <dd><input class="form__item-style" type="text" name="bikou" value="<%= bicycle.bikou %>"></dd>
           <input type="hidden" name="before_ymd_end" value="<%= bicycle.ymd_end %>">
           <div class="form__btn">
             <input class="btn-base" type="button" id="btn_update" value="更新">
