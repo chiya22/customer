@@ -12,6 +12,7 @@ body {
 .title {
   width: 100%;
   padding: 1rem;
+  padding-top: 1.5rem;
   background-color: #cd5e42;
   color: #fff;
   font-size: 1.75rem;
