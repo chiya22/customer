@@ -20,9 +20,7 @@ passport.use("local-strategy", new LocalStrategy({
     passwordField: "password",
     passReqToCallback: true
 }, (req, username, password, done) => {
-    const today = new Date();
-    const dateinfo = today.getHours() + "時" + today.getMinutes() + "分" + ('0' + today.getSeconds()).slice(-2) + "秒";
-    logger.info(dateinfo + " ) " + 'username:' + username + ' password:' + password);
+    logger.info('[LOGIN] username:' + username + ' password:' + password);
 
     users.findPKey(username, (err, retObj) => {
         if (err) { throw err };
