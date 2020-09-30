@@ -12,7 +12,8 @@
     <div class="msg">
       <div class="msgarea">
         <p class="msgarea__text">設定された年月日で解約します。<br>よろしいですか？</p>
-        <input type="text" placeholder="解約日を選択する" class="form__item-style flatpickr" name="select_ymd_kaiyaku" id="select_ymd_kaiyaku">
+        <input type="text" placeholder="解約日を選択する" class="form__item-style flatpickr" name="select_ymd_kaiyaku"
+          id="select_ymd_kaiyaku">
         <button class="msgarea__okbtn">はい</button>
         <button class="msgarea__ngbtn">いいえ</button>
       </div>
@@ -68,21 +69,21 @@
           <dt>備考</dt>
           <dd><input type="text" class="form__item-readonly-style" name="bikou" value="<%= person.bikou %>" disabled>
           </dd>
-          <% if (locals.user.role === '社員') { %>
           <div class="form__btn">
-            <% if (person.ymd_kaiyaku === '99991231') { %>
-              <a class="btn-base" href="/person/update/<%= person.id %>">更新</a>
-              <input id="cancelbtn" class="btn-base" type="button" value="解約">
+            <% if (locals.user.role === '社員') { %>
+              <% if (person.ymd_kaiyaku === '99991231') { %>
+            <a class="btn-base" href="/person/update/<%= person.id %>">更新</a>
+            <input id="cancelbtn" class="btn-base" type="button" value="解約">
             <% } else { %>
-              <a class="btn-base" href="/person/delete/<%= person.id %>">削除</a>
+            <a class="btn-base" href="/person/delete/<%= person.id %>">削除</a>
             <% } %>
+          <% } %>
             <a class="btn-move" href="/company/<%= person.id_company %>">会社情報へ</a>
             <a class="btn-move" href="/">入居者検索へ</a>
             <input type="hidden" name="id" value="<%= person.id %>">
             <input type="hidden" name="id_company" value="<%= person.id_company %>">
             <input type="hidden" name="selected_ymd_kaiyaku" id="selected_ymd_kaiyaku" value="">
           </div>
-          <% } %>
         </dl>
       </form>
     </div>
