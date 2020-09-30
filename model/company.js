@@ -33,7 +33,7 @@ const find = function (callback) {
 
 const findForSelect = function (callback) {
     (async function () {
-        const query = 'select id, kubun_company, id_nyukyo, name, ymd_nyukyo, ymd_kaiyaku from companies where ymd_end = "99991231" order by id_nyukyo asc'
+        const query = 'select case ymd_kaiyaku when "99991231" then "" else "解約" end as kaiyakuKubun, id, kubun_company, id_nyukyo, name, ymd_nyukyo, ymd_kaiyaku from companies where ymd_end = "99991231" order by kaiyakuKubun asc, id_nyukyo asc'
         // const client = knex.connect();
         await client.raw(query)
             .then((retObj) => {
