@@ -2,6 +2,9 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const hash = require("./hash.js").digest;
 
+const log4js = require("log4js");
+const logger = log4js.configure('./config/log4js-config.json').getLogger();
+
 const users = require("../model/users");
 
 passport.serializeUser((user, done) => {
@@ -19,7 +22,7 @@ passport.use("local-strategy", new LocalStrategy({
 }, (req, username, password, done) => {
     const today = new Date();
     const dateinfo = today.getHours() + "時" + today.getMinutes() + "分" + ('0' + today.getSeconds()).slice(-2) + "秒";
-    console.log(dateinfo + " ) " + 'username:' + username + ' password:' + password);
+    logger.info(dateinfo + " ) " + 'username:' + username + ' password:' + password);
 
     users.findPKey(username, (err, retObj) => {
         if (err) { throw err };
