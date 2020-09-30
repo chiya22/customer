@@ -229,6 +229,11 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   //エラー情報
   let errors;
 
+  //会社情報
+  let company = {};
+  let inObjC = {};
+  inObjC.id = inObj.id_company;
+
   //入力チェック
   errors = validateData(req.body);
 
@@ -236,11 +241,6 @@ router.post('/insert', security.authorize(), function (req, res, next) {
 
     //すでに会社を選択している場合
     if (inObj.id_company) {
-
-      let company = {};
-
-      let inObjC = {};
-      inObjC.id = inObj.id_company;
 
       m_company.findPKey(inObjC, (err, retObj) => {
         if (err) { next(err) };
@@ -275,16 +275,22 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   }
 
   //応対履歴IDの採番号
-  m_sq.getSqOutai((err, retObj) => {
-    if (err) { next(err); }
-    inObj.id = 'O' + ('000000000' + retObj.no).slice(-9);
-    m_outai.insert(inObj, (err, retObj) => {
-      //個人のidは自動採番とするため、Duplicateエラーは考慮不要
+  m_company.findPKey(inObjC, (err, retObj) => {
+    if (err) { next(err) };
+    company = retObj;
+    m_sq.getSqOutai((err, retObj) => {
       if (err) { next(err); }
-      res.redirect('/outai');
+      inObj.id = 'O' + ('000000000' + retObj.no).slice(-9);
+      inObj.content = company.id_nyukyo + '【' + company.kubun_company + '】' + company.name + '\n\n' + inObj.content
+      m_outai.insert(inObj, (err, retObj) => {
+        //個人のidは自動採番とするため、Duplicateエラーは考慮不要
+        if (err) { next(err); }
+        res.redirect('/outai');
+      });
     });
   });
 });
+
 
 //応対履歴情報の更新
 router.post('/update', security.authorize(), function (req, res, next) {
