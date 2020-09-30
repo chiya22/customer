@@ -59,14 +59,14 @@ router.get('/:id', security.authorize(), function (req, res, next) {
         persons = retObj;
 
         //入居情報の取得
-        m_nyukyo.findPKey(company.id_nyukyo, (err, retObj) => {
-          if (err) { next(err) };
-          nyukyo = retObj;
+        // m_nyukyo.findPKey(company.id_nyukyo, (err, retObj) => {
+        //   if (err) { next(err) };
+        //   nyukyo = retObj;
 
           //入居番号の会社
-          m_company.findByNyukyo(company.id_nyukyo, (err, retObj) => {
-            if (err) { next(err); }
-            nyukyocompanies = retObj;
+          // m_company.findByNyukyo(company.id_nyukyo, (err, retObj) => {
+          //   if (err) { next(err); }
+          //   nyukyocompanies = retObj;
 
             //キャビネット情報の取得
             m_relation_comcabi.findByCompany(company.id, (err, retObj) => {
@@ -112,8 +112,8 @@ router.get('/:id', security.authorize(), function (req, res, next) {
                             res.render('company', {
                               company: company,
                               persons: persons,
-                              nyukyo: nyukyo,
-                              nyukyocompanies: nyukyocompanies,
+                              // nyukyo: nyukyo,
+                              // nyukyocompanies: nyukyocompanies,
                               cabinets: cabinets,
                               freecabinets: freecabinets,
                               rooms: rooms,
@@ -128,8 +128,8 @@ router.get('/:id', security.authorize(), function (req, res, next) {
                       });
                     });
                   });
-                });
-              });
+              //   });
+              // });
             });
           });
         });

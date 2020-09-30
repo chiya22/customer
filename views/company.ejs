@@ -188,38 +188,6 @@
         <!-- /.room -->
         <% } %>
 
-        <div class="nyukyo">
-          <div class="nyukyo__header">
-            <% if (nyukyo) { %>
-            <p class="midashi">入居番号　<%= nyukyo.id %></p>
-            <% } else { %>
-            <p class="midashi">入居番号</p>
-            <% } %>
-          </div>
-          <!-- /.nyukyo__header -->
-          <% if (nyukyo) { %>
-          <div class="nyukyo__items">
-            <% nyukyocompanies.forEach( nyukyocompany  => { %>
-            <div class="nyukyo__item">
-              <% if (nyukyocompany.ymd_kaiyaku === '99991231') { %>
-              <a class="btn-link" href="/company/<%= nyukyocompany.id %>">
-                <span><%= nyukyocompany.name %><span class="dateinfo">　入居：<%= nyukyocompany.ymd_nyukyo %></span></span>
-              </a>
-              <% } else { %>
-              <a class="btn-link bd-left-disabled" href="/company/<%= nyukyocompany.id %>">
-                <span class="color-disabled"><%= nyukyocompany.name %><span
-                    class="dateinfo">　入居：<%= nyukyocompany.ymd_nyukyo %>　解約：<%= nyukyocompany.ymd_kaiyaku %></span></span>
-              </a>
-              <% } %>
-            </div>
-            <!-- /.nyukyo__item -->
-            <% }) %>
-          </div>
-          <!-- /.nyukyo__items -->
-          <% } %>
-        </div>
-        <!-- /.nyukyo -->
-
         <div class="cabinet">
           <div class="cabinet__header">
             <p class="midashi">キャビネット</p>
