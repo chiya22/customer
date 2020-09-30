@@ -24,7 +24,7 @@
                 <%
                 let title;
                 if ((company.ymd_kaiyaku) && (company.ymd_kaiyaku !== '99991231')) {
-                  title = company.id_nyukyo + '【解約】【' + company.kubun_company + '】' + company.name;
+                  title = '【解約】' + company.id_nyukyo + '【' + company.kubun_company + '】' + company.name;
                 } else {
                   title = company.id_nyukyo + '【' + company.kubun_company + '】' + company.name;
                 }
@@ -52,7 +52,7 @@
               <% if (selectCompany) { %>
               <a class="btn-link ml-small" href="/outai/insert/<%= selectCompany.id %>">応対履歴登録</a>
               <% } else { %>
-              <a class="btn-link ml-small" href="/outai/insert/C99999">応対履歴登録</a>
+              <a class="btn-link ml-small" href="/outai/insert/CZZZZZ">応対履歴登録</a>
               <% } %>
             </div>
             <!-- /.searchform__top -->

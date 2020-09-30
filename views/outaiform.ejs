@@ -31,10 +31,18 @@
               <option value="">--会社選択--</option>
               <% } %>
               <% companies.forEach(function (company) { %>
-              <% if ((selectCompany) && (company.id === selectCompany.id)) { %>
-              <option value="<%= company.id %>" selected><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
+                <%
+                let title;
+                if ((company.ymd_kaiyaku) && (company.ymd_kaiyaku !== '99991231')) {
+                  title = '【解約】' + company.id_nyukyo + '【' + company.kubun_company + '】' + company.name;
+                } else {
+                  title = company.id_nyukyo + '【' + company.kubun_company + '】' + company.name;
+                }
+                %>
+                <% if ((selectCompany) && (company.id === selectCompany.id)) { %>
+              <option value="<%= company.id %>" selected><%= title %></option>
               <% } else { %>
-              <option value="<%= company.id %>"><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
+              <option value="<%= company.id %>"><%= title %></option>
               <% } %>
               <% }); %>
             </select>
@@ -83,10 +91,18 @@
                 <option value="" selected>--会社選択--</option>
                 <% } %>
                 <% companies.forEach(function (company) { %>
-                <% if (company.id === outai.id_company) { %>
-                <option value="<%= company.id %>" selected><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
+                  <%
+                  let title;
+                  if ((company.ymd_kaiyaku) && (company.ymd_kaiyaku !== '99991231')) {
+                    title = '【解約】' + company.id_nyukyo + '【' + company.kubun_company + '】' + company.name;
+                  } else {
+                    title = company.id_nyukyo + '【' + company.kubun_company + '】' + company.name;
+                  }
+                  %>
+                  <% if (company.id === outai.id_company) { %>
+                <option value="<%= company.id %>" selected><%= title %></option>
                 <% } else { %>
-                <option value="<%= company.id %>"><%= company.id_nyukyo %>【<%= company.kubun_company %>】<%= company.name %></option>
+                <option value="<%= company.id %>"><%= title %></option>
                 <% } %>
                 <% }); %>
               </select>
