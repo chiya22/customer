@@ -109,12 +109,14 @@
               <span class="dateinfo-small">　　登録：<%= result.ymdhms_add %>（<%= result.name_add %>）
                 更新：<%= result.ymdhms_upd %>（<%= result.name_upd %>）</span>
             </a>
+            <div class="balloon"><pre><%= result.content %></pre></div>
             <% } else { %>
             <a class="btn-link" href="./outai/<%= result.id %>">
               <span><%= title %></span>
               <span class="dateinfo-small">　　登録：<%= result.ymdhms_add %>（<%= result.name_add %>）
                 更新：<%= result.ymdhms_upd %>（<%= result.name_upd %>）</span>
             </a>
+            <div class="balloon"><pre><%= result.content %></pre></div>
             <% } %>
           </div>
           <!-- /.search__result-item -->
