@@ -54,19 +54,28 @@ router.post('/', security.authorize(), function (req, res, next) {
   let query2;
   if (id_company) {
     if (includecomplete) {
-      query = 'select count(*) as count_all from outais where id_company = "' + id_company + '" and content like "%' + searchvalue + '%"'
-      query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where id_company = "' + id_company + '" and content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+      query = ''
+      // query = 'select count(*) as count_all from outais where id_company = "' + id_company + '" and content like "%' + searchvalue + '%"'
+      query = 'select COUNT(*) as count_all FROM ( SELECT o.*,c.name as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id ) ocu WHERE ocu.id_company = "' + id_company + '" and (ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%" )'
+      // query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where id_company = "' + id_company + '" and content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+      query2 = 'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.id_company = "' + id_company + '" AND ( ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%") ORDER BY ocu.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
     } else {
-      query = 'select count(*) as count_all from outais where id_company = "' + id_company + '" and status != "完了" and content like "%' + searchvalue + '%"'
-      query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where id_company = "' + id_company + '" and status != "完了" and content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+      // query = 'select count(*) as count_all from outais where id_company = "' + id_company + '" and status != "完了" and content like "%' + searchvalue + '%"'
+      query = 'select COUNT(*) as count_all FROM ( SELECT o.*,c.name as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id ) ocu WHERE ocu.id_company = "' + id_company + '" and ocu.status != "完了" and (ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%" )'
+      // query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where id_company = "' + id_company + '" and status != "完了" and content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+      query2 = 'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.id_company = "' + id_company + '" AND ocu.status != "完了" AND ( ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%") ORDER BY ocu.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
     }
   } else {
     if (includecomplete) {
-      query = 'select count(*) as count_all from outais where content like "%' + searchvalue + '%"'
-      query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+      // query = 'select count(*) as count_all from outais where content like "%' + searchvalue + '%"'
+      query = 'select COUNT(*) as count_all FROM ( SELECT o.*,c.name as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id ) ocu WHERE (ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%" )'
+      // query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+      query2 = 'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ( ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%") ORDER BY ocu.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
     } else {
-      query = 'select count(*) as count_all from outais where status != "完了" and content like "%' + searchvalue + '%"'
-      query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where status != "完了" and content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+      // query = 'select count(*) as count_all from outais where status != "完了" and content like "%' + searchvalue + '%"'
+      query = 'select COUNT(*) as count_all FROM ( SELECT o.*,c.name as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id ) ocu WHERE ocu.status != "完了" and (ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%" )'
+      // query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where status != "完了" and content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+      query2 = 'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.status != "完了" AND ( ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%") ORDER BY ocu.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
     }
   }
 
@@ -275,18 +284,13 @@ router.post('/insert', security.authorize(), function (req, res, next) {
   }
 
   //応対履歴IDの採番号
-  m_company.findPKey(inObjC, (err, retObj) => {
-    if (err) { next(err) };
-    company = retObj;
-    m_sq.getSqOutai((err, retObj) => {
+  m_sq.getSqOutai((err, retObj) => {
+    if (err) { next(err); }
+    inObj.id = 'O' + ('000000000' + retObj.no).slice(-9);
+    m_outai.insert(inObj, (err, retObj) => {
+      //個人のidは自動採番とするため、Duplicateエラーは考慮不要
       if (err) { next(err); }
-      inObj.id = 'O' + ('000000000' + retObj.no).slice(-9);
-      inObj.content = company.id_nyukyo + '【' + company.kubun_company + '】' + company.name + '\n\n' + inObj.content
-      m_outai.insert(inObj, (err, retObj) => {
-        //個人のidは自動採番とするため、Duplicateエラーは考慮不要
-        if (err) { next(err); }
-        res.redirect('/outai');
-      });
+      res.redirect('/outai');
     });
   });
 });
