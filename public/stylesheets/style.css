@@ -31,6 +31,33 @@ body {
   font-weight: bold;
 }
 
+.balloon {
+  display: none;
+  position: absolute;
+  bottom: 30px;
+  left: 100px;
+  padding: 5px 10px;
+  color: #fff;
+  font-size: 14px;
+  background-color: #F93D23;
+  border-radius: 5px;
+  z-index: 999;
+  opacity: 0.7;
+}
+
+.balloon::before {
+  content: "";
+  position: absolute;
+  top: 97%;
+  left: 20px;
+  border: 6px solid transparent;
+  border-top: 6px solid #F93D23;
+}
+
+.search__result-item:hover .balloon {
+  display: block;
+}
+
 .form__item-style {
   color: #8a8a8a;
   display: block;
@@ -505,6 +532,7 @@ body {
 .search__result-item {
   margin: 20px 10px;
   width: 98%;
+  position: relative;
 }
 
 .search__result-item a {
