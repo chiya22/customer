@@ -70,7 +70,7 @@
             <div class="form__btn">
               <% if (locals.user.role === '社員') { %>
               <% if (company.ymd_kaiyaku === '99991231') { %>
-              <a class="btn-base" href="/company/update/<%= company.id %>">更新</a>
+              <a class="btn-base" href="/company/update/<%= company.id %>">編集</a>
               <input type="button" class="btn-base" id="cancelbtn" value="解約">
               <% } else { %>
               <a class="btn-base" href="/company/delete/<%= company.id %>">削除</a>
