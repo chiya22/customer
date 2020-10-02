@@ -60,25 +60,39 @@
           </dd>
           <dt><span class="tag">必須</span>個人区分</dt>
           <dd>
-            <% if (company.kubun_company === 'CN') { %>
-            <input id="kubun_person_1" class="form__radio-style" type="radio" value="主" checked="checked"
+            <%
+            let flgMain = "";
+            let flgContain = "";
+            let flgAdd = "";
+            let fleOther = "";
+            let flgGuest = "";
+            let flgFree = "";
+            if (person.kubun_person === '主') {
+              flgMain = "checked";
+            } else if (person.kubun_person === '人数内') {
+              flgContain = "checked";
+            } else if (person.kubun_person === '追加') {
+              flgAdd = "checked";
+            } else if (person.kubun_person === 'その他') {
+              flgOther = "checked";
+            } else if (person.kubun_person === 'ゲスト') {
+              flgGuest = "checked";
+            } else if (person.kubun_person === 'フリー') {
+              flgFree = "checked";
+            }
+            %>
+            <input id="kubun_person_1" class="form__radio-style" type="radio" value="主" <%= flgMain %>
               name="kubun_person"><label for="kubun_person_1" class="form__radio-label">主</label>
-            <input id="kubun_person_2" class="form__radio-style" type="radio" value="人数内" name="kubun_person"><label
+            <input id="kubun_person_2" class="form__radio-style" type="radio" value="人数内" name="kubun_person" <%= flgContain %> ><label
               for="kubun_person_2" class="form__radio-label">人数内</label>
-            <input id="kubun_person_3" class="form__radio-style" type="radio" value="追加" name="kubun_person"><label
+            <input id="kubun_person_3" class="form__radio-style" type="radio" value="追加" name="kubun_person" <%= flgAdd %> ><label
               for="kubun_person_3" class="form__radio-label">追加</label>
-            <input id="kubun_person_4" class="form__radio-style" type="radio" value="その他" name="kubun_person"><label
+            <input id="kubun_person_4" class="form__radio-style" type="radio" value="その他" name="kubun_person" <%= flgOther %> ><label
               for="kubun_person_4" class="form__radio-label">その他</label>
-            <% } else { %>
-            <input id="kubun_person_1" class="form__radio-style" type="radio" value="主" checked="checked"
-              name="kubun_person"><label for="kubun_person_1" class="form__radio-label">主</label>
-            <input id="kubun_person_2" class="form__radio-style" type="radio" value="追加" name="kubun_person"><label
-              for="kubun_person_2" class="form__radio-label">追加</label>
-            <input id="kubun_person_3" class="form__radio-style" type="radio" value="ゲスト" name="kubun_person"><label
-              for="kubun_person_3" class="form__radio-label">ゲスト</label>
-            <input id="kubun_person_4" class="form__radio-style" type="radio" value="フリー" name="kubun_person"><label
-              for="kubun_person_4" class="form__radio-label">フリー</label>
-            <% } %>
+            <input id="kubun_person_5" class="form__radio-style" type="radio" value="ゲスト" name="kubun_person" <%= flgGuest %> ><label
+              for="kubun_person_5" class="form__radio-label">ゲスト</label>
+            <input id="kubun_person_6" class="form__radio-style" type="radio" value="フリー" name="kubun_person" <%= flgFree %> ><label
+              for="kubun_person_6" class="form__radio-label">フリー</label>
           </dd>
           <dt><span class="tag">必須</span>個人名</dt>
           <dd><input type="text" class="form__item-style" name="name" value="<%= person.name %>" required></dd>
@@ -136,26 +150,40 @@
               </select>
             </dd>
             <dt>個人区分</dt>
+            <%
+            let flgMain = "";
+            let flgContain = "";
+            let flgAdd = "";
+            let flgOther = "";
+            let flgGuest = "";
+            let flgFree = "";
+            if (person.kubun_person === '主') {
+              flgMain = "checked";
+            } else if (person.kubun_person === '人数内') {
+              flgContain = "checked";
+            } else if (person.kubun_person === '追加') {
+              flgAdd = "checked";
+            } else if (person.kubun_person === 'その他') {
+              flgOther = "checked";
+            } else if (person.kubun_person === 'ゲスト') {
+              flgGuest = "checked";
+            } else if (person.kubun_person === 'フリー') {
+              flgFree = "checked";
+            }
+            %>
             <dd>
-              <% if (company.kubun_company === 'CN') { %>
-              <input id="kubun_person_1" class="form__radio-style" type="radio" value="主" checked="checked"
-                name="kubun_person"><label for="kubun_person_1" class="form__radio-label">主</label>
-              <input id="kubun_person_2" class="form__radio-style" type="radio" value="人数内" name="kubun_person"><label
-                for="kubun_person_2" class="form__radio-label">人数内</label>
-              <input id="kubun_person_3" class="form__radio-style" type="radio" value="追加" name="kubun_person"><label
-                for="kubun_person_3" class="form__radio-label">追加</label>
-                <input id="kubun_person_4" class="form__radio-style" type="radio" value="その他" name="kubun_person"><label
-                for="kubun_person_4" class="form__radio-label">その他</label>
-              <% } else { %>
-              <input id="kubun_person_1" class="form__radio-style" type="radio" value="主" checked="checked"
-                name="kubun_person"><label for="kubun_person_1" class="form__radio-label">主</label>
-              <input id="kubun_person_2" class="form__radio-style" type="radio" value="追加" name="kubun_person"><label
-                for="kubun_person_2" class="form__radio-label">追加</label>
-              <input id="kubun_person_3" class="form__radio-style" type="radio" value="ゲスト" name="kubun_person"><label
-                for="kubun_person_3" class="form__radio-label">ゲスト</label>
-              <input id="kubun_person_4" class="form__radio-style" type="radio" value="フリー" name="kubun_person"><label
-                for="kubun_person_4" class="form__radio-label">フリー</label>
-              <% } %>
+              <input id="kubun_person_1" class="form__radio-style" type="radio" value="主" name="kubun_person" <%= flgMain %> >
+              <label for="kubun_person_1" class="form__radio-label">主</label>
+              <input id="kubun_person_2" class="form__radio-style" type="radio" value="人数内" name="kubun_person" <%= flgContain %> >
+              <label for="kubun_person_2" class="form__radio-label">人数内</label>
+              <input id="kubun_person_3" class="form__radio-style" type="radio" value="追加" name="kubun_person" <%= flgAdd %> >
+              <label for="kubun_person_3" class="form__radio-label">追加</label>
+              <input id="kubun_person_4" class="form__radio-style" type="radio" value="その他" name="kubun_person" <%= flgOther %> >
+              <label for="kubun_person_4" class="form__radio-label">その他</label>
+              <input id="kubun_person_5" class="form__radio-style" type="radio" value="ゲスト" name="kubun_person" <%= flgGuest %> >
+              <label for="kubun_person_5" class="form__radio-label">ゲスト</label>
+              <input id="kubun_person_6" class="form__radio-style" type="radio" value="フリー" name="kubun_person" <%= flgFree %> >
+              <label for="kubun_person_6" class="form__radio-label">フリー</label>
             </dd>
             <dt>個人名</dt>
             <dd><input type="text" class="form__item-style" name="name" value="<%= person.name %>" required></dd>
