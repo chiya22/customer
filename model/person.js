@@ -28,13 +28,40 @@ const find = function (callback) {
             ymd_end: "99991231",
         }).orderBy("id","asc")
             .then((retObj) => {
-                callback(null, retObj[0]);
+                callback(null, retObj);
             })
             .catch((err) => {
                 callback(err, null);
             });
     })();
 };
+
+const findForDownload = function (callback) {
+    (async function() {
+        const query = 'SELECT c.id_nyukyo, c.name AS name_company, p.name AS name_person, p.kana as kana_person, p.kubun_person, p.telno_mobile FROM persons p left outer JOIN companies c ON p.id_company = c.id AND  c.ymd_kaiyaku = "99991231" WHERE p.ymd_kaiyaku = "99991231" ORDER BY c.kana, p.kana'
+        await client.raw(query)
+            .then((retObj) => {
+                callback(null, retObj[0]);
+            })
+            .catch((err) => {
+                callback(err, null);
+            })
+    })();
+};
+
+const findForDownloadOrderNyukyo = function (callback) {
+    (async function() {
+        const query = 'SELECT c.id_nyukyo, c.name AS name_company, p.name AS name_person, p.kana as kana_person, p.kubun_person, p.telno_mobile FROM persons p left outer JOIN companies c ON p.id_company = c.id AND  c.ymd_kaiyaku = "99991231" WHERE p.ymd_kaiyaku = "99991231" ORDER BY c.id_nyukyo, c.kana, p.kana'
+        await client.raw(query)
+            .then((retObj) => {
+                callback(null, retObj[0]);
+            })
+            .catch((err) => {
+                callback(err, null);
+            })
+    })();
+};
+
 
 // 会社に所属している個人を抽出
 const findByCompany = function (inObj, callback) {
@@ -158,6 +185,8 @@ const cancelByCompany = function (inObj, callback) {
 
 module.exports = {
     find,
+    findForDownload,
+    findForDownloadOrderNyukyo,
     findPKey,
     findByCompany,
     findLikeCount,

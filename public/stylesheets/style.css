@@ -789,7 +789,7 @@ dd.area__outai-content textarea {
   margin-left: 1.5rem;
 }
 
-.area-admin a {
+.area-admin a, .area-admin input {
   margin: 10px 15px;
 }
 

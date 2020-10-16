@@ -104,6 +104,19 @@ const remove = function (inObj, callback) {
     })();
 };
 
+const findWithRoom = function (callback) {
+    (async function () {
+        const query = 'SELECT c.id_nyukyo , IFNULL(CONCAT(r.place, "_", r.floor, "_", r.name),"ON") AS name_room FROM companies c LEFT OUTER JOIN relation_comroom cr ON c.id = cr.id_company AND cr.ymd_end = "99991231" LEFT OUTER JOIN rooms r ON cr.id_room = r.id AND r.ymd_end = "99991231" WHERE c.ymd_kaiyaku = "99991231" ORDER BY c.id_nyukyo asc'
+        await client.raw(query)
+        .then( (retObj) => {
+            callback(null, retObj[0]);
+        })
+        .catch( (err) => {
+            callback(err, null);
+        });
+    })();
+}
+
 module.exports = {
     find,
     findPKey,
@@ -112,4 +125,5 @@ module.exports = {
     insert,
     update,
     remove,
+    findWithRoom,
 };
