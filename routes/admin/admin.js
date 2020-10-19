@@ -21,7 +21,7 @@ router.post('/download/persons', function (req, res, next) {
     m_person.findForDownload((err, retObj) => {
       if (err) { next(err) };
 
-      csv = '入居者番号,部屋,会社名・屋号,利用者名,ふりがな（利用者名）,登録,携帯電話' + '\r\n';
+      csv = '入居者番号,部屋,会社名・屋号,ふりがな（会社名）,利用者名,ふりがな（利用者名）,登録,携帯電話' + '\r\n';
       retObj.forEach((obj) => {
         let name_room = [];
         roominfoList.forEach( roominfo => {
@@ -30,7 +30,7 @@ router.post('/download/persons', function (req, res, next) {
           }
         });
         obj.name_room = name_room.join('/');
-        csv += obj.id_nyukyo + ',' + obj.name_room + ',' + obj.name_company + ',' + obj.name_person + ',' + obj.kana_person + ',' + obj.kubun_person + ',' + obj.telno_mobile + '\r\n';
+        csv += obj.id_nyukyo + ',' + obj.name_room + ',' + obj.name_company + ',' + obj.kana_company + ',' + obj.name_person + ',' + obj.kana_person + ',' + obj.kubun_person + ',' + obj.telno_mobile + '\r\n';
       });
     
       res.setHeader('Content-disposition', 'attachment; filename=data.csv');
@@ -52,7 +52,7 @@ router.post('/download/personsordernyukyo', function (req, res, next) {
     m_person.findForDownloadOrderNyukyo((err, retObj) => {
       if (err) { next(err) };
 
-      csv = '入居者番号,部屋,会社名・屋号,利用者名,ふりがな（利用者名）,登録,携帯電話' + '\r\n'
+      csv = '入居者番号,部屋,会社名・屋号,ふりがな（会社名）,利用者名,ふりがな（利用者名）,登録,携帯電話' + '\r\n';
       retObj.forEach((obj) => {
         let name_room = [];
         roominfoList.forEach( roominfo => {
@@ -61,7 +61,7 @@ router.post('/download/personsordernyukyo', function (req, res, next) {
           }
         });
         obj.name_room = name_room.join('/');
-        csv += obj.id_nyukyo + ',' + obj.name_room + ',' + obj.name_company + ',' + obj.name_person + ',' + obj.kana_person + ',' + obj.kubun_person + ',' + obj.telno_mobile + '\r\n';
+        csv += obj.id_nyukyo + ',' + obj.name_room + ',' + obj.name_company + ',' + obj.kana_company + ',' + obj.name_person + ',' + obj.kana_person + ',' + obj.kubun_person + ',' + obj.telno_mobile + '\r\n';
       });
     
       res.setHeader('Content-disposition', 'attachment; filename=data.csv');
