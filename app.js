@@ -59,6 +59,9 @@ app.use('/company', companyRouter);
 app.use('/person', personRouter);
 app.use('/outai', outaisRouter);
 
+const cron = require('./util/cron')
+cron.startcron();
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
