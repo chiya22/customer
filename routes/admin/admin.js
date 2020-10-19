@@ -52,7 +52,7 @@ router.post('/download/personsordernyukyo', function (req, res, next) {
     m_person.findForDownloadOrderNyukyo((err, retObj) => {
       if (err) { next(err) };
 
-      csv = '入居者番号,部屋,会社名・屋号,利用者名,ふりがな（利用者名）,登録,携帯電話'
+      csv = '入居者番号,部屋,会社名・屋号,利用者名,ふりがな（利用者名）,登録,携帯電話' + '\r\n'
       retObj.forEach((obj) => {
         let name_room = [];
         roominfoList.forEach( roominfo => {
