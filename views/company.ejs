@@ -176,7 +176,7 @@
               <% if ((company.ymd_kaiyaku === '99991231') && (room.ymd_end === '99991231')) { %>
               <% if (locals.user.role === '社員') { %>
               <a class="tag"
-                href="/company/deleteroom/<%= room.id_company %>/<%= room.id_room %>/<%= room.no_seq %>">削除</a>
+                href="/company/deleteroom/<%= room.id_company %>/<%= room.id_room %>/<%= room.no_seq %>">解約</a>
               <% } %>
               <% } %>
             </div>
@@ -230,7 +230,7 @@
                 <% if ((company.ymd_kaiyaku === '99991231') && (cabinet.ymd_end === '99991231')) { %>
                 <% if (locals.user.role === '社員') { %>
                 <a class="tag"
-                  href="/company/deletecabinet/<%= company.id %>/<%= cabinet.id_cabinet %>/<%= cabinet.no_seq %>">削除</a>
+                  href="/company/deletecabinet/<%= company.id %>/<%= cabinet.id_cabinet %>/<%= cabinet.no_seq %>">解約</a>
                 <% } %>
                 <% } %>
               </div>
@@ -286,7 +286,7 @@
                   <% if ((company.ymd_kaiyaku === '99991231') && (bicycle.ymd_end === '99991231')) { %>
                   <% if (locals.user.role === '社員') { %>
                   <a class="tag"
-                    href="/company/deletebicycle/<%= bicycle.id_company %>/<%= bicycle.id_bicycle %>/<%= bicycle.no_seq %>">削除</a>
+                    href="/company/deletebicycle/<%= bicycle.id_company %>/<%= bicycle.id_bicycle %>/<%= bicycle.no_seq %>">解約</a>
                   <% } %>
                   <% } %>
                 </div>
@@ -341,7 +341,7 @@
                     <% if ((company.ymd_kaiyaku === '99991231') && (car.ymd_end === '99991231')) { %>
                     <% if (locals.user.role === '社員') { %>
                     <a class="tag"
-                      href="/company/deletecar/<%= car.id_company %>/<%= car.id_car %>/<%= car.no_seq %>">削除</a>
+                      href="/company/deletecar/<%= car.id_company %>/<%= car.id_car %>/<%= car.no_seq %>">解約</a>
                     <% } %>
                     <% } %>
                   </div>
