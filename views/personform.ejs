@@ -213,7 +213,7 @@
             <input type="hidden" name="id" value="<%= person.id %>">
             <div class="form__btn">
               <input type="button" class="btn-base" id="btn_update" value="更新">
-              <a class="btn-move" href="/company/<%= person.id_company %>">会社情報へ</a>
+              <a class="btn-move" href="/person/<%= person.id %>">個人情報へ</a>
   
               <!-- ◆削除モード -->
               <% } else { %>
@@ -259,10 +259,10 @@
                   disabled></dd>
               <input type="hidden" name="id" value="<%= person.id %>">
               <input type="hidden" name="id_company" value="<%= person.id_company %>">
-              <% if (person.ymd_kaiyaku === '99991231') { %>
+              <% if (person.ymd_kaiyaku !== '99991231') { %>
               <div class="form__btn">
                 <input type="button" class="btn-base" id="btn_delete" value="削除">
-                <a class="btn-move" href="/company/<%= person.id_company %>">会社情報へ</a>
+                <a class="btn-move" href="/person/<%= person.id %>">個人情報へ</a>
                 <% } %>
             </div>
             <% } %>
