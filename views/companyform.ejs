@@ -10,20 +10,22 @@
   <%- include("./common/header.ejs") %>
   <section class="main">
     <div class="main__wrapper">
-      <% if (company) { %>
-      <div class="title">
-        <% if (company.id_nyukyo) { %>
-        <span class="tag-big"><%= company.id_nyukyo %></span>
+      <div class="fix_header">
+        <% if (company) { %>
+        <div class="title">
+          <% if (company.id_nyukyo) { %>
+          <span class="tag-big"><%= company.id_nyukyo %></span>
+          <% } %>
+          <span class="tag-big"><%= company.kubun_company %></span>
+          <% if ((company.ymd_kaiyaku) && (company.ymd_kaiyaku !== '99991231')) { %>
+          <span class="tag-big">解約</span>
+          <% } %>
+          <%= company.name %>
+        </div>
+        <% } else { %>
+        <div class="title">新規登録</div>
         <% } %>
-        <span class="tag-big"><%= company.kubun_company %></span>
-        <% if ((company.ymd_kaiyaku) && (company.ymd_kaiyaku !== '99991231')) { %>
-        <span class="tag-big">解約</span>
-        <% } %>
-        <%= company.name %>
       </div>
-      <% } else { %>
-      <div class="title">新規登録</div>
-      <% } %>
       <form class="company__form" name="companyform" method="POST">
         <% if (errors) { %>
         <div class="alert alert-danger">
@@ -163,36 +165,10 @@
             <!-- ◆更新モード -->
             <% } else if ((mode === 'update') && (company.ymd_kaiyaku === '99991231')) { %>
             <input type="hidden" name="id" value="<%= company.id %>">
-            <dt><span class="tag">必須</span>入居番号</dt>
-            <dd>
-              <select class="form__item-style" name="id_nyukyo">
-                <% if (!company.id_nyukyo) { %>
-                <option value="" selected>--入居番号選択--</option>
-                <% } else { %>
-                <option value="">--入居番号選択--</option>
-                <% } %>
-                <% nyukyos.forEach(function (nyukyo) { %>
-                <%
-                  let dispvalue;
-                  if ((nyukyo.ymd_kaiyaku) && (nyukyo.ymd_kaiyaku === '99991231')) {
-                      dispvalue = '【使用中】' +　nyukyo.id;
-                    } else {
-                      if (nyukyo.ymd_kaiyaku) {
-                        dispvalue = '【未使用】' + nyukyo.id + '　解約日：' + nyukyo.ymd_kaiyaku;
-                      }else{
-                        dispvalue = '【未使用】' + nyukyo.id;
-                      }
-                    };
-                %>
-                <% if (nyukyo.id === company.id_nyukyo) { %>
-                <option value="<%= nyukyo.id %>" selected><%= dispvalue %></option>
-                <% } else { %>
-                <option value="<%= nyukyo.id %>"><%= dispvalue %></option>
-                <% } %>
-                <% }); %>
-              </select>
-            </dd>
-            <dt><span class="tag">必須</span>会社区分</dt>
+            <dt>入居番号</dt>
+            <dd><input class="form__item-style bg-input-disabled" type="text" name="id_nyukyo"
+                value="<%= company.id_nyukyo %>" disabled></dd>
+            <dt>会社区分</dt>
             <dd><input class="form__item-style bg-input-disabled" type="text" name="kubun_company"
                 value="<%= company.kubun_company %>" disabled></dd>
             <input type="hidden" name="kubun_company" value="<%= company.kubun_company %>">
