@@ -565,9 +565,11 @@ pre {
   font-size: 0.75rem;
   font-weight: bold;
   margin-left: 5px;
-  padding: 13px 5px;
+  padding: 5px;
   text-align: center;
   text-decoration: none;
+  width: 40px;
+  height: auto;
 }
 
 .result__row .btn-outai:hover {
@@ -577,6 +579,11 @@ pre {
 .result__row .btn-outai:active {
   box-shadow: inset 0 0 2px rgba(128, 128, 128, 0.1);
   transform: translateY(2px);
+}
+
+.result__row .btn-outai-img {
+  width: 30px;
+  height: auto;
 }
 
 .company,
