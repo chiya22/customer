@@ -82,6 +82,24 @@ pre {
     color: $base-color;
   }
 }
+.searchform__item-style {
+  color: #8a8a8a;
+  display: inline-block;
+  width: 100px;
+  height: 25px;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 27px;
+  background-clip: padding-box;
+  background-color: #fff;
+  font-size: 12px;
+  letter-spacing: 0.8px;
+  &:focus {
+    outline: none;
+    border: 1px solid $base-color;
+    color: $base-color;
+  }
+}
 //radio
 .form__radio-style {
   clip: rect(1px, 1px, 1px, 1px);
@@ -113,7 +131,50 @@ pre {
   letter-spacing: 0.8px;
 }
 //checkbox
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.checkbox_label {
+  display: inline-block;
+  // width: 70px;
+  position: relative;
+  // margin: 20px;
+  padding: 5px 15px 5px 35px;
+  border: 3px solid #fff;
+  border-radius: 50px;
+  color: #fff;
+  background-color: #8a8a8a;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color .2s, box-shadow .2s;
+}
+.checkbox_label::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 10px;
+  width: 15px;
+  border: 3px solid #fff;
+  border-radius: 20px;
+  transition: background-color .2s;
+}
+input[type="checkbox"] {
+  position: absolute;
+  left: -9999px;
+}
+input:checked + .checkbox_label {
+  background-color: $base-color;
+}
+input:checked + .checkbox_label::before {
+  background-color: #fff;
+}
+
 .form__check {
+  display: inline-block;
   margin-left: 10px;
 }
 .form__check input[type="checkbox"] {
@@ -152,6 +213,7 @@ pre {
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
 
 //アクションするボタン
 .btn-base {
@@ -340,6 +402,9 @@ pre {
 .ml-large {
   margin-left: 100px;
 }
+.mt-small {
+  margin-top: 10px;
+}
 .pd-disabled {
   padding: 9px 16px !important;
 }
@@ -463,6 +528,7 @@ pre {
   top: 52px;
   padding-top: 10px;
   background-color: #fff;
+  z-index:999;
 }
 
 .searchform {
@@ -476,14 +542,54 @@ pre {
     align-items: center;
     padding: 5px 0;
   }
-  .search__result-disp {
-    margin-top: 0.5rem;
+  .searchform__detail {
+    .searchform__detail_btn_close {
+      display: inline-block;
+      border-radius: 19px;
+      color: #fff;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 5px 20px;
+      margin: 5px 0 10px;
+      cursor: pointer;
+      
+    }
+    .searchform__detail_label {
+      font-size: 14px;
+      color: $base-color;
+      font-weight: bold;
+      margin-left: 10px;
+      margin-right: 10px;
+      padding:5px 0;
+      }
+    .searchform__detail__summary {
+      color: #333;
+      outline: none;
+    }
+    .searcform_detail_parts {
+      padding:5px;
+    }
+    .searchform__detail_ymd_label {
+      font-size: 12px;
+      font-weight: bold;
+      color: $base-color;
+      margin-left: 10px;
+      margin-right: 10px;
+      padding:5px 0;
+      }
+  }
+  .ymd_nyukyo_area, .ymd_kaiyaku_area {
+    display: inline-block;
   }
   .page-section {
     display: flex;
     align-items: center;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    .search__result-disp {
+      margin-left: 10px;
+    //   display: inline-block;
+    //   // margin-top: 0.5rem;
+    }
     .page-disp {
       padding: 0 10px;
       font-weight: normal;
@@ -494,7 +600,7 @@ pre {
   padding-top: 160px;
 }
 .search__result {
-  padding-top: 110px;
+  padding-top: 130px;
 }
 .search__result-item {
   margin: 20px 10px;

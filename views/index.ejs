@@ -21,19 +21,56 @@
                 <a class="btn-link ml-small" href="/company">会社登録</a>
               <% } %>
             </div>
+            <div class="searchform__detail">
+                <input type="button" class="btn-base btn_searchform_detail mt-small" value="詳細条件を表示する" />
+                <div class="searchform__detail__content">
+                  <div class="kubun_area searcform_detail_parts">
+                    <div><p class="searchform__detail_btn_close">詳細条件を閉じる</p></div>
+                    <label class="searchform__detail_label">◆会社</label>
+                    <div class="kubun_company_area searcform_detail_parts">
+                      <input type="checkbox" id="kubun_company_cn" name="kubun_company_cn" <%= searchdetail.search_kubun_company_cn %> value="checked"><label for="kubun_company_cn" class="checkbox_label">CN</label>
+                      <input type="checkbox" id="kubun_company_on" name="kubun_company_on" <%= searchdetail.search_kubun_company_on %> value="checked"><label for="kubun_company_on" class="checkbox_label">ON</label>
+                      <input type="checkbox" id="kubun_company_ts" name="kubun_company_ts" <%= searchdetail.search_kubun_company_ts %> value="checked"><label for="kubun_company_ts" class="checkbox_label">TS</label>
+                      <input type="checkbox" id="kubun_company_city" name="kubun_company_city" <%= searchdetail.search_kubun_company_city %> value="checked"><label for="kubun_company_city" class="checkbox_label">市町村</label>
+                      <input type="checkbox" id="kubun_company_other" name="kubun_company_other" <%= searchdetail.search_kubun_company_other %> value="checked"><label for="kubun_company_other" class="checkbox_label">その他</label>
+                      <div class="form__check"><input type="checkbox" id="kubun_company_kaiyaku" name="kubun_company_kaiyaku" <%= searchdetail.search_kubun_company_kaiyaku %> value="checked"><label for="kubun_company_kaiyaku">解約含む</label></div>
+                    </div>
+                    <label class="searchform__detail_label">◆個人</label>
+                    <div class="kubun_person_area searcform_detail_parts">
+                      <input type="checkbox" id="kubun_person_main" name="kubun_person_main" <%= searchdetail.search_kubun_person_main %> value="checked"><label for="kubun_person_main" class="checkbox_label">主</label>
+                      <input type="checkbox" id="kubun_person_nai" name="kubun_person_nai" <%= searchdetail.search_kubun_person_nai %> value="checked"><label for="kubun_person_nai" class="checkbox_label">人数内</label>
+                      <input type="checkbox" id="kubun_person_add" name="kubun_person_add" <%= searchdetail.search_kubun_person_add %> value="checked"><label for="kubun_person_add" class="checkbox_label">追加</label>
+                      <input type="checkbox" id="kubun_person_other" name="kubun_person_other" <%= searchdetail.search_kubun_person_other %> value="checked"><label for="kubun_person_other" class="checkbox_label">その他</label>
+                      <input type="checkbox" id="kubun_person_guest" name="kubun_person_guest" <%= searchdetail.search_kubun_person_guest %> value="checked"><label for="kubun_person_guest" class="checkbox_label">ゲスト</label>
+                      <input type="checkbox" id="kubun_person_free" name="kubun_person_free" <%= searchdetail.search_kubun_person_free %> value="checked"><label for="kubun_person_free" class="checkbox_label">フリー</label>
+                      <div class="form__check">
+                        <input type="checkbox" id="kubun_person_kaiyaku" name="kubun_person_kaiyaku" <%= searchdetail.search_kubun_person_kaiyaku %> value="checked"><label for="kubun_person_kaiyaku">解約含む</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ymd_nyukyo_area searcform_detail_parts">
+                    <label class="searchform__detail_ymd_label">入居年月日</label><input type="text" class="searchform__item-style flatpickr" name="ymd_nyukyo_start" value="<%= searchdetail.search_ymd_nyukyo_start %>">　～　<input type="text" class="searchform__item-style flatpickr" name="ymd_nyukyo_end" value="<%= searchdetail.search_ymd_nyukyo_end %>">
+                  </div>
+                  <div class="ymd_kaiyaku_area searcform_detail_parts">
+                    <label class="searchform__detail_ymd_label">解約年月日</label><input type="text" class="searchform__item-style flatpickr" name="ymd_kaiyaku_start" value="<%= searchdetail.search_ymd_kaiyaku_start %>">　～　<input type="text" class="searchform__item-style flatpickr" name="ymd_kaiyaku_end" value="<%= searchdetail.search_ymd_kaiyaku_end %>">
+                  </div>
+                </div>
+            </div>
+
             <!-- /.searchform__top -->
             <input type="hidden" id="page_max" name="page_max" value="<%= page_max %>">
             <input type="hidden" id="page_current" name="page_current" value="<%= page_current %>">
             <input type="hidden" id="count_all" name="count_all" value="<%= count_all %>">
             <input type="hidden" id="pageaction" name="pageaction">
+
           </form>
           <% if (results) { %>
-          <div class="search__result-disp">
-            <p>検索結果（<%= count_all %>件）</p>
-          </div>
-          <!-- /.search__result-disp -->
           <div class="page-section">
-            <% if ((page_current !== 1) && (page_max !== 0)){ %>
+            <!-- /.search__result-disp -->
+            <div class="search__result-disp">
+              <p>検索結果（<%= count_all %>件）</p>
+            </div>
+              <% if ((page_current !== 1) && (page_max !== 0)){ %>
             <input type="button" class="btn-base" id="btn_prev" value="前ページ" />
             <% } else { %>
               <input type="button" class="btn-disabled" id="btn_prev" value="前ページ" disabled />
@@ -76,9 +113,9 @@
                   <form method="POST" action="/outai">
                     <input type="hidden" name="id_company" value="<%= result.id %>" >
                     <input type="hidden" name="searchvalue" value="" >
-                    <input type="submit" class="btn-outai color-disabled" value="一覧">
+                    <input type="image" class="btn-outai color-disabled" src="/static/images/list_disabled.png">
                   </form>
-                  <a href="./outai/insert/<%= result.id %>" class="btn-outai color-disabled">追加</a>
+                  <a href="./outai/insert/<%= result.id %>" class="btn-outai color-disabled"><img class="btn-outai-img" src="/static/images/add_disabled.png"></a>
                   </div>
                   <% } %>
               <% } else { %>
@@ -138,6 +175,41 @@
         document.searchform.submit();
       });
     }
+
+    // 詳細条件の表示・非表示制御
+    let kubun_area = document.getElementsByClassName("kubun_area")[0];
+    let kubun_company_area = document.getElementsByClassName("kubun_company_area")[0];
+    let kubun_person_area = document.getElementsByClassName("kubun_person_area")[0];
+    let ymd_nyukyo_area = document.getElementsByClassName("ymd_nyukyo_area")[0];
+    let ymd_kaiyaku_area = document.getElementsByClassName("ymd_kaiyaku_area")[0];
+    let btn_close = document.getElementsByClassName("searchform__detail_btn_close")[0];
+
+    kubun_area.style.display = "none";
+    kubun_company_area.style.display = "none";
+    kubun_person_area.style.display = "none";
+    ymd_nyukyo_area.style.display = "none";
+    ymd_kaiyaku_area.style.display = "none";
+    
+    let btn_search_detail = document.getElementsByClassName("btn_searchform_detail")[0];
+    btn_search_detail.style.display = "block";
+    btn_search_detail.addEventListener("click", function() {
+      btn_search_detail.style.display = "none";
+      kubun_area.style.display = "block";
+      kubun_company_area.style.display = "block";
+      kubun_person_area.style.display = "block";
+      ymd_nyukyo_area.style.display = "block";
+      ymd_kaiyaku_area.style.display = "block";
+    });
+
+    btn_close .addEventListener("click", function() {
+      btn_search_detail.style.display = "block";
+      kubun_area.style.display = "none";
+      kubun_company_area.style.display = "none";
+      kubun_person_area.style.display = "none";
+      ymd_nyukyo_area.style.display = "none";
+      ymd_kaiyaku_area.style.display = "none";
+    })
+
   </script>
 </body>
 <%- include("./common/javascripts.ejs") %>
