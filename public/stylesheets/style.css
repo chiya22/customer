@@ -675,12 +675,12 @@ input:checked + .checkbox_label::before {
   color: #cd5e42;
   font-size: 0.75rem;
   font-weight: bold;
-  margin-left: 5px;
   padding: 5px;
   text-align: center;
   text-decoration: none;
   width: 40px;
   height: auto;
+  margin: 2px;
 }
 
 .result__row .btn-outai:hover {
@@ -693,7 +693,8 @@ input:checked + .checkbox_label::before {
 }
 
 .result__row .btn-outai-img {
-  width: 30px;
+  width: 22px;
+  margin: 4px;
   height: auto;
 }
 
@@ -749,6 +750,10 @@ dd.area__outai-content textarea {
   resize: none;
   letter-spacing: 2px;
   line-height: 1.2rem;
+}
+
+.company__outai {
+  text-align: center;
 }
 
 .person {

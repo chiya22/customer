@@ -84,6 +84,13 @@
             <input type="hidden" name="selected_ymd_kaiyaku" id="selected_ymd_kaiyaku" value="">
           </dl>
         </form>
+        <div class="company__outai">
+          <form method="POST" action="/outai">
+            <input type="hidden" name="id_company" value="<%= company.id %>" >
+            <input type="hidden" name="searchvalue" value="" >
+            <input type="submit" class="btn-move" value="応対履歴へ">
+          </form>
+        </div>
       </div>
       <!-- /.company -->
       <div class="person">
