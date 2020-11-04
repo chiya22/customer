@@ -111,9 +111,11 @@
                   </a>
                   <% if (result.header !== '個人') { %>
                   <form method="POST" action="/outai">
-                    <input type="hidden" name="id_company" value="<%= result.id %>" >
-                    <input type="hidden" name="searchvalue" value="" >
-                    <input type="image" class="btn-outai color-disabled" src="/static/images/list_disabled.png">
+                    <div class="btn-outai">
+                      <input type="hidden" name="id_company" value="<%= result.id %>" >
+                      <input type="hidden" name="searchvalue" value="" >
+                      <input type="image" class="btn-outai-img color-disabled" src="/static/images/list_disabled.png">
+                    </div>
                   </form>
                   <a href="./outai/insert/<%= result.id %>" class="btn-outai color-disabled"><img class="btn-outai-img" src="/static/images/add_disabled.png"></a>
                   </div>
