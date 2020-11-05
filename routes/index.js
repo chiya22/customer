@@ -32,14 +32,14 @@ router.get('/', security.authorize(), function (req, res, next) {
   searchdetail.search_kubun_company_ts = "checked";
   searchdetail.search_kubun_company_city = "checked";
   searchdetail.search_kubun_company_other = "checked";
-  searchdetail.search_kubun_company_kaiyaku = "";
+  searchdetail.search_kubun_company_kaiyaku = "checked";
   searchdetail.search_kubun_person_main = "checked"
   searchdetail.search_kubun_person_nai = "checked";
   searchdetail.search_kubun_person_add = "checked"
   searchdetail.search_kubun_person_other = "checked"
   searchdetail.search_kubun_person_guest = "checked"
   searchdetail.search_kubun_person_free = "checked"
-  searchdetail.search_kubun_person_kaiyaku = ""
+  searchdetail.search_kubun_person_kaiyaku = "checked"
   searchdetail.search_ymd_nyukyo_start = ""
   searchdetail.search_ymd_nyukyo_end = ""
   searchdetail.search_ymd_kaiyaku_start = ""
