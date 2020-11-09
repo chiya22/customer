@@ -14,7 +14,7 @@
         <div class="searchform">
           <form name="searchform" method="post" action="/">
             <div class="searchform__top">
-              <input class="form__item-style width-base" type="text" name="searchvalue" placeholder="検索文字を入力してください"
+              <input class="form__item-style width-base" type="text" id="field_search" name="searchvalue" placeholder="検索文字を入力してください"
                 value="<%= searchvalue %>">
               <input class="btn-base ml-small" type="button" id="btn_search" value="検索" />
               <% if (locals.user.role === '社員') { %>
@@ -156,6 +156,14 @@
   </div>
   <!-- /.main -->
   <script>
+    let fieldSearch = document.getElementById("field_search");
+    fieldSearch.addEventListener("keypress", function (e) {
+      const key = e.keyCode || e.charCode || 0;
+      if (key == 13) {
+        document.searchform.submit();
+      }
+    });
+
     let btnSearch = document.getElementById("btn_search");
     btnSearch.addEventListener("click", function () {
       let pageaction = document.getElementById("pageaction");
