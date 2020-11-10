@@ -77,7 +77,7 @@
           <dd><input type="text" class="form__item-style" name="name" required></dd>
           <dt>会社名（追加）</dt>
           <dd><input type="text" class="form__item-style" name="name_other" required></dd>
-          <dt>会社名カナ</dt>
+          <dt>会社名かな</dt>
           <dd><input type="text" class="form__item-style" name="kana"></dd>
           <dt><span class="tag">必須</span>入居年月日</dt>
           <dd><input type="text" class="form__item-style flatpickr" name="ymd_nyukyo" required></dd>
@@ -144,7 +144,7 @@
           <dd><input type="text" class="form__item-style" name="name" value="<%= company.name %>" required></dd>
           <dt>会社名（追加）</dt>
           <dd><input type="text" class="form__item-style" name="name_other" value="<%= company.name_other %>"></dd>
-          <dt>会社名カナ</dt>
+          <dt>会社名かな</dt>
           <dd><input type="text" class="form__item-style" name="kana" value="<%= company.kana %>"></dd>
           <dt><span class="tag">必須</span>入居年月日</dt>
           <dd><input type="text" class="form__item-style flatpickr" name="ymd_nyukyo" value="<%= company.ymd_nyukyo %>"
@@ -168,6 +168,7 @@
             <dt>入居番号</dt>
             <dd><input class="form__item-style bg-input-disabled" type="text" name="id_nyukyo"
                 value="<%= company.id_nyukyo %>" disabled></dd>
+                <input type="hidden" name="id_nyukyo" value="<%= company.id_nyukyo %>">
             <dt>会社区分</dt>
             <dd><input class="form__item-style bg-input-disabled" type="text" name="kubun_company"
                 value="<%= company.kubun_company %>" disabled></dd>
@@ -176,7 +177,7 @@
             <dd><input class="form__item-style" type="text" name="name" value="<%= company.name %>" required></dd>
             <dt>会社名（追加）</dt>
             <dd><input class="form__item-style" type="text" name="name_other" value="<%= company.name_other %>"></dd>
-            <dt>会社名カナ</dt>
+            <dt>会社名かな</dt>
             <dd><input class="form__item-style" type="text" name="kana" value="<%= company.kana %>"></dd>
             <dt><span class="tag">必須</span>入居年月日</dt>
             <dd><input type="text" class="form__item-style flatpickr" name="ymd_nyukyo"
@@ -206,7 +207,7 @@
             <dt>会社名</dt>
             <dd><input class="form__item-style bg-input-disabled" type="text" name="name" value="<%= company.name %>"
                 disabled></dd>
-            <dt>会社名カナ</dt>
+            <dt>会社名かな</dt>
             <dd><input class="form__item-style bg-input-disabled" type="text" name="kana" value="<%= company.kana %>"
                 disabled></dd>
             <dt>入居年月日</dt>
