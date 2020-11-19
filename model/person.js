@@ -156,7 +156,7 @@ const remove = function (inObj, callback) {
 const cancel = function (inObj, callback) {
     (async function () {
         // const client = knex.connect();
-        const query = 'update persons set ymd_kaiyaku = "' + inObj.ymd_kaiyaku + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id = "' + inObj.id + '" and ymd_end = "99991231"';
+        const query = 'update persons set ymd_kaiyaku = "' + inObj.ymd_kaiyaku + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id = "' + inObj.id + '" and ymd_kaiyaku = "99991231" and ymd_end = "99991231"';
         logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
             .then((retObj) => {
@@ -171,7 +171,7 @@ const cancel = function (inObj, callback) {
 const cancelByCompany = function (inObj, callback) {
     (async function () {
         // const client = knex.connect();
-        const query = 'update persons set ymd_kaiyaku = "' + inObj.ymd_kaiyaku + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_company = ' + tool.returnvalue(inObj.id_company) + ' and ymd_end = "99991231"';
+        const query = 'update persons set ymd_kaiyaku = "' + inObj.ymd_kaiyaku + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id_company = ' + tool.returnvalue(inObj.id_company) + ' and ymd_kaiyaku = "99991231" and ymd_end = "99991231"';
         logger.info('[' + inObj.id_upd + ']' + query);
         await client.raw(query)
             .then((retObj) => {
