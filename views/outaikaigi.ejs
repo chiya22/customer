@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>応対履歴（会議室）</title>
+  <%- include("./common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("./common/header.ejs") %>
+  <section class="main">
+    <div class="main__wrapper area__outai">
+      <dl>
+        <dt class="area__outai-company">利用者</dt>
+        <dd class="area__outai-company">
+        <% if (selectRiyousha) { %>
+          <input type="text" class="form__item-readonly-style" value="【<%= selectRiyousha.id %>】<%= selectRiyousha.name %>" disabled>
+        <% } %>
+        </dd>
+        <dt class="area__outai-content">内容</dt>
+        <dd class="area__outai-content">
+        <textarea class="form__item-readonly-style" disabled><%= outaikaigi.content %></textarea>
+        </dd>
+        <dt>ステータス</dt>
+        <dd><input type="text" class="form__item-readonly-style" name="status" value="<%= outaikaigi.status %>" disabled></dd>
+        <dt></dt>
+        <dd></dd>
+        <dt>登録日時</dt>
+        <dd><input type="text" class="form__item-readonly-style" name="ymdhms_add" value="<%= outaikaigi.ymdhms_add %>" disabled></dd>
+        <dt>登録者</dt>
+        <dd><input type="text" class="form__item-readonly-style" name="id_add" value="<%= outaikaigi.name_add %>" disabled></dd>
+        <dt>更新日時</dt>
+        <dd><input type="text" class="form__item-readonly-style" name="ymdhms_upd" value="<%= outaikaigi.ymdhms_upd %>" disabled></dd>
+        <dt>更新者</dt>
+        <dd><input type="text" class="form__item-readonly-style" name="id_upd" value="<%= outaikaigi.name_upd %>" disabled></dd>
+      </dl>
+          <div class="form__btn">
+            <a class="btn-base" href="/outaikaigi/update/<%= outaikaigi.id %>">編集</a>
+            <a class="btn-move" href="/outaikaigi">応対履歴（会議室）検索へ</a>
+          </div>
+    </div>
+  </section>
+</body>
+
+<%- include("./common/javascripts.ejs") %>
+
+</html>

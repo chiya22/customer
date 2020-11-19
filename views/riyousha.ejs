@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>会議室利用者</title>
+  <%- include("./common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("./common/header.ejs") %>
+
+  <div class="main">
+    <div class="main__wrapper">
+
+      <div class="fix_header">
+        <div class="title">
+          <span class="tag-big"><%= riyousha.id %></span>
+          <%= riyousha.name %>
+        </div>
+      </div>
+      <!-- /.fix_header -->
+
+      <div class="riyousha">
+        <dl>
+          <!-- <dt>利用者ID</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="id" value="<%= riyousha.id %>" disabled> -->
+          <dt>利用者名</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.name %>" disabled>
+          </dd>
+          <dt>利用者名かな</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.kana %>" disabled>
+          </dd>
+          </dd>
+          <dt>千代田区区分</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.kubun %>" disabled>
+          </dd>
+          <dt>利用区分</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.kubun2 %>" disabled>
+          </dd>
+          <dt>郵便番号</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.no_yubin %>"
+              disabled>
+          </dd>
+          <dt>性別</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.sex %>" disabled>
+          </dd>
+          <dt>住所</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.address %>" disabled>
+          </dd>
+          <dt>電話番号</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.no_tel %>" disabled>
+          </dd>
+          <dt>メール１</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.mail1 %>" disabled>
+          </dd>
+          <dt>メール２</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.mail2 %>" disabled>
+          </dd>
+          <dt>登録年月日</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= riyousha.ymd_add %>"
+              disabled>
+          </dd>
+          <dt>更新年月日</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="ymd_kaiyaku" value="<%= riyousha.ymd_upd %>"
+              disabled>
+          </dd>
+          <dt>備考</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.bikou %>" disabled>
+          </dd>
+        </dl>
+        <%
+         let floor45;
+         let chika;
+         if (riyousha.kubun === '千代田区内') {
+          if (riyousha.kubun1 === '中小企業・公共団体・個人') {
+            floor45 = '4ヶ月前の同日';
+           chika = '4ヶ月前の同日';
+          } else {
+            floor45 = '1ヶ月前の同日';
+           chika = '4ヶ月前の同日';
+          }
+         } else if (riyousha.kubun === '千代田区外') {
+          if (riyousha.kubun1 === '中小企業・公共団体・個人') {
+            floor45 = '3ヶ月前の同日';
+           chika = '3ヶ月前の同日';
+          } else {
+            floor45 = '×';
+           chika = '3ヶ月前の同日';
+          }
+         } else {
+          floor45 = '4ヶ月前の同日';
+          chika = '4ヶ月前の同日';
+         }
+        %>
+        <div>
+          <dl>
+            <dt>4階・5階</dt>
+            <dd><input type="text" class="form__item-readonly-style" name="45kai" value="<%= floor45 %>" disabled>
+            </dd>
+            <dt>地下1階</dt>
+            <dd><input type="text" class="form__item-readonly-style" name="chika" value="<%= chika %>" disabled>
+            </dd>
+          </dl>
+        </div>
+        
+        <div class="riyousha__btnarea">
+          <div class="riyousha__btn">
+            <a class="btn-move" href="/riyousha">会議室利用者検索へ</a>
+          </div>
+          <div class="riyousha__btn">
+            <form method="POST" action="/outaikaigi">
+              <input type="hidden" name="id_riyousha" value="<%= riyousha.id %>">
+              <input type="hidden" name="searchvalue" value="">
+              <input type="submit" class="btn-move" value="応対履歴（会議室）へ">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+
+  let cancelbtn = document.getElementById("cancelbtn");
+  cancelbtn.addEventListener('click', function () {
+    scrollTo(0, 0);
+    let msg = document.getElementsByClassName("msg")[0];
+    msg.style.visibility = "visible";
+  });
+  let okbtn = document.getElementsByClassName("msgarea__okbtn")[0];
+  let ngbtn = document.getElementsByClassName("msgarea__ngbtn")[0];
+  okbtn.addEventListener('click', function () {
+    let select = document.getElementById("select_ymd_kaiyaku");
+    let selected = document.getElementById("selected_ymd_kaiyaku");
+    if (select.value) {
+      selected.value = select.value;
+      document.cancelForm.submit();
+    } else {
+      select.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
+      return false;
+    }
+  });
+  ngbtn.addEventListener('click', function () {
+    let msg = document.getElementsByClassName("msg")[0];
+    msg.style.visibility = "hidden";
+  });
+
+</script>
+<%- include("./common/javascripts.ejs") %>
+
+</html>

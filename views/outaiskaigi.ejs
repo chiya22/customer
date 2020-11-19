@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>応対履歴（会議）一覧</title>
+  <%- include("./common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("./common/header.ejs") %>
+  <div class="main">
+    <div class="main__wrapper">
+      <div class="fix_header">
+        <div class="searchform">
+          <form name="searchform" method="post" action="/outaikaigi">
+            <div class="searchform__top">
+              <select class="form__item-style width-base" name="id_riyousha">
+                <% if (!selectRiyousha) { %>
+                <option value="" selected>--利用者選択--</option>
+                <% } else { %>
+                <option value="">--利用者選択--</option>
+                <% } %>
+                <% riyoushas.forEach( function (riyousha) { %>
+                <%
+                let title;
+                  title = '【' + riyousha.id + '】' + riyousha.name;
+                %>
+                <% if ((selectRiyousha) && (riyousha.id === selectRiyousha.id)) { %>
+                <option value="<%= riyousha.id %>" selected><%= title %></option>
+                <% } else { %>
+                <option value="<%= riyousha.id %>"><%= title %></option>
+                <% } %>
+                <% }); %>
+              </select>
+              <div class="form__check">
+                <% if (includecomplete) { %>
+                <input type="checkbox" id="includecomplete" name="includecomplete" checked value="完了"><label
+                  for="includecomplete">完了含む</label>
+                <% } else { %>
+                <input type="checkbox" id="includecomplete" name="includecomplete" value="完了"><label
+                  for="includecomplete">完了含む</label>
+                <% } %>
+              </div>
+              <input class="form__item-style width-base" type="text" name="searchvalue" placeholder="検索文字を入力してください"
+                value="<%= searchvalue %>">
+              <input class="btn-base ml-small" type="button" id="btn_search" value="検索" />
+              <!-- ダミーの会社IDを設定する -->
+              <% if (selectRiyousha) { %>
+              <a class="btn-link ml-small" href="/outaikaigi/insert/<%= selectRiyousha.id %>">応対履歴（会議室）登録</a>
+              <% } else { %>
+              <a class="btn-link ml-small" href="/outaikaigi/insert/ZZZZZ">応対履歴（会議室）登録</a>
+              <% } %>
+            </div>
+            <!-- /.searchform__top -->
+            <input type="hidden" id="page_max" name="page_max" value="<%= page_max %>">
+            <input type="hidden" id="page_current" name="page_current" value="<%= page_current %>">
+            <input type="hidden" id="count_all" name="count_all" value="<%= count_all %>">
+            <input type="hidden" id="pageaction" name="pageaction">
+          </form>
+          <% if (results) { %>
+          <div class="search__result-disp">
+            <p>検索結果（<%= count_all %>件）</p>
+          </div>
+          <!-- /.search__result-disp -->
+          <div class="page-section">
+            <% if ((page_current !== 1) && (page_max !== 0)){ %>
+            <input type="button" class="btn-base" id="btn_prev" value="前ページ" />
+            <% } else { %>
+            <input type="button" class="btn-disabled" id="btn_prev" value="前ページ" disabled />
+            <% } %>
+            <% if (page_max > 1) { %>
+            <div class="page-disp">
+              <%= page_current %>/<%= page_max %>
+            </div>
+            <!-- /.page-disp -->
+            <% } %>
+            <% if ((page_max !== 0) && (page_current !== page_max)) { %>
+            <input type="button" class="btn-base" id="btn_next" value="次ページ" />
+            <% } else { %>
+            <input type="button" class="btn-disabled" id="btn_next" value="次ページ" disabled />
+            <% } %>
+          </div>
+          <% } %>
+          <!-- /.page-section -->
+        </div>
+        <!-- /.search__form -->
+      </div>
+      <!-- /.fix_header -->
+      <% if (results) { %>
+      <div class="search__result-outai">
+        <div class="search__result-items">
+          <%  results.forEach( result => { %>
+          <div class="search__result-item">
+            <%
+            let title;
+            if (result.name_riyousha === '利用者指定なし') {
+              title = '【-----】' + result.name_riyousha + '　|　';
+            } else {
+              title = '【' + result.id_riyousha + '】' + result.name_riyousha + '　|　';
+            }
+            if (result.content.length  > 15) {
+              title += result.content.slice(0,15) + '...'
+            } else {
+              title += result.content
+            }
+            %>
+            <% if (result.status === '完了') { %>
+            <a class="btn-link bd-left-disabled" href="./outaikaigi/<%= result.id %>">
+              <span class="color-disabled"><%= title %></span>
+              <span class="dateinfo-small">　　登録：<%= result.ymdhms_add %>（<%= result.name_add %>）
+                更新：<%= result.ymdhms_upd %>（<%= result.name_upd %>）</span>
+            </a>
+            <div class="balloon"><pre><%= result.content %></pre></div>
+            <% } else { %>
+            <a class="btn-link" href="./outaikaigi/<%= result.id %>">
+              <span><%= title %></span>
+              <span class="dateinfo-small">　　登録：<%= result.ymdhms_add %>（<%= result.name_add %>）
+                更新：<%= result.ymdhms_upd %>（<%= result.name_upd %>）</span>
+            </a>
+            <div class="balloon"><pre><%= result.content %></pre></div>
+            <% } %>
+          </div>
+          <!-- /.search__result-item -->
+          <% }); %>
+        </div>
+        <!-- /.search__result-items -->
+      </div>
+      <!-- /.search__result -->
+      <% } %>
+    </div>
+    <!-- /.main__wrpper -->
+  </div>
+  <!-- /.main -->
+  <script>
+    let btnSearch = document.getElementById("btn_search");
+    btnSearch.addEventListener("click", function () {
+      let pageaction = document.getElementById("pageaction");
+      pageaction.value = "";
+      document.searchform.submit();
+    });
+
+    let btnNext = document.getElementById("btn_next");
+    if (btnNext) {
+      btnNext.addEventListener("click", function () {
+        let pageaction = document.getElementById("pageaction");
+        pageaction.value = "next";
+        document.searchform.submit();
+      });
+    }
+    let btnPrev = document.getElementById("btn_prev");
+    if (btnPrev) {
+      btnPrev.addEventListener("click", function () {
+        let pageaction = document.getElementById("pageaction");
+        pageaction.value = "prev";
+        document.searchform.submit();
+      });
+    }
+  </script>
+</body>
+<%- include("./common/javascripts.ejs") %>
+
+</html>

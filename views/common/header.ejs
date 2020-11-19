@@ -7,10 +7,16 @@
             <div class="header-right">
                 <% if (locals.user){ %>
                     <div>
-                        <a class="btn-header" href="/">入居者検索</a>
+                        <a class="btn-header" href="/">入居者</a>
                     </div>
                     <div>
-                        <a class="btn-header" href="/outai">応対履歴検索</a>
+                        <a class="btn-header" href="/riyousha">会議室利用者</a>
+                    </div>
+                    <div>
+                        <a class="btn-header" href="/outai">応対履歴</a>
+                    </div>
+                    <div>
+                        <a class="btn-header" href="/outaikaigi">応対履歴(会議室)</a>
                     </div>
                     <% if (locals.user.role === '社員') { %>
                     <div>

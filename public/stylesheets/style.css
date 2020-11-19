@@ -374,7 +374,7 @@ input:checked + .checkbox_label::before {
 .main__wrapper {
   width: 95%;
   max-width: 900px;
-  min-width: 800px;
+  min-width: 900px;
   margin: 0 auto 20px auto;
 }
 
@@ -506,7 +506,7 @@ input:checked + .checkbox_label::before {
 
 .header .header-wrapper {
   max-width: 900px;
-  min-width: 800px;
+  min-width: 900px;
   width: 95%;
   height: 100%;
   padding: 0;
@@ -557,7 +557,7 @@ input:checked + .checkbox_label::before {
   position: fixed;
   width: 95%;
   max-width: 900px;
-  min-width: 800px;
+  min-width: 900px;
   margin: 0 auto;
   top: 52px;
   padding-top: 10px;
@@ -637,12 +637,16 @@ input:checked + .checkbox_label::before {
   font-weight: normal;
 }
 
+.search__result {
+  padding-top: 130px;
+}
+
 .search__result-outai {
   padding-top: 160px;
 }
 
-.search__result {
-  padding-top: 130px;
+.search__result-riyousha {
+  padding-top: 100px;
 }
 
 .search__result-item {
@@ -701,12 +705,14 @@ input:checked + .checkbox_label::before {
 .company,
 .company__form,
 .person__form,
-.cancel__form {
+.cancel__form,
+.riyousha {
   margin-top: 1rem;
 }
 
 .company,
-.company__form {
+.company__form,
+.riyousha {
   padding-top: 85px;
 }
 
@@ -754,6 +760,16 @@ dd.area__outai-content textarea {
 
 .company__outai {
   text-align: center;
+}
+
+.riyousha__btnarea {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.riyousha__btn {
+  margin: 10px;
 }
 
 .person {

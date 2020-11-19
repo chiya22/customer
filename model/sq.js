@@ -40,8 +40,21 @@ const getSqOutai = function (callback) {
     })();
 };
 
+const getSqOutaikaigi = function (callback) {
+    (async function () {
+        const query1 = 'update sq_outai_kaigi set id=LAST_INSERT_ID(id+1)';
+        const query2 = 'select LAST_INSERT_ID() as no from sq_outai_kaigi';
+        // const client = knex.connect();
+        const retObj1 = await client.raw(query1);
+        const retObj2 = await client.raw(query2);
+
+        callback(null, retObj2[0][0]);
+    })();
+};
+
 module.exports = {
     getSqCompany,
     getSqPerson,
     getSqOutai,
+    getSqOutaikaigi,
 };

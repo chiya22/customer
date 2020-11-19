@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>応対履歴（会議室）編集</title>
+  <%- include("./common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("./common/header.ejs") %>
+  <section class="main">
+    <div class="main__wrapper area__outai">
+      <!-- /.area-link -->
+      <form class="outai__form" name="outaiform" method="POST">
+        <% if (errors) { %>
+        <div class="alert alert-danger">
+          <%  for (let key in errors) { %>
+          <div><%= errors[key] %></div>
+          <% } %>
+        </div>
+        <% } %>
+        <dl>
+          <!-- ◆登録モード -->
+          <% if (mode === 'insert') { %>
+          <dt class="area__outai-company">利用者</dt>
+          <dd class="area__outai-company">
+            <select class="form__item-style" name="id_company">
+              <% if (!selectRiyousha) { %>
+              <option value="" selected>--利用者選択--</option>
+              <% } else { %>
+              <option value="">--利用者選択--</option>
+              <% } %>
+              <% riyoushas.forEach(function (riyousha) { %>
+                <%
+                let title;
+                title = '【' + riyousha.id + '】' + riyousha.name;
+                %>
+                <% if ((selectRiyousha) && (riyousha.id === selectRiyousha.id)) { %>
+              <option value="<%= riyousha.id %>" selected><%= title %></option>
+              <% } else { %>
+              <option value="<%= riyousha.id %>"><%= title %></option>
+              <% } %>
+              <% }); %>
+            </select>
+          </dd>
+          <dt class="area__outai-content"><span class="tag">必須</span>内容</dt>
+          <% if (outaikaigi) { %>
+            <dd class="area__outai-content">
+            <textarea name="content" class="form__item-style"><%= outaikaigi.content %></textarea>
+            </dd>
+          <% } else { %>
+            <dd class="area__outai-content">
+            <textarea name="content" class="form__item-style"></textarea>
+            </dd>
+          <% } %>
+          <dt>ステータス</dt>
+          <dd>
+            <input id="status_1" class="form__radio-style" type="radio" value="完了" checked="checked" name="status"><label for="status_1" class="form__radio-label">完了</label>
+            <input id="status_2" class="form__radio-style" type="radio" value="未完了" name="status"><label for="status_2" class="form__radio-label">未完了</label>
+          </dd>
+          <dt>
+          </dt>
+          <dd>
+          </dd>
+          <dt>登録日時</dt>
+          <dd><input type="text" class="form__item-style bg-input-disabled" name="ymdhms_add" value="" disabled></dd>
+          <dt>登録者</dt>
+          <dd><input type="text" class="form__item-style bg-input-disabled" name="id_add" value="" disabled></dd>
+          <dt>更新日時</dt>
+          <dd><input type="text" class="form__item-style bg-input-disabled" name="ymdhms_upd" value="" disabled></dd>
+          <dt>更新者</dt>
+          <dd><input type="text" class="form__item-style bg-input-disabled" name="id_upd" value="" disabled></dd>
+          <div class="form__btn">
+            <input type="button" class="btn-base" id="btn_insert" value="登録">
+            <% if ((outaikaigi) && (outaikaigi.id_riyousha)) { %>
+              <a class="btn-move" href="/outaikaigi/riyousha/<%= outaikaigi.id_riyousha %>">応対履歴（会議室）検索へ</a>
+            <% } else { %>
+              <a class="btn-move" href="/outaikaigi">応対履歴（会議室）検索へ</a>
+            <% } %> 
+
+            <!-- ◆更新モード -->
+            <% } else { %>
+            <dt class="area__outai-company">利用者</dt>
+            <dd class="area__outai-company">
+              <select class="form__item-style" name="id_company">
+                <% if (!outaikaigi.id_riyousha) { %>
+                <option value="" selected>--利用者選択--</option>
+                <% } %>
+                <% riyoushas.forEach(function (riyousha) { %>
+                  <%
+                  let title;
+                  title = '【' + riyousha.id + '】' + riyousha.name;
+                  %>
+                  <% if (riyousha.id === outaikaigi.id_riyousha) { %>
+                <option value="<%= riyousha.id %>" selected><%= title %></option>
+                <% } else { %>
+                <option value="<%= riyousha.id %>"><%= title %></option>
+                <% } %>
+                <% }); %>
+              </select>
+            </dd>
+            <dt class="area__outai-content">内容</dt>
+            <dd class="area__outai-content">
+            <textarea name="content" class="form__item-style"><%= outaikaigi.content %></textarea>
+            </dd>
+            <dt>ステータス</dt>
+            <dd>
+              <% if (outaikaigi.status === '完了') { %>
+              <input id="status_1" class="form__radio-style" type="radio" value="完了" checked="checked" name="status"><label for="status_1" class="form__radio-label">完了</label>
+              <input id="status_2" class="form__radio-style" type="radio" value="未完了" name="status"><label for="status_2" class="form__radio-label">未完了</label>
+              <% } else { %>
+              <input id="status_1" class="form__radio-style" type="radio" value="完了" name="status"><label for="status_1" class="form__radio-label">完了</label>
+              <input id="status_2" class="form__radio-style" type="radio" value="未完了" checked="checked" name="status"><label for="status_2" class="form__radio-label">未完了</label>
+              <% } %>
+            </dd>
+            <dt>
+            </dt>
+            <dd>
+            </dd>
+            <dt>登録日時</dt>
+            <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outaikaigi.ymdhms_add %>" disabled></dd>
+            <dt>登録者</dt>
+            <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outaikaigi.name_add %>" disabled></dd>
+            <dt>更新日時</dt>
+            <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outaikaigi.ymdhms_upd %>" disabled></dd>
+            <dt>更新者</dt>
+            <dd><input type="text" class="form__item-style bg-input-disabled" value="<%= outaikaigi.name_upd %>" disabled></dd>
+            <div class="form__btn">
+              <input type="button" class="btn-base" id="btn_update" value="更新">
+              <a class="btn-move" href="/outaikaigi/<%= outaikaigi.id %>">戻る</a>
+              <input type="hidden" name="id" value="<%= outaikaigi.id %>">
+              <input type="hidden" name="ymdhms_add" value="<%= outaikaigi.ymdhms_add %>">
+              <input type="hidden" name="id_add" value="<%= outaikaigi.id_add %>">
+              <input type="hidden" name="ymdhms_upd" value="<%= outaikaigi.ymdhms_upd %>">
+              <input type="hidden" name="id_upd" value="<%= outaikaigi.id_upd %>">
+            <% } %>
+            </div>
+            <input type="hidden" id="field_mode">
+        </dl>
+      </form>
+    </div>
+  </section>
+  <script>
+    let insertbtn = document.getElementById("btn_insert");
+    if (insertbtn) {
+      insertbtn.addEventListener("click", function () {
+        document.outaiform.action = "/outaikaigi/insert";
+        document.outaiform.submit();
+      })
+    }
+    let updatebtn = document.getElementById("btn_update");
+    if (updatebtn) {
+      updatebtn.addEventListener("click", function () {
+        document.outaiform.action = "/outaikaigi/update";
+        document.outaiform.submit();
+      })
+    }
+  </script>
+</body>
+<%- include("./common/javascripts.ejs") %>
+
+</html>

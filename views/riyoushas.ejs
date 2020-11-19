@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>会議室利用者</title>
+  <%- include("./common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("./common/header.ejs") %>
+  <div class="main">
+    <div class="main__wrapper">
+      <div class="fix_header">
+        <div class="searchform">
+          <form name="searchform" method="post" action="/riyousha">
+            <div class="searchform__top">
+              <input class="form__item-style width-base" type="text" id="field_search" name="searchvalue"
+                placeholder="検索文字を入力してください" value="<%= searchvalue %>">
+              <input class="btn-base ml-small" type="button" id="btn_search" value="検索" />
+            </div>
+            <!-- /.searchform__top -->
+            <input type="hidden" id="page_max" name="page_max" value="<%= page_max %>">
+            <input type="hidden" id="page_current" name="page_current" value="<%= page_current %>">
+            <input type="hidden" id="count_all" name="count_all" value="<%= count_all %>">
+            <input type="hidden" id="pageaction" name="pageaction">
+
+          </form>
+
+          <% if (results) { %>
+          <div class="page-section">
+            <div class="search__result-disp">
+              <p>検索結果（<%= count_all %>件）</p>
+            </div>
+            <% if ((page_current !== 1) && (page_max !== 0)){ %>
+            <input type="button" class="btn-base" id="btn_prev" value="前ページ" />
+            <% } else { %>
+            <input type="button" class="btn-disabled" id="btn_prev" value="前ページ" disabled />
+            <% } %>
+            <% if (page_max > 1) { %>
+            <div class="page-disp">
+              <%= page_current %>/<%= page_max %>
+            </div>
+            <!-- /.page-disp -->
+            <% } %>
+            <% if ((page_max !== 0) && (page_current !== page_max)) { %>
+            <input type="button" class="btn-base" id="btn_next" value="次ページ" />
+            <% } else { %>
+            <input type="button" class="btn-disabled" id="btn_next" value="次ページ" disabled />
+            <% } %>
+          </div>
+          <% } %>
+        </div>
+      </div>
+
+      <% if (results) { %>
+      <div class="search__result-riyousha">
+        <div class="search__result-items">
+          <%  results.forEach( result => { %>
+          <div class="search__result-item">
+            <div class="result__row">
+              <a class="btn-link" href="./riyousha/<%= result.id %>">
+                <p class="tag"><%= result.id %></p>
+                <p class="tag"><%= result.kubun %></p>
+                <% if (result.kubun2) { %> 
+                <p class="tag"><%= result.kubun2 %></p>
+                <% } %>
+                <%= result.name %>
+                <span class="dateinfo">　|　登録日：<%= result.ymd_add %></span>
+              </a>
+              <form method="POST" action="/outaikaigi">
+                <div class="btn-outai">
+                  <input type="hidden" name="id_riyousha" value="<%= result.id %>">
+                  <input type="hidden" name="searchvalue" value="">
+                  <input type="image" class="btn-outai-img" src="/static/images/list.png">
+                </div>
+              </form>
+              <a href="./outaikaigi/insert/<%= result.id %>" class="btn-outai"><img class="btn-outai-img"
+                  src="/static/images/add.png"></a>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <% } %>
+
+      </div>
+      <!-- /.main__wrpper -->
+    </div>
+    <!-- /.main -->
+    <script>
+      let fieldSearch = document.getElementById("field_search");
+      fieldSearch.addEventListener("keypress", function (e) {
+        const key = e.keyCode || e.charCode || 0;
+        if (key == 13) {
+          document.searchform.submit();
+        }
+      });
+
+      let btnSearch = document.getElementById("btn_search");
+      btnSearch.addEventListener("click", function () {
+        let pageaction = document.getElementById("pageaction");
+        pageaction.value = "";
+        document.searchform.submit();
+      });
+
+      let btnNext = document.getElementById("btn_next");
+      if (btnNext) {
+        btnNext.addEventListener("click", function () {
+          let pageaction = document.getElementById("pageaction");
+          pageaction.value = "next";
+          document.searchform.submit();
+        });
+      }
+      let btnPrev = document.getElementById("btn_prev");
+      if (btnPrev) {
+        btnPrev.addEventListener("click", function () {
+          let pageaction = document.getElementById("pageaction");
+          pageaction.value = "prev";
+          document.searchform.submit();
+        });
+      }
+    </script>
+</body>
+<%- include("./common/javascripts.ejs") %>
+
+</html>
