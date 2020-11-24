@@ -27,6 +27,26 @@ const startcron = () => {
             logger.info(`cronより通知メールを送信しました：${new Date()}`);
         });
     });
+
+    cron.schedule('0 9 * * 1-5', () => {
+        query = 'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(r.name, "利用者指定なし") as name_riyousha FROM outaiskaigi o left outer JOIN riyoushas r ON o.id_riyousha = r.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) oru WHERE oru.status != "完了" ORDER BY oru.ymdhms_upd desc'
+        m_outai.selectSQL(query, (err, retObj) => {
+            if (err) { next(err) };
+            let outais = retObj;
+            let content = `未完了の応対履歴（会議室）一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
+            let url = 'http://192.168.1.19:3000/outaikaigi/'
+
+            outais.forEach(outai => {
+                content += `利用者：${outai.name_riyousha}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${url}${outai.id}\r\n------------------------------------------------------\r\n`
+            });
+
+            //メール送信
+            mail.send("応対履歴一覧（会議室）", content)
+
+            logger.info(`cronより通知メールを送信しました（会議室）：${new Date()}`);
+        });
+    });
+
 }
 
 module.exports = {
