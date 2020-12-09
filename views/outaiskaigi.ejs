@@ -58,12 +58,12 @@
             <input type="hidden" id="pageaction" name="pageaction">
           </form>
           <% if (results) { %>
-          <div class="search__result-disp">
-            <p>検索結果（<%= count_all %>件）</p>
-          </div>
           <!-- /.search__result-disp -->
           <div class="page-section">
-            <% if ((page_current !== 1) && (page_max !== 0)){ %>
+            <div class="search__result-disp">
+              <p>検索結果（<%= count_all %>件）</p>
+            </div>
+              <% if ((page_current !== 1) && (page_max !== 0)){ %>
             <input type="button" class="btn-base" id="btn_prev" value="前ページ" />
             <% } else { %>
             <input type="button" class="btn-disabled" id="btn_prev" value="前ページ" disabled />

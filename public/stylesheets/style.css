@@ -642,7 +642,7 @@ input:checked + .checkbox_label::before {
 }
 
 .search__result-outai {
-  padding-top: 160px;
+  padding-top: 140px;
 }
 
 .search__result-riyousha {
