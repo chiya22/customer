@@ -316,7 +316,7 @@ input:checked + .checkbox_label::before {
   margin: 20px;
 }
 
-.msg {
+.msg, .msg_add {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -325,7 +325,7 @@ input:checked + .checkbox_label::before {
   visibility: hidden;
 }
 
-.msgarea {
+.msgarea, .msgarea_add {
   position: relative;
   top: 50%;
   left: 50%;
@@ -338,7 +338,7 @@ input:checked + .checkbox_label::before {
   padding: 1rem;
 }
 
-.msgarea input {
+.msgarea input, .msgarea_add input {
   margin-bottom: 20px;
 }
 
@@ -348,7 +348,9 @@ input:checked + .checkbox_label::before {
 }
 
 .msgarea__okbtn,
-.msgarea__ngbtn {
+.msgarea__ngbtn,
+.msgarea__okbtn_add,
+.msgarea__ngbtn_add {
   font-size: 1rem;
   color: #808080;
   border: 1px solid #808080;
@@ -359,7 +361,9 @@ input:checked + .checkbox_label::before {
 }
 
 .msgarea__okbtn:hover,
-.msgarea__ngbtn:hover {
+.msgarea__ngbtn:hover,
+.msgarea__okbtn_add:hover,
+.msgarea__ngbtn_add:hover {
   background-color: #808080;
   color: #fff;
   transform: translateY(-5px);

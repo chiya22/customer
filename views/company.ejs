@@ -7,6 +7,16 @@
 </head>
 
 <body>
+  <div class="msg_add">
+    <div class="msgarea_add">
+      <p class="msgarea__text">設定された年月日で開始します。<br>よろしいですか？</p>
+      <input type="text" placeholder="開始日を選択する" class="form__item-style flatpickr" name="select_ymd_add"
+        id="select_ymd_add">
+      <button class="msgarea__okbtn_add">はい</button>
+      <button class="msgarea__ngbtn_add">いいえ</button>
+      <input type="hidden" name="addid" />
+    </div>
+  </div>
   <div class="msg">
     <div class="msgarea">
       <p class="msgarea__text">設定された年月日で解約します。<br>よろしいですか？</p>
@@ -14,6 +24,7 @@
         id="select_ymd_kaiyaku">
       <button class="msgarea__okbtn">はい</button>
       <button class="msgarea__ngbtn">いいえ</button>
+      <input type="hidden" name="deletelinkfield" />
     </div>
   </div>
   <%- include("./common/header.ejs", {current: 'nyukyo'}) %>
@@ -86,8 +97,8 @@
         </form>
         <div class="company__outai">
           <form method="POST" action="/outai">
-            <input type="hidden" name="id_company" value="<%= company.id %>" >
-            <input type="hidden" name="searchvalue" value="" >
+            <input type="hidden" name="id_company" value="<%= company.id %>">
+            <input type="hidden" name="searchvalue" value="">
             <input type="submit" class="btn-move" value="応対履歴へ">
           </form>
         </div>
@@ -151,8 +162,9 @@
             <% }
                 }); %>
           </select>
-          <input class="btn-base ml-small" type="submit" value="追加">
+          <input class="btn-base ml-small" name="addbtn" id="add_btn_room" type="button" value="追加">
           <input type="hidden" name="id_company" value="<%= company.id %>">
+          <input type="hidden" name="selected_ymd_kaiyaku_room" id="selected_ymd_kaiyaku_room" value="">
         </form>
         <% } %>
         <% } %>
@@ -182,7 +194,7 @@
               <% } %>
               <% if ((company.ymd_kaiyaku === '99991231') && (room.ymd_end === '99991231')) { %>
               <% if (locals.user.role === '社員') { %>
-              <a class="tag"
+              <a name="dellink" class="tag"
                 href="/company/deleteroom/<%= room.id_company %>/<%= room.id_room %>/<%= room.no_seq %>">解約</a>
               <% } %>
               <% } %>
@@ -202,7 +214,7 @@
           <!-- /.cabinet__header -->
           <% if (company.ymd_kaiyaku === '99991231') { %>
           <% if (locals.user.role === '社員') { %>
-          <form name="cabinetForm" class="cabinet__form" method="POST" action="/company/addcabinet" >
+          <form name="cabinetForm" class="cabinet__form" method="POST" action="/company/addcabinet">
             <select name="id_cabinet" class="form__item-style cabinet__select">
               <option value="" selected>-- キャビネット選択 --</option>
               <% freecabinets.forEach(function (freecabinet) { %>
@@ -211,8 +223,9 @@
               </option>
               <% }) %>
             </select>
-            <input class="btn-base ml-small" type="submit" value="追加">
+            <input class="btn-base ml-small" name="addbtn" id="add_btn_cabinet" type="button" value="追加">
             <input type="hidden" name="id_company" value="<%= company.id %>">
+            <input type="hidden" name="selected_ymd_kaiyaku_cabinet" id="selected_ymd_kaiyaku_cabinet" value="">
           </form>
           <% } %>
           <% } %>
@@ -236,7 +249,7 @@
                 <% } %>
                 <% if ((company.ymd_kaiyaku === '99991231') && (cabinet.ymd_end === '99991231')) { %>
                 <% if (locals.user.role === '社員') { %>
-                <a class="tag"
+                <a name="dellink" class="tag"
                   href="/company/deletecabinet/<%= company.id %>/<%= cabinet.id_cabinet %>/<%= cabinet.no_seq %>">解約</a>
                 <% } %>
                 <% } %>
@@ -265,8 +278,9 @@
                 </option>
                 <% }); %>
               </select>
-              <input class="btn-base ml-small" type="submit" value="追加">
+              <input class="btn-base ml-small" name="addbtn" id="add_btn_bicycle" type="button" value="追加">
               <input type="hidden" name="id_company" value="<%= company.id %>">
+              <input type="hidden" name="selected_ymd_kaiyaku_bicycle" id="selected_ymd_kaiyaku_bicycle" value="">
             </form>
             <% } %>
             <% } %>
@@ -292,7 +306,7 @@
                   <% } %>
                   <% if ((company.ymd_kaiyaku === '99991231') && (bicycle.ymd_end === '99991231')) { %>
                   <% if (locals.user.role === '社員') { %>
-                  <a class="tag"
+                  <a name="dellink" class="tag"
                     href="/company/deletebicycle/<%= bicycle.id_company %>/<%= bicycle.id_bicycle %>/<%= bicycle.no_seq %>">解約</a>
                   <% } %>
                   <% } %>
@@ -320,8 +334,9 @@
                   </option>
                   <% }); %>
                 </select>
-                <input class="btn-base ml-small" type="submit" value="追加">
+                <input class="btn-base ml-small" name="addbtn" id="add_btn_car" type="button" value="追加">
                 <input type="hidden" name="id_company" value="<%= company.id %>">
+                <input type="hidden" name="selected_ymd_kaiyaku_car" id="selected_ymd_kaiyaku_car" value="">
               </form>
               <% } %>
               <% } %>
@@ -347,7 +362,7 @@
                     <% } %>
                     <% if ((company.ymd_kaiyaku === '99991231') && (car.ymd_end === '99991231')) { %>
                     <% if (locals.user.role === '社員') { %>
-                    <a class="tag"
+                    <a name="dellink" class="tag"
                       href="/company/deletecar/<%= car.id_company %>/<%= car.id_car %>/<%= car.no_seq %>">解約</a>
                     <% } %>
                     <% } %>
@@ -358,14 +373,70 @@
                 <!-- /.car__items -->
               </div>
               <!-- /.car -->
-            </div>
-
-          </div>
-          <!-- /.main-wrapper -->
-        </div>
-        <!-- /.main -->
+      </div>
+    </div>
+    <!-- /.main-wrapper -->
+  </div>
+  <!-- /.main -->
 </body>
 <script>
+
+  let dellinks = document.getElementsByName("dellink");
+  dellinks.forEach((dellink, index) => {
+    dellink.addEventListener('click', function (e) {
+      e.preventDefault();
+      let deletelinkfield = document.getElementsByName('deletelinkfield')[0];
+      deletelinkfield.value = this.href;
+      scrollTo(0, 0);
+      let msg = document.getElementsByClassName("msg")[0];
+      msg.style.visibility = "visible";
+    })
+  });
+
+  let addbtns = document.getElementsByName("addbtn");
+  addbtns.forEach((addbtn, index) => {
+    addbtn.addEventListener('click', function () {
+      scrollTo(0, 0);
+      let msg_add = document.getElementsByClassName("msg_add")[0];
+      msg_add.style.visibility = "visible";
+      let addid = document.getElementsByName('addid')[0];
+      addid.value = this.id;
+    })
+  });
+
+  let okbtn_add = document.getElementsByClassName("msgarea__okbtn_add")[0];
+  okbtn_add.addEventListener('click', function () {
+    let addid = document.getElementsByName('addid')[0];
+    let select = document.getElementsByName('select_ymd_add')[0];
+    let selected;
+    let selectform;
+    if (addid.value === 'add_btn_room') {
+      selected = document.getElementById("selected_ymd_kaiyaku_room");
+      selectform = document.roomForm;
+    } else if (addid.value  === 'add_btn_cabinet') {
+      selected = document.getElementById("selected_ymd_kaiyaku_cabinet");
+      selectform = document.cabinetForm;
+    } else if (addid.value  === 'add_btn_bicycle') {
+      selected = document.getElementById("selected_ymd_kaiyaku_bicycle");
+      selectform = document.bicycleForm;
+    } else if (addid.value  === 'add_btn_car') {
+      selected = document.getElementById("selected_ymd_kaiyaku_car");
+      selectform = document.carForm;
+    }
+    if (select.value) {
+      selected.value = select.value;
+      selectform.submit();
+    } else {
+      select.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
+      return false;
+    }
+  });
+
+  let ngbtn_add = document.getElementsByClassName("msgarea__ngbtn_add")[0];
+  ngbtn_add.addEventListener('click', function () {
+    let msg = document.getElementsByClassName("msg_add")[0];
+    msg.style.visibility = "hidden";
+  });
 
   let cancelbtn = document.getElementById("cancelbtn");
   cancelbtn.addEventListener('click', function () {
@@ -373,19 +444,26 @@
     let msg = document.getElementsByClassName("msg")[0];
     msg.style.visibility = "visible";
   });
+
   let okbtn = document.getElementsByClassName("msgarea__okbtn")[0];
-  let ngbtn = document.getElementsByClassName("msgarea__ngbtn")[0];
   okbtn.addEventListener('click', function () {
+    let deletelinkfield = document.getElementsByName('deletelinkfield')[0];
     let select = document.getElementById("select_ymd_kaiyaku");
     let selected = document.getElementById("selected_ymd_kaiyaku");
     if (select.value) {
-      selected.value = select.value;
-      document.cancelForm.submit();
+      if (deletelinkfield) {
+        document.location = deletelinkfield.value + '/' + select.value;
+      } else {
+        selected.value = select.value;
+        document.cancelForm.submit();
+      }
     } else {
       select.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
       return false;
     }
   });
+
+  let ngbtn = document.getElementsByClassName("msgarea__ngbtn")[0];
   ngbtn.addEventListener('click', function () {
     let msg = document.getElementsByClassName("msg")[0];
     msg.style.visibility = "hidden";

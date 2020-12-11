@@ -346,7 +346,7 @@ router.post('/addroom', security.authorize(), function (req, res, next) {
     let relation_comroom = {};
     relation_comroom.id_company = id_company;
     relation_comroom.id_room = req.body.id_room;
-    relation_comroom.ymd_start = tool.getToday();
+    relation_comroom.ymd_start = req.body.selected_ymd_kaiyaku_room
     relation_comroom.ymd_upd = tool.getToday();
     relation_comroom.id_upd = req.user.id;
     m_relation_comroom.insert(relation_comroom, (err, retObj) => {
@@ -359,13 +359,13 @@ router.post('/addroom', security.authorize(), function (req, res, next) {
 });
 
 // 会社⇔部屋情報の削除
-router.get('/deleteroom/:id_company/:id_room/:no_seq', security.authorize(), function (req, res, next) {
+router.get('/deleteroom/:id_company/:id_room/:no_seq/:ymd_kaiyaku', security.authorize(), function (req, res, next) {
 
   let relation_comroom = {};
   relation_comroom.id_company = req.params.id_company;
   relation_comroom.id_room = req.params.id_room;
   relation_comroom.no_seq = req.params.no_seq;
-  relation_comroom.ymd_end = tool.getToday();
+  relation_comroom.ymd_end = req.params.ymd_kaiyaku;
   relation_comroom.ymd_upd = tool.getToday();
   relation_comroom.id_upd = req.user.id;
   m_relation_comroom.remove(relation_comroom, (err, retObj) => {
@@ -383,7 +383,7 @@ router.post('/addcabinet', security.authorize(), function (req, res, next) {
     let relation_comcabi = {};
     relation_comcabi.id_company = id_company;
     relation_comcabi.id_cabinet = req.body.id_cabinet;
-    relation_comcabi.ymd_start = tool.getToday();
+    relation_comcabi.ymd_start = req.body.selected_ymd_kaiyaku_cabinet
     relation_comcabi.ymd_upd = tool.getToday();
     relation_comcabi.id_upd = req.user.id;
     m_relation_comcabi.insert(relation_comcabi, (err, retObj) => {
@@ -396,12 +396,12 @@ router.post('/addcabinet', security.authorize(), function (req, res, next) {
 });
 
 // 会社⇔キャビネットの削除
-router.get('/deletecabinet/:id_company/:id_cabinet/:no_seq', security.authorize(), function (req, res, next) {
+router.get('/deletecabinet/:id_company/:id_cabinet/:no_seq/:ymd_kaiyaku', security.authorize(), function (req, res, next) {
   let relation_comcabi = {};
   relation_comcabi.id_company = req.params.id_company;
   relation_comcabi.id_cabinet = req.params.id_cabinet;
   relation_comcabi.no_seq = req.params.no_seq;
-  relation_comcabi.ymd_end = tool.getToday();
+  relation_comcabi.ymd_end = req.params.ymd_kaiyaku;
   relation_comcabi.ymd_upd = tool.getToday();
   relation_comcabi.id_upd = req.user.id;
   m_relation_comcabi.remove(relation_comcabi, (err, retObj) => {
@@ -419,7 +419,7 @@ router.post('/addbicycle', security.authorize(), function (req, res, next) {
     let relation_combicycle = {};
     relation_combicycle.id_company = id_company;
     relation_combicycle.id_bicycle = req.body.id_bicycle;
-    relation_combicycle.ymd_start = tool.getToday();
+    relation_combicycle.ymd_start = req.body.selected_ymd_kaiyaku_bicycle;
     relation_combicycle.ymd_upd = tool.getToday();
     relation_combicycle.id_upd = req.user.id;
     m_relation_combicycle.insert(relation_combicycle, (err, retObj) => {
@@ -433,12 +433,12 @@ router.post('/addbicycle', security.authorize(), function (req, res, next) {
 });
 
 // 会社⇔駐輪場情報の削除
-router.get('/deletebicycle/:id_company/:id_bicycle/:no_seq', security.authorize(), function (req, res, next) {
+router.get('/deletebicycle/:id_company/:id_bicycle/:no_seq/:ymd_kaiyaku', security.authorize(), function (req, res, next) {
   let relation_combicycle = {};
   relation_combicycle.id_company = req.params.id_company;
   relation_combicycle.id_bicycle = req.params.id_bicycle;
   relation_combicycle.no_seq = req.params.no_seq;
-  relation_combicycle.ymd_end = tool.getToday();
+  relation_combicycle.ymd_end = req.params.ymd_kaiyaku;
   relation_combicycle.ymd_upd = tool.getToday();
   relation_combicycle.id_upd = req.user.id;
   m_relation_combicycle.remove(relation_combicycle, (err, retObj) => {
@@ -456,7 +456,7 @@ router.post('/addcar', security.authorize(), function (req, res, next) {
     let relation_comcar = {};
     relation_comcar.id_company = id_company;
     relation_comcar.id_car = req.body.id_car;
-    relation_comcar.ymd_start = tool.getToday();
+    relation_comcar.ymd_start = req.body.selected_ymd_kaiyaku_car;
     relation_comcar.ymd_upd = tool.getToday();
     relation_comcar.id_upd = req.user.id;
     m_relation_comcar.insert(relation_comcar, (err, retObj) => {
@@ -469,12 +469,12 @@ router.post('/addcar', security.authorize(), function (req, res, next) {
 });
 
 // 会社⇔駐車場情報の削除
-router.get('/deletecar/:id_company/:id_car/:no_seq', security.authorize(), function (req, res, next) {
+router.get('/deletecar/:id_company/:id_car/:no_seq/:ymd_kaiyaku', security.authorize(), function (req, res, next) {
   let relation_comcar = {};
   relation_comcar.id_company = req.params.id_company;
   relation_comcar.id_car = req.params.id_car;
   relation_comcar.no_seq = req.params.no_seq;
-  relation_comcar.ymd_end = tool.getToday();
+  relation_comcar.ymd_end = req.params.ymd_kaiyaku;
   relation_comcar.ymd_upd = tool.getToday();
   relation_comcar.id_upd = req.user.id;
   m_relation_comcar.remove(relation_comcar, (err, retObj) => {
