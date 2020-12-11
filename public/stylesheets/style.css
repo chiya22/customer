@@ -553,6 +553,16 @@ input:checked + .checkbox_label::before {
   color: #fff;
 }
 
+.header .header-wrapper .header-right .btn-header-current {
+  font-size: 0.75rem;
+  background-color: #cd5e42;
+  padding: 8px 10px;
+  border-radius: 19px;
+  color: #fff;
+  border: 1px solid #cd5e42;
+  margin-right: 10px;
+}
+
 .fix_header {
   position: fixed;
   width: 95%;

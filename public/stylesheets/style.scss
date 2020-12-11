@@ -514,6 +514,15 @@ input:checked + .checkbox_label::before {
           color: #fff;
         }
       }
+      .btn-header-current {
+        font-size: 0.75rem;
+        background-color: $base-color;
+        padding: 8px 10px;
+        border-radius: 19px;
+        color: #fff;
+        border: 1px solid $base-color;
+        margin-right: 10px;
+      }
     }
   }
 }
