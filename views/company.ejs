@@ -451,7 +451,7 @@
     let select = document.getElementById("select_ymd_kaiyaku");
     let selected = document.getElementById("selected_ymd_kaiyaku");
     if (select.value) {
-      if (deletelinkfield) {
+      if (deletelinkfield.value !== '') {
         document.location = deletelinkfield.value + '/' + select.value;
       } else {
         selected.value = select.value;
