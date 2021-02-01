@@ -8,6 +8,11 @@ const iconv = require("iconv-lite");
 const puppeteer = require("puppeteer");
 const riyousha = require('../model/riyousha');
 const fs = require("fs");
+const url = 'http://192.168.1.19:3000/outai/';
+const urlkaigi = 'http://192.168.1.19:3000/outaikaigi/';
+// const url = 'http://192.168.1.51:3002/outai/';
+// const urlkaigi = 'http://192.168.1.51:3002/outaikaigi/'
+
 
 // cron設定
 const startcron = () => {
@@ -19,7 +24,6 @@ const startcron = () => {
             if (err) { next(err) };
             let outais = retObj;
             let content = `未完了の応対履歴一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
-            let url = 'http://192.168.1.19:3000/outai/'
 
             outais.forEach(outai => {
                 content += `会社：${outai.name_company}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${url}${outai.id}\r\n------------------------------------------------------\r\n`
@@ -38,10 +42,9 @@ const startcron = () => {
             if (err) { next(err) };
             let outais = retObj;
             let content = `未完了の応対履歴（会議室）一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
-            let url = 'http://192.168.1.19:3000/outaikaigi/'
 
             outais.forEach(outai => {
-                content += `利用者：${outai.name_riyousha}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${url}${outai.id}\r\n------------------------------------------------------\r\n`
+                content += `利用者：${outai.name_riyousha}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${urlkaigi}${outai.id}\r\n------------------------------------------------------\r\n`
             });
 
             //メール送信
@@ -52,9 +55,11 @@ const startcron = () => {
     });
 
     // 毎分実行
-    cron.schedule('0 8 * * 1-5', () => {
+    cron.schedule('15 09 * * 1-5', () => {
+
         (async () => {
-            const browser = await puppeteer.launch({ headless: false });
+
+            const browser = await puppeteer.launch({ headless: true });
 
             let page = await browser.newPage();
 
@@ -83,7 +88,7 @@ const startcron = () => {
             let newPage = await getNewPage(page);
 
             // パスワードの設定
-            await newPage.type('input[name="in_managerpassword"]', "PS10001SP");
+            await newPage.type('input[name="in_managerpassword"]', "");
             const inputElement = await newPage.$("input[type=submit]");
             await inputElement.click();
 
@@ -126,6 +131,8 @@ const startcron = () => {
             }
             await newPageTouroku.select('select[name="start_y"]', set_y.toString());
             await newPageTouroku.select('select[name="start_m"]', set_m.toString());
+            await newPageTouroku.select('select[name="end_y"]', set_y.toString());
+            await newPageTouroku.select('select[name="end_m"]', set_m.toString());
             // await newPageTouroku.select('select[name="end_y"]', '2020');
             // await newPageTouroku.select('select[name="end_m"]', '12');
 
@@ -143,11 +150,19 @@ const startcron = () => {
 
             const a_tag = await newPageResult.$('a');
             if (a_tag) {
-                logger.info(`会議室マスタ情報をダウンロードしました：${new Date()}`);
+                await logger.info(`会議室マスタ情報をダウンロードしました：${new Date()}`);
+
+                // ダウンロード先の設定
+                const dlpath = 'C:\\download';
+                await page._client.send(
+                  'Page.setDownloadBehavior',
+                  { behavior: 'allow', downloadPath: dlpath }
+                );
                 await a_tag.click();
                 await page.waitFor(10000);
+
             } else {
-                logger.info(`会議室マスタ情報がありませんでした：${new Date()}`);
+                await logger.info(`会議室マスタ情報がありませんでした：${new Date()}`);
             }
 
             /**
@@ -170,9 +185,9 @@ const startcron = () => {
         })();
     })
 
-    cron.schedule('50 8 * * 1-5', () => {
+    cron.schedule('30 9 * * 1-5', () => {
 
-        const downloadfilepath = "C:\\Users\\yoshida\\Downloads";
+        const downloadfilepath = "C:\\download";
 
         // ダウンロードディレクトリにあるcsvファイルを取得する
         let targetfilename = "";
@@ -233,14 +248,14 @@ const startcron = () => {
                                     }
                                 } else {
                                     if (linecontents[0].indexOf("■") !== -1) {
-                                        inObj.kubun = "千代田区内";
-                                    } else {
                                         inObj.kubun = "入居者";
-                                    }
-                                    if (linecontents[0].indexOf("◆") === -1) {
-                                        inObj.kubun2 = "中小企業・公共団体・個人";
                                     } else {
-                                        inObj.kubun2 = "大企業・任意団体";
+                                        inObj.kubun = "千代田区内";
+                                        if (linecontents[0].indexOf("◆") === -1) {
+                                            inObj.kubun2 = "中小企業・公共団体・個人";
+                                        } else {
+                                            inObj.kubun2 = "大企業・任意団体";
+                                        }
                                     }
                                 }
                                 inObj.name = linecontents[0];
