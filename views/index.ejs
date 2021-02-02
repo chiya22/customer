@@ -92,11 +92,18 @@
         <!-- /.search__form -->
       </div>
       <!-- /.fix_header -->
+
+      <%
+        const d = new Date();
+        const mm = ('00' + (d.getMonth() + 1)).slice(-2);
+        const dd = ('00' + d.getDate()).slice(-2);
+        const current_yyyymmdd = d.getFullYear() + mm + dd;
+      %> 
       <div class="search__result">
         <div class="search__result-items">
           <%  results.forEach( result => { %>
           <div class="search__result-item">
-              <% if ((result.ymd_kaiyaku) && (result.ymd_kaiyaku !== '99991231')) { %>
+              <% if ((result.ymd_kaiyaku) && (result.ymd_kaiyaku < current_yyyymmdd)) { %>
                   <% if (result.header === '個人') { %>
                   <a class="btn-link bd-left-disabled" href="./person/<%= result.id %>"><p class="tag bg-disabled"><%= result.header %></p>
                   <% } else { %>
@@ -129,7 +136,10 @@
                   <% } %>
                   <p class="tag"><%= result.kubun %></p>
                   <%= result.name %>
-                  <span class="dateinfo">入居：<%= result.ymd_nyukyo %></span>
+                  <span class="dateinfo">入居：<%= result.ymd_nyukyo %>
+                    <% if (result.ymd_kaiyaku !== '99991231') { %>
+                      解約：<%= result.ymd_kaiyaku %></span>
+                    <% } %>
                   </a>
                   <% if (result.header !== '個人') { %>
                   <form method="POST" action="/outai">

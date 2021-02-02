@@ -29,6 +29,12 @@
   </div>
   <%- include("./common/header.ejs", {current: 'nyukyo'}) %>
 
+  <%
+  const d = new Date();
+  const mm = ('00' + (d.getMonth() + 1)).slice(-2);
+  const dd = ('00' + d.getDate()).slice(-2);
+  const current_yyyymmdd = d.getFullYear() + mm + dd;
+  %>
   <div class="main">
     <div class="main__wrapper">
 
@@ -38,7 +44,8 @@
           <span class="tag-big"><%= company.id_nyukyo %></span>
           <% } %>
           <span class="tag-big"><%= company.kubun_company %></span>
-          <% if (company.ymd_kaiyaku !== '99991231') { %>
+          <!-- 会社の解約日　＜　現在の日付　-->
+          <% if (company.ymd_kaiyaku < current_yyyymmdd) { %>
           <span class="tag-big">解約</span>
           <% } %>
           <%= company.name %>
@@ -107,7 +114,8 @@
       <div class="person">
         <div class="person__header">
           <p class="midashi">個人
-            <% if (company.ymd_kaiyaku === '99991231') { %>
+            <!-- 会社の解約日　＞＝　現在の日付　※解約予定だが、解約日を過ぎていない場合　-->
+            <% if (company.ymd_kaiyaku >= current_yyyymmdd) { %>
             <% if (locals.user.role === '社員') { %>
             <a class="btn-base person__addbtn" href="/person/add/<%= company.id %>">個人登録</a></p>
           <% } %>
@@ -118,15 +126,22 @@
           <% if (persons) { %>
           <%  persons.forEach( person => { %>
           <div class="person__item">
-            <% if (person.ymd_kaiyaku === '99991231') { %>
+            <!-- 個人の解約日　＞＝　現在の日付　※解約予定だが、解約日を過ぎていない場合　-->
+            <% if (person.ymd_kaiyaku >= current_yyyymmdd) { %>
             <a class="btn-link" href="/person/<%= person.id %>"><span
                 class="tag"><%= person.kubun_person %></span><%= person.name %><span
-                class="dateinfo">　入居：<%= person.ymd_nyukyo %></span></a>
+                class="dateinfo">　入居：<%= person.ymd_nyukyo %></span>
+              <% if (person.ymd_kaiyaku !== '99991231') { %>
+              　解約：<%= person.ymd_kaiyaku %>
+              <% } %>
+            </a>
             <% } else { %>
-            <a class="btn-link bd-left-disabled" href="/person/<%= person.id %>"><span
-                class="tag bg-disabled">解約</span><span class="tag bg-disabled"><%= person.kubun_person %></span><span
-                class="color-disabled"><%= person.name %><span
-                  class="dateinfo">　入居：<%= person.ymd_nyukyo %>　解約：<%= person.ymd_kaiyaku %></span></span></a>
+            <a class="btn-link bd-left-disabled" href="/person/<%= person.id %>">
+              <span class="tag bg-disabled">解約</span>
+              <span class="tag bg-disabled"><%= person.kubun_person %></span>
+              <span class="color-disabled"><%= person.name %><span
+                  class="dateinfo">　入居：<%= person.ymd_nyukyo %>　解約：<%= person.ymd_kaiyaku %></span></span>
+            </a>
             <% } %>
           </div>
           <%  }); %>
@@ -185,20 +200,22 @@
               dateinfo = '開始：' + room.ymd_start + '　終了：' + room.ymd_end
             }
           %>
-          <% if (room.ymd_end === '99991231') { %>
-          <div class="room__item">
-            <span><%= roomname %><%= dateinfo %></span>
-            <% } else { %>
+          <!-- 部屋の解約日　＞＝　現在の日付　※解約予定だが、解約日を過ぎていない場合　-->
+          <% if (room.ymd_end >= current_yyyymmdd) { %>
+            <div class="room__item">
+              <span><%= roomname %><%= dateinfo %></span>
+          <% } else { %>
             <div class="room__item bd-disabled pd-disabled">
               <span class="color-disabled"><%= roomname %><%= dateinfo %></span>
-              <% } %>
-              <% if ((company.ymd_kaiyaku === '99991231') && (room.ymd_end === '99991231')) { %>
-              <% if (locals.user.role === '社員') { %>
+          <% } %>
+            <% if ((company.ymd_kaiyaku === '99991231') && (room.ymd_end === '99991231')) { %>
+            <% if (locals.user.role === '社員') { %>
               <a name="dellink" class="tag"
                 href="/company/deleteroom/<%= room.id_company %>/<%= room.id_room %>/<%= room.no_seq %>">解約</a>
-              <% } %>
-              <% } %>
+            <% } %>
+            <% } %>
             </div>
+            <!-- /.room_item -->
             <% }) %>
             <% } %>
           </div>
@@ -207,116 +224,119 @@
         <!-- /.room -->
         <% } %>
 
-        <div class="cabinet">
-          <div class="cabinet__header">
-            <p class="midashi">キャビネット</p>
-          </div>
-          <!-- /.cabinet__header -->
-          <% if (company.ymd_kaiyaku === '99991231') { %>
-          <% if (locals.user.role === '社員') { %>
-          <form name="cabinetForm" class="cabinet__form" method="POST" action="/company/addcabinet">
-            <select name="id_cabinet" class="form__item-style cabinet__select">
-              <option value="" selected>-- キャビネット選択 --</option>
-              <% freecabinets.forEach(function (freecabinet) { %>
-              <option value="<%= freecabinet.id %>">
-                <%= freecabinet.place %>　<%= freecabinet.name %>
-              </option>
-              <% }) %>
-            </select>
-            <input class="btn-base ml-small" name="addbtn" id="add_btn_cabinet" type="button" value="追加">
-            <input type="hidden" name="id_company" value="<%= company.id %>">
-            <input type="hidden" name="selected_ymd_kaiyaku_cabinet" id="selected_ymd_kaiyaku_cabinet" value="">
-          </form>
-          <% } %>
-          <% } %>
-          <div class="cabinet__items">
-            <% if (cabinets) { %>
-            <%  cabinets.forEach( cabinet => { %>
-            <%
-          let dateinfo;
-          if (cabinet.ymd_end === '99991231') {
-            dateinfo = '開始：' + cabinet.ymd_start
-          } else {
-            dateinfo = '開始：' + cabinet.ymd_start + '　終了：' + cabinet.ymd_end
-          }
-          %>
-            <% if (cabinet.ymd_end === '99991231') { %>
-            <div class="cabinet__item">
-              <span><%= cabinet.place %>　<%= cabinet.name %>　<%= dateinfo %></span>
-              <% } else { %>
-              <div class="cabinet__item bd-disabled pd-disabled">
-                <span class="color-disabled"><%= cabinet.place %>　<%= cabinet.name %>　<%= dateinfo %></span>
-                <% } %>
-                <% if ((company.ymd_kaiyaku === '99991231') && (cabinet.ymd_end === '99991231')) { %>
-                <% if (locals.user.role === '社員') { %>
-                <a name="dellink" class="tag"
-                  href="/company/deletecabinet/<%= company.id %>/<%= cabinet.id_cabinet %>/<%= cabinet.no_seq %>">解約</a>
-                <% } %>
-                <% } %>
-              </div>
-              <!-- /.cabinet__item -->
-              <%  }) %>
-              <% } %>
-            </div>
-            <!-- /.cabinet__items -->
-          </div>
-          <!-- /.cabinet -->
-
-          <div class="bicycle">
-            <div class="bicycle__header">
-              <p class="midashi">駐輪場</p>
-            </div>
-            <!-- /.bicycle__header -->
-            <% if (company.ymd_kaiyaku === '99991231') { %>
-            <% if (locals.user.role === '社員') { %>
-            <form name="bicycleForm" class="bicycle__form" method="POST" action="/company/addbicycle">
-              <select name="id_bicycle" class="form__item-style bicycle__select">
-                <option value="" selected>--　駐輪場選択　--</option>
-                <% freebicycles.forEach( selectbicycle => { %>
-                <option value="<%= selectbicycle.id %>">
-                  <%= selectbicycle.id %> <%= selectbicycle.name %>
-                </option>
-                <% }); %>
-              </select>
-              <input class="btn-base ml-small" name="addbtn" id="add_btn_bicycle" type="button" value="追加">
-              <input type="hidden" name="id_company" value="<%= company.id %>">
-              <input type="hidden" name="selected_ymd_kaiyaku_bicycle" id="selected_ymd_kaiyaku_bicycle" value="">
-            </form>
-            <% } %>
-            <% } %>
-            <div class="bicycle__items">
-              <% if (bicycles) { %>
-              <%  bicycles.forEach( bicycle => { %>
-              <% 
-            let bicyclename;
-            bicyclename = bicycle.id + ' ' + bicycle.name
+      <div class="cabinet">
+        <div class="cabinet__header">
+          <p class="midashi">キャビネット</p>
+        </div>
+        <!-- /.cabinet__header -->
+        <% if (company.ymd_kaiyaku === '99991231') { %>
+        <% if (locals.user.role === '社員') { %>
+        <form name="cabinetForm" class="cabinet__form" method="POST" action="/company/addcabinet">
+          <select name="id_cabinet" class="form__item-style cabinet__select">
+            <option value="" selected>-- キャビネット選択 --</option>
+            <% freecabinets.forEach(function (freecabinet) { %>
+            <option value="<%= freecabinet.id %>">
+              <%= freecabinet.place %>　<%= freecabinet.name %>
+            </option>
+            <% }) %>
+          </select>
+          <input class="btn-base ml-small" name="addbtn" id="add_btn_cabinet" type="button" value="追加">
+          <input type="hidden" name="id_company" value="<%= company.id %>">
+          <input type="hidden" name="selected_ymd_kaiyaku_cabinet" id="selected_ymd_kaiyaku_cabinet" value="">
+        </form>
+        <% } %>
+        <% } %>
+        <div class="cabinet__items">
+          <% if (cabinets) { %>
+          <%  cabinets.forEach( cabinet => { %>
+          <%
             let dateinfo;
-            if (bicycle.ymd_end === '99991231') {
-              dateinfo = '開始：' + bicycle.ymd_start
+            if (cabinet.ymd_end === '99991231') {
+              dateinfo = '開始：' + cabinet.ymd_start
             } else {
-              dateinfo = '開始：' + bicycle.ymd_start + '　終了：' + bicycle.ymd_end
+              dateinfo = '開始：' + cabinet.ymd_start + '　終了：' + cabinet.ymd_end
             }
-            %>
-              <% if (bicycle.ymd_end === '99991231') { %>
-              <div class="bicycle__item">
-                <span><%= bicyclename %>　<%= dateinfo %></span>
-                <% } else { %>
-                <div class="bicycle__item bd-disabled pd-disabled">
-                  <span class="color-disabled"><%= bicyclename %>　<%= dateinfo %></span>
-                  <% } %>
-                  <% if ((company.ymd_kaiyaku === '99991231') && (bicycle.ymd_end === '99991231')) { %>
-                  <% if (locals.user.role === '社員') { %>
-                  <a name="dellink" class="tag"
-                    href="/company/deletebicycle/<%= bicycle.id_company %>/<%= bicycle.id_bicycle %>/<%= bicycle.no_seq %>">解約</a>
-                  <% } %>
-                  <% } %>
-                </div>
-                <% }) %>
-                <% } %>
-              </div>
-              <!-- /.bicycle__items -->
-            </div>
-            <!-- /.bicycle -->
+          %>
+          <!-- キャビネットの解約日　＞＝　現在の日付　※解約予定だが、解約日を過ぎていない場合　-->
+          <% if (cabinet.ymd_end >= current_yyyymmdd) { %>
+          <div class="cabinet__item">
+            <span><%= cabinet.place %>　<%= cabinet.name %>　<%= dateinfo %></span>
+          <% } else { %>
+          <div class="cabinet__item bd-disabled pd-disabled">
+            <span class="color-disabled"><%= cabinet.place %>　<%= cabinet.name %>　<%= dateinfo %></span>
+          <% } %>
+            <% if ((company.ymd_kaiyaku === '99991231') && (cabinet.ymd_end === '99991231')) { %>
+            <% if (locals.user.role === '社員') { %>
+            <a name="dellink" class="tag"
+              href="/company/deletecabinet/<%= company.id %>/<%= cabinet.id_cabinet %>/<%= cabinet.no_seq %>">解約</a>
+            <% } %>
+            <% } %>
+          </div>
+          <!-- /.cabinet__item -->
+          <%  }) %>
+          <% } %>
+        </div>
+        <!-- /.cabinet__items -->
+      </div>
+      <!-- /.cabinet -->
+
+      <div class="bicycle">
+        <div class="bicycle__header">
+          <p class="midashi">駐輪場</p>
+        </div>
+        <!-- /.bicycle__header -->
+        <% if (company.ymd_kaiyaku === '99991231') { %>
+        <% if (locals.user.role === '社員') { %>
+        <form name="bicycleForm" class="bicycle__form" method="POST" action="/company/addbicycle">
+          <select name="id_bicycle" class="form__item-style bicycle__select">
+            <option value="" selected>--　駐輪場選択　--</option>
+            <% freebicycles.forEach( selectbicycle => { %>
+            <option value="<%= selectbicycle.id %>">
+              <%= selectbicycle.id %> <%= selectbicycle.name %>
+            </option>
+            <% }); %>
+          </select>
+          <input class="btn-base ml-small" name="addbtn" id="add_btn_bicycle" type="button" value="追加">
+          <input type="hidden" name="id_company" value="<%= company.id %>">
+          <input type="hidden" name="selected_ymd_kaiyaku_bicycle" id="selected_ymd_kaiyaku_bicycle" value="">
+        </form>
+        <% } %>
+        <% } %>
+        <div class="bicycle__items">
+          <% if (bicycles) { %>
+          <%  bicycles.forEach( bicycle => { %>
+          <% 
+        let bicyclename;
+        bicyclename = bicycle.id + ' ' + bicycle.name
+        let dateinfo;
+        if (bicycle.ymd_end === '99991231') {
+          dateinfo = '開始：' + bicycle.ymd_start
+        } else {
+          dateinfo = '開始：' + bicycle.ymd_start + '　終了：' + bicycle.ymd_end
+        }
+        %>
+          <!-- 駐輪場の解約日　＞＝　現在の日付　※解約予定だが、解約日を過ぎていない場合　-->
+          <% if (bicycle.ymd_end >= current_yyyymmdd) { %>
+          <div class="bicycle__item">
+            <span><%= bicyclename %>　<%= dateinfo %></span>
+          <% } else { %>
+          <div class="bicycle__item bd-disabled pd-disabled">
+            <span class="color-disabled"><%= bicyclename %>　<%= dateinfo %></span>
+          <% } %>
+            <% if ((company.ymd_kaiyaku === '99991231') && (bicycle.ymd_end === '99991231')) { %>
+            <% if (locals.user.role === '社員') { %>
+            <a name="dellink" class="tag"
+              href="/company/deletebicycle/<%= bicycle.id_company %>/<%= bicycle.id_bicycle %>/<%= bicycle.no_seq %>">解約</a>
+            <% } %>
+            <% } %>
+          </div>
+          <!-- /.bicycle__item -->
+          <% }) %>
+          <% } %>
+        </div>
+        <!-- /.bicycle__items -->
+      </div>
+      <!-- /.bicycle -->
 
             <div class="car">
               <div class="car__header">
@@ -353,7 +373,8 @@
               dateinfo = '開始：' + car.ymd_start + '　終了：' + car.ymd_end
             }
             %>
-                <% if (car.ymd_end === '99991231') { %>
+                <!-- 駐車場の解約日　＞＝　現在の日付　※解約予定だが、解約日を過ぎていない場合　-->
+                <% if (car.ymd_end >= current_yyyymmdd) { %>
                 <div class="car__item">
                   <span><%= carname %>　<%= dateinfo %></span>
                   <% } else { %>
@@ -373,16 +394,17 @@
                 <!-- /.car__items -->
               </div>
               <!-- /.car -->
-      </div>
-    </div>
-    <!-- /.main-wrapper -->
-  </div>
-  <!-- /.main -->
+            </div>
+          </div>
+          <!-- /.main-wrapper -->
+        </div>
+        <!-- /.main -->
 </body>
 <script>
 
   let dellinks = document.getElementsByName("dellink");
-  dellinks.forEach((dellink, index) => {
+  if (dellinks) {
+    dellinks.forEach((dellink, index) => {
     dellink.addEventListener('click', function (e) {
       e.preventDefault();
       let deletelinkfield = document.getElementsByName('deletelinkfield')[0];
@@ -390,22 +412,26 @@
       scrollTo(0, 0);
       let msg = document.getElementsByClassName("msg")[0];
       msg.style.visibility = "visible";
-    })
-  });
+      })
+    });
+  }
 
   let addbtns = document.getElementsByName("addbtn");
-  addbtns.forEach((addbtn, index) => {
+  if (addbtns) {
+    addbtns.forEach((addbtn, index) => {
     addbtn.addEventListener('click', function () {
       scrollTo(0, 0);
       let msg_add = document.getElementsByClassName("msg_add")[0];
       msg_add.style.visibility = "visible";
       let addid = document.getElementsByName('addid')[0];
       addid.value = this.id;
-    })
-  });
+      })
+    });
+  }
 
   let okbtn_add = document.getElementsByClassName("msgarea__okbtn_add")[0];
-  okbtn_add.addEventListener('click', function () {
+  if (okbtn_add) {
+    okbtn_add.addEventListener('click', function () {
     let addid = document.getElementsByName('addid')[0];
     let select = document.getElementsByName('select_ymd_add')[0];
     let selected;
@@ -413,13 +439,13 @@
     if (addid.value === 'add_btn_room') {
       selected = document.getElementById("selected_ymd_kaiyaku_room");
       selectform = document.roomForm;
-    } else if (addid.value  === 'add_btn_cabinet') {
+    } else if (addid.value === 'add_btn_cabinet') {
       selected = document.getElementById("selected_ymd_kaiyaku_cabinet");
       selectform = document.cabinetForm;
-    } else if (addid.value  === 'add_btn_bicycle') {
+    } else if (addid.value === 'add_btn_bicycle') {
       selected = document.getElementById("selected_ymd_kaiyaku_bicycle");
       selectform = document.bicycleForm;
-    } else if (addid.value  === 'add_btn_car') {
+    } else if (addid.value === 'add_btn_car') {
       selected = document.getElementById("selected_ymd_kaiyaku_car");
       selectform = document.carForm;
     }
@@ -430,13 +456,16 @@
       select.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
       return false;
     }
-  });
+    });
+  }
 
   let ngbtn_add = document.getElementsByClassName("msgarea__ngbtn_add")[0];
-  ngbtn_add.addEventListener('click', function () {
+  if (ngbtn_add) {
+    ngbtn_add.addEventListener('click', function () {
     let msg = document.getElementsByClassName("msg_add")[0];
     msg.style.visibility = "hidden";
   });
+  }
 
   let cancelbtn = document.getElementById("cancelbtn");
   cancelbtn.addEventListener('click', function () {
