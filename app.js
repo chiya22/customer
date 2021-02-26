@@ -19,6 +19,7 @@ var personRouter = require('./routes/person');
 var outaisRouter = require('./routes/outai');
 var riyoushaRouter = require('./routes/riyousha');
 var outaiskaigiRouter = require('./routes/outaikaigi');
+var topRouter = require('./routes/top');
 
 var app = express();
 
@@ -34,7 +35,7 @@ app.use(session({
   saveUninitialized: true,
   name: "sid",
   cookie: {
-    maxAge: 3 * 24 * 60 * 1000,
+    maxAge: 3 * 24 * 60 * 60 * 1000,
     secure: false
   }
 }));
@@ -63,6 +64,7 @@ app.use('/outai', outaisRouter);
 
 app.use('/riyousha', riyoushaRouter);
 app.use('/outaikaigi', outaiskaigiRouter);
+app.use('/top', topRouter);
 
 const cron = require('./util/cron')
 cron.startcron();

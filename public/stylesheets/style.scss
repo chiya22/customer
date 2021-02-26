@@ -898,3 +898,36 @@ dd.area__outai-content {
   border-top: solid 6px $base-color;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32);
 }
+
+.kaigi__result__table {
+  margin-top: 40px;
+  border-collapse: collapse;
+  border: 3px solid rgba(255,255,255,1);
+  table-layout: fixed;
+  width: 100%;
+}
+.kaigi__result__table th, .kaigi__result__table td {
+  border: 3px solid rgba(255,255,255,1);
+  padding: .6em;
+  text-align: center;
+  background: #fff;
+}
+.kaigi__result__table th {
+  background: $base-color;
+  color: #fff;
+  font-weight: normal;
+}
+.kaigi__result__table td {
+  background: rgba(205,94,66,.2);
+}
+.kaigi__result__bikou {
+  font-size: 10px;
+  color: gray;
+}
+.kaigi__result__data {
+  display: inline-block;
+  padding-top: 5px;
+  font-size: 20px;
+  
+}
+

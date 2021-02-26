@@ -982,3 +982,39 @@ dd.area__outai-content textarea {
   border-top: solid 6px #cd5e42;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32);
 }
+
+.kaigi__result__table {
+  margin-top: 40px;
+  border-collapse: collapse;
+  border: 3px solid white;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.kaigi__result__table th, .kaigi__result__table td {
+  border: 3px solid white;
+  padding: .6em;
+  text-align: center;
+  background: #fff;
+}
+
+.kaigi__result__table th {
+  background: #cd5e42;
+  color: #fff;
+  font-weight: normal;
+}
+
+.kaigi__result__table td {
+  background: rgba(205, 94, 66, 0.2);
+}
+
+.kaigi__result__bikou {
+  font-size: 10px;
+  color: gray;
+}
+
+.kaigi__result__data {
+  display: inline-block;
+  padding-top: 5px;
+  font-size: 20px;
+}

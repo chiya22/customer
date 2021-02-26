@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>まとめ情報</title>
+  <%- include("./common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("./common/header.ejs", {current: "nyukyo" }); %>
+    <div class="main">
+      <div class="main__wrapper">
+        <table class="kaigi__result__table">
+          <tr>
+            <th>年月</th>
+            <th>全体</th>
+            <th>4階・5階</th>
+            <th>地下MTG</th>
+            <th>地下PRJ</th>
+          </tr>
+          <% results.forEach( result=> { %>
+            <tr>
+              <td>
+                <%= result.ymd.slice(0,4) + '/' + result.ymd.slice(-2) %><br>
+                  <span class="kaigi__result__bikou">
+                    <%= result.ymd_add.slice(0,4) + '/' + result.ymd_add.slice(4,6) + '/' + result.ymd_add.slice(-2)
+                      +　'更新' %>
+                  </span>
+              </td>
+              <td>
+                <span class="kaigi__result__data">
+                  <%= result.per_total + '%' %>
+                  </span>
+              </td>
+              <td>
+                <span class="kaigi__result__data">
+                  <%= result.per_45 + '%' %>
+                </span>
+              </td>
+              <td>
+                <span class="kaigi__result__data">
+                  <%= result.per_mtg + '%' %>
+                </span>
+              </td>
+              <td>
+                <span class="kaigi__result__data">
+                  <%= result.per_prj + '%' %>
+                </span>
+              </td>
+            </tr>
+            <% }) %>
+        </table>
+      </div>
+      <!-- /.main__wrpper -->
+    </div>
+    <!-- /.main -->
+
+</body>
+<%- include("./common/javascripts.ejs") %>
+
+</html>

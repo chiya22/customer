@@ -2,21 +2,25 @@ const log4js = require("log4js");
 const logger = log4js.configure('./config/log4js-config.json').getLogger();
 
 const cron = require('node-cron');
+
 const m_outai = require('../model/outais');
 const m_yoyaku = require('../model/yoyakus');
+const m_riyousha = require('../model/riyousha');
+
 const readline = require("readline");
 const mail = require('./sendmail');
 const iconv = require("iconv-lite");
 const puppeteer = require("puppeteer");
-const riyousha = require('../model/riyousha');
+const tool = require('./tool');
 const fs = require("fs");
+
 const url = 'http://192.168.1.19:3000/outai/';
 const urlkaigi = 'http://192.168.1.19:3000/outaikaigi/';
 // const url = 'http://192.168.1.51:3002/outai/';
 // const urlkaigi = 'http://192.168.1.51:3002/outaikaigi/'
 
 const url_yoyaku = 'https://www.yamori-yoyaku.jp/studio/OfficeLogin.htm';
-const dlpath = 'C:\\download';
+const dlpath = 'C:\\download\\cutomer';
 const login_id = '';
 const login_passwd = '';
 
@@ -123,10 +127,10 @@ const startcron = () => {
             });
 
             const beforeOneMontYYYYMM = getCurrentYYYYMM(-1);
-            const startYYYY = beforeOneMontYYYYMM.slice(0, 6);
+            const startYYYY = beforeOneMontYYYYMM.slice(0, 4);
             const startMM = beforeOneMontYYYYMM.slice(-2);
             const currentYYYYMM = getCurrentYYYYMM(0);
-            const currentYYYY = currentYYYYMM.slice(0, 6);
+            const currentYYYY = currentYYYYMM.slice(0, 4);
             const currentMM = currentYYYYMM.slice(-2);
 
             // 開始へ設定する年月
@@ -233,7 +237,7 @@ const startcron = () => {
                             let inObj = {};
                             inObj.id = linecontents[12];
                             linecontents[0] = (linecontents[0].replace(/ /g, "　").replace(/[*]/g, "＊"));
-                            riyousha.findPKey(inObj, (err, retObj) => {
+                            m_riyousha.findPKey(inObj, (err, retObj) => {
                                 if (err) { throw err };
 
                                 // 新規登録用、更新用のオブジェクトを作成
@@ -277,7 +281,7 @@ const startcron = () => {
                                     // 更新されているかを判別する
                                     if ((target_ymd_add !== retObj.ymd_add) || (target_ymd_upd !== retObj.ymd_upd)) {
 
-                                        riyousha.update(inObj, (err, retObj) => {
+                                        m_riyousha.update(inObj, (err, retObj) => {
                                             if (err) { throw err };
                                             if (retObj.changedRows === 0) {
                                                 logger.info(`更新対象が存在しません：${inObj.id}`);
@@ -291,7 +295,7 @@ const startcron = () => {
                                     // 利用者に存在しない場合
                                 } else {
 
-                                    riyousha.insert(inObj, (err, retObj) => {
+                                    m_riyousha.insert(inObj, (err, retObj) => {
                                         if (err) { throw err };
                                         detaillog = inObj.id + ',' + inObj.kubun + ',' + inObj.kubun2 + ',' + inObj.name + ',' + inObj.kana + ',' + inObj.sex + ',' + inObj.no_yubin + ',' + inObj.address + ',' + inObj.no_tel + ',' + inObj.mail1 + ',' + inObj.mail2 + ',' + inObj.kubun_riyousha + ',' + inObj.kubun_vip + ',' + inObj.bikou + ',' + inObj.ymd_add + ',' + inObj.ymd_upd + '\n';
                                         logger.info(`会議室利用者情報登録ログ：${detaillog}`);
@@ -321,7 +325,8 @@ const startcron = () => {
 
     // 会議室　予約情報ダウンロード
     // 当月
-    cron.schedule('0 23 * * 1-5', () => {
+    cron.schedule('19 * * * 1-5', () => {
+        // cron.schedule('0 23 * * 1-5', () => {
         dlinfo(0);
     })
     // 当月＋１
@@ -342,7 +347,8 @@ const startcron = () => {
     })
 
     // 会議室　予約情報取込
-    cron.schedule('5 23 * * 1-5', () => {
+    cron.schedule('42 * * * 1-5', () => {
+        // cron.schedule('5 23 * * 1-5', () => {
         setYoyakuInfo(0);
     });
     cron.schedule('15 23 * * 1-5', () => {
@@ -358,111 +364,143 @@ const startcron = () => {
         setYoyakuInfo(4);
     });
 
+    // 会議室稼働率情報設定
+    cron.schedule('43 23 * * 1-5', () => {
+        setPerInfo(0);
+    });
+
+    //　予約情報ダウンロード
     const dlinfo = (num) => {
 
         const addnum = num;
 
         (async () => {
 
-            const browser = await puppeteer.launch({ headless: false });
-    
+            const browser = await puppeteer.launch({ headless: true });
+
             let page = await browser.newPage();
-    
+
             const URL = url_yoyaku;
             await page.goto(URL, { waitUntil: "domcontentloaded" });
-    
+
             // ログイン
             await page.type('input[name="in_office"]', login_id);
             await page.type('input[name="in_opassword"]', login_passwd);
             await page.click(
                 "body > table > tbody > tr > td > table > tbody > tr:nth-child(1) > td > form > table:nth-child(2) > tbody > tr > td:nth-child(2) > input"
             );
-    
+
             await page.waitForTimeout(1000);
             // await page.waitForNavigation({waitUntil: 'domcontentloaded'});
-    
-            // 「予約検索」をクリック
+
+            // 管理画面から「管理者メニュー」をクリック
             const menu = await page.$(
-                "body > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(2) > tbody > tr:nth-child(8) > td:nth-child(2) > input[type=image]:nth-child(9)"
+                "body > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(2) > tbody > tr:nth-child(3) > td:nth-child(2) > input[type=image]:nth-child(6)"
             );
             await menu.click();
-    
+
             await page.waitForTimeout(2000);
-    
+
             // 新しく開いたページを取得
-            // let newPage = await getNewPage(page);
-    
-            // 新規予約確認タブをクリック
-            const shinki = await page.$(
-                "body > div > table:nth-child(3) > tbody > tr > th:nth-child(3) > a"
-            )
-            await shinki.click();
-    
-            await page.waitForTimeout(2000);
-    
-            // 現在の年月
-            const currentYYYYMM = getCurrentYYYYMM(0);
-            // 一年前の年月
-            const current_YYYYMM_before = getCurrentYYYYMM(-12);
-            // 現在の年月の末日
-            const current_D_YYYYMM_matubi = new Date(currentYYYYMM.slice(0, 6), currentYYYYMM.slice(-2), 0).getDate();
-    
-            // 登録日・更新日を設定
-            await page.select('select[name="s_tourokuYm"]', "" + current_YYYYMM_before);
-            await page.select('select[name="s_tourokudd"]', '1');
-            await page.select('select[name="e_tourokuYm"]', "" + currentYYYYMM);
-            await page.select('select[name="e_tourokudd"]', "" + current_D_YYYYMM_matubi);
-    
-            // 利用日の年月
-            const riyouYYYYMM = getCurrentYYYYMM(addnum);
-            const riyou_D_YYYYMM_matubi =  new Date(riyouYYYYMM.slice(0, 6), riyouYYYYMM.slice(-2), 0).getDate();
-    
-            // 利用日を設定
-            await page.select('select[name="s_riyouYm"]', "" + riyouYYYYMM);
-            await page.select('select[name="s_riyoudd"]', '1');
-            await page.select('select[name="e_riyouYm"]', "" + riyouYYYYMM);
-            await page.select('select[name="e_riyoudd"]', "" + riyou_D_YYYYMM_matubi);
-    
-            //　検索のクリック
-            await page.click(
-                "body > div > form > table:nth-child(1) > tbody > tr > td:nth-child(4) > input"
+            let newPage = await getNewPage(page);
+
+            // パスワードの設定
+            await newPage.type('input[name="in_managerpassword"]', login_passwd);
+            const inputElement = await newPage.$("input[type=submit]");
+            await inputElement.click();
+
+            await newPage.waitForTimeout(2000);
+
+            // 「ダウンロード」のクリック
+            await newPage.click(
+                "body > div:nth-child(3) > table > tbody > tr > th:nth-child(6) > img"
             );
-    
-            await page.waitForTimeout(2000);
-    
+
+            await newPage.waitForTimeout(2000);
+
+            // 「予約情報ダウンロード」のクリック
+            await newPage.click(
+                "#inbody > div > div:nth-child(2) > div:nth-child(2) > div.waku_5 > img"
+            );
+
+            await newPage.waitForTimeout(2000);
+
+            // 新しく開いたページを取得
+            let newPageTouroku = await getNewPage(newPage);
+
             // Promptが出たら必ずOKとする
-            page.on('dialog', async dialog => {
+            newPageTouroku.on('dialog', async dialog => {
                 await dialog.accept();
             });
-    
-            // ダウンロード先の設定
-            await page._client.send(
-                'Page.setDownloadBehavior',
-                { behavior: 'allow', downloadPath: dlpath }
+
+            const inYYYYMM = getCurrentYYYYMM(addnum);
+            const inYYYY_MM = inYYYYMM.slice(0, 4) + '-' + inYYYYMM.slice(4, 6)
+            const in_DD_matubi = new Date(inYYYYMM.slice(0, 4), inYYYYMM.slice(-2), 0).getDate();
+
+            await newPageTouroku.select('select[name="in_month"]', inYYYY_MM);
+            await newPageTouroku.select('select[name="in_sday"]', "1");
+            await newPageTouroku.select('select[name="in_eday"]', "" + Number(in_DD_matubi));
+
+            // 「項目名-全選択」をクリックする
+            await newPageTouroku.click(
+                "#inbody > table > tbody > tr:nth-child(3) > td.reserve_screen > a:nth-child(2)"
             );
-    
-            await logger.info(`会議室予約情報をダウンロードしました：${new Date()}`);
-    
-            // 「全リストCSVダウンロード」をクリック
-            await page.click(
-                "body > div > form > table:nth-child(2) > tbody > tr > td:nth-child(2) > a"
+            await newPageTouroku.click(
+                "#inbody > table > tbody > tr:nth-child(4) > td.reserve_screen > a:nth-child(2)"
             );
-    
-            await page.waitForTimeout(2000);
-    
-            await logger.info(`会議室予約情報をダウンロードしました：${new Date()}`);
-    
+
+            // 「予約データ」をクリックする
+            await newPageTouroku.click(
+                "#inbody > p:nth-child(4) > input:nth-child(1)"
+            );
+
+            await newPage.waitForTimeout(2000);
+
+            // 新しく開いたページを取得
+            let newPageResult = await getNewPage(newPageTouroku);
+
+            const a_tag = await newPageResult.$('a');
+            if (a_tag) {
+                await logger.info(`予約情報をダウンロードしました：${new Date()}`);
+
+                // ダウンロード先の設定
+                await page._client.send(
+                    'Page.setDownloadBehavior',
+                    { behavior: 'allow', downloadPath: dlpath }
+                );
+                await a_tag.click();
+                await page.waitForTimeout(10000);
+
+            } else {
+                await logger.info(`予約情報がありませんでした：${new Date()}`);
+            }
             await browser.close();
-    
-        })();        
+
+            /**
+             * 新しく開いたページを取得
+             * @param {page} page もともと開いていたページ
+             * @returns {page} 別タブで開いたページ
+             */
+            async function getNewPage(page) {
+                const pageTarget = await page.target();
+                const newTarget = await browser.waitForTarget(
+                    (target) => target.opener() === pageTarget
+                );
+                const newPage = await newTarget.page();
+                await newPage.waitForSelector("body");
+                return newPage;
+            }
+
+        })();
     }
 
+    // 予約情報取込
     const setYoyakuInfo = (num) => {
         // ダウンロードディレクトリにあるcsvファイルを取得する
         let targetfilename = "";
         fs.readdirSync(dlpath).forEach((filename) => {
             // *mdl.csvのファイルの場合処理をする
-            if ((filename.slice(0, 10) === "kakuninsho") && (filename.slice(-3) === 'csv')) {
+            if ((filename.slice(-7) === 'rdl.csv')) {
 
                 targetfilename = filename;
 
@@ -491,38 +529,43 @@ const startcron = () => {
                         const linecontents = chunk.split(",");
 
                         // ヘッダーは飛ばす
-                        if ((linecontents[0] !== '管理ID') && (linecontents[0] !== '')) {
+                        if ((linecontents[0] !== '登録日') && (linecontents[0] !== '')) {
                             let inObj = {};
-                            inObj.id = 'Y' + linecontents[2].replace(/\//g, '').slice(0, 6) + ('' + '0000000000000' + max_id_yoyaku).slice(-14);
+                            inObj.id = 'Y' + linecontents[1].replace(/\-/g, '').slice(0, 6) + ('' + '0000000000000' + max_id_yoyaku).slice(-14);
                             // inObj.id = max_id_yoyaku;
                             max_id_yoyaku += 1;
-                            inObj.nm_room = linecontents[1];
-                            inObj.ymd_yoyaku = linecontents[2].replace(/\//g, '');
-                            inObj.time_start = linecontents[3];
-                            inObj.time_end = linecontents[4];
-                            inObj.price = linecontents[5];
-                            if (linecontents[6] !== '') {
-                                inObj.ymd_uketuke = linecontents[6].replace(/\//g, '');
+                            inObj.ymd_add = linecontents[0].replace(/\-/g, '');
+                            inObj.ymd_riyou = linecontents[1].replace(/\-/g, '');
+                            if (linecontents[2] !== '') {
+                                inObj.ymd_upd = linecontents[2].replace(/\-/g, '');
                             } else {
-                                inObj.ymd_uketuke = linecontents[6];
+                                inObj.ymd_upd = linecontents[2];
                             }
-                            inObj.status_pay = linecontents[7];
-                            inObj.nm_input = linecontents[8];
-                            inObj.nm_riyousha = linecontents[9];
-                            inObj.seishikinm_room = linecontents[10];
-                            inObj.type_room = linecontents[11];
-                            inObj.id_keiyaku = linecontents[12];
-                            inObj.nm_keiyaku = linecontents[13];
-                            inObj.nm_tantou = linecontents[14];
-                            inObj.telno = linecontents[15];
-                            inObj.faxno = linecontents[16];
-                            inObj.email = linecontents[17];
-                            inObj.kubun = linecontents[18];
-                            inObj.address = linecontents[19];
-                            inObj.quantity = linecontents[20];
-                            inObj.unit = linecontents[21];
-                            inObj.notes = linecontents[22];
-                            inObj.bikou = linecontents[23];
+                            inObj.nm_kubun_room = linecontents[3];
+                            inObj.nm_room = linecontents[4];
+                            inObj.time_yoyaku = linecontents[5];
+                            inObj.time_start = linecontents[5].slice(0, 5).replace(/:/g, '');
+                            inObj.time_end = linecontents[5].slice(6, 11).replace(/:/g, '');
+                            inObj.id_riyousha = linecontents[6];
+                            inObj.nm_riyousha = linecontents[7];
+                            inObj.kana_riyousha = linecontents[8];
+                            inObj.no_yubin = linecontents[9];
+                            inObj.address = linecontents[10];
+                            inObj.email = linecontents[11];
+                            inObj.telno = linecontents[12];
+                            inObj.mokuteki = linecontents[13];
+                            inObj.nm_uketuke = linecontents[14];
+                            inObj.num_person = linecontents[15];
+                            inObj.price = linecontents[16];
+                            inObj.bikou = linecontents[17];
+                            inObj.kubun_day = tool.getDayKubun(inObj.ymd_riyou);
+                            if (inObj.nm_room.slice(0,3) === '会議室') {
+                                inObj.kubun_room = 1
+                            } else if (inObj.nm_room.slice(0,6) === 'プロジェクト') {
+                                inObj.kubun_room = 3
+                            } else {
+                                inObj.kubun_room = 2
+                            }
                             m_yoyaku.insert(inObj, (err, retObj) => {
                                 if (err) { throw err };
                                 logger.info(`会議室予約情報ID：${inObj.id}`);
@@ -564,6 +607,48 @@ const startcron = () => {
 
         return "" + retYYYY + ("" + "0" + retMM).slice(-2);
     }
+
+    // 会議室稼働率情報設定
+    const setPerInfo = (addnum) => {
+
+        const yyyymm = getCurrentYYYYMM(addnum);
+
+        // 現在の月の稼働時間を求める
+        // ◆全体
+        const allTimeAll = tool.getHourbyYYYYMM(yyyymm, 1, 1) + tool.getHourbyYYYYMM(yyyymm, 2, 1);
+        const allTime45 = tool.getHourbyYYYYMM(yyyymm, 1, 2) + tool.getHourbyYYYYMM(yyyymm, 2, 2);
+        const allTimeMtg = tool.getHourbyYYYYMM(yyyymm, 1, 3) + tool.getHourbyYYYYMM(yyyymm, 2, 3);
+        const allTimePrj = tool.getHourbyYYYYMM(yyyymm, 1, 4) + tool.getHourbyYYYYMM(yyyymm, 2, 4);
+
+        let inObj = {};
+        inObj.yyyymm = yyyymm;
+        inObj.kubun_room = 1;
+        m_yoyaku.calcTime(inObj, (err, retObj) => {
+            if (err) { throw err };
+            const retAll = retObj;
+            inObj.kubun_room = 2;
+            m_yoyaku.calcTime(inObj, (err, retObj) => {
+                if (err) { throw err };
+                const ret45 = retObj;
+                inObj.kubun_room = 3;
+                m_yoyaku.calcTime(inObj, (err, retObj) => {
+                    if (err) { throw err };
+                    const retMtg = retObj;
+                    inObj.kubun_room = 4;
+                    m_yoyaku.calcTime(inObj, (err, retObj) => {
+                        if (err) { throw err };
+                        // [0]がある場合、[1]がある場合、どちらもない場合もあるよ
+                        const retPrj = retObj;
+                        const perAll = ((retAll[0].totaltime + retAll[1].totaltime) / allTimeAll) * 100;
+                        const per45 = ((ret45[0].totaltime + ret45[1].totaltime) / allTime45) * 100;
+                        const perMtg = ((retMtg[0].totaltime + retMtg[1].totaltime) / allTimeMtg) * 100;
+                        const perPrj = ((retPrj[0].totaltime + retPrj[1].totaltime) / allTimePrj) * 100;
+                    });
+                });
+            });
+        });
+    }
+
 }
 
 module.exports = {
