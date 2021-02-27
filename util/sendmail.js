@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const config = require("../config/app.config");
 
 const log4js = require("log4js");
 const logger = log4js.configure('./config/log4js-config.json').getLogger();
@@ -7,12 +8,12 @@ const send = (title, content) => {
 
     // SMTP情報
     const smtp_config = {
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
+        host: config.mail.smtp.host,
+        port: config.mail.smtp.port,
+        secure: config.mail.smtp.secure,
         auth: {
-            user: 'gmail-user',
-            pass: 'gmail-password',
+            user: config.mail.user,
+            pass: config.mail.passwd,
         },
     }
 
@@ -20,8 +21,8 @@ const send = (title, content) => {
 
     // メール情報
     let message = {
-        from: 'sendFrom',
-        to: 'sendTo',
+        from: config.mail.from,
+        to: config.mail.to,
         subject: title,
         text: content,
     };

@@ -1,3 +1,5 @@
+
+const config = require("../config/app.config");
 const log4js = require("log4js");
 const logger = log4js.configure('./config/log4js-config.json').getLogger();
 
@@ -14,16 +16,6 @@ const puppeteer = require("puppeteer");
 const tool = require('./tool');
 const fs = require("fs");
 
-const url = 'http://192.168.1.19:3000/outai/';
-const urlkaigi = 'http://192.168.1.19:3000/outaikaigi/';
-// const url = 'http://192.168.1.51:3002/outai/';
-// const urlkaigi = 'http://192.168.1.51:3002/outaikaigi/'
-
-const url_yoyaku = 'https://www.yamori-yoyaku.jp/studio/OfficeLogin.htm';
-const dlpath = 'C:\\download\\cutomer';
-const login_id = '';
-const login_passwd = '';
-
 // cron設定
 const startcron = () => {
 
@@ -36,7 +28,7 @@ const startcron = () => {
             let content = `未完了の応対履歴一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
 
             outais.forEach(outai => {
-                content += `会社：${outai.name_company}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${url}${outai.id}\r\n------------------------------------------------------\r\n`
+                content += `会社：${outai.name_company}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${config.url.outai}${outai.id}\r\n------------------------------------------------------\r\n`
             });
 
             //メール送信
@@ -54,7 +46,7 @@ const startcron = () => {
             let content = `未完了の応対履歴（会議室）一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
 
             outais.forEach(outai => {
-                content += `利用者：${outai.name_riyousha}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${urlkaigi}${outai.id}\r\n------------------------------------------------------\r\n`
+                content += `利用者：${outai.name_riyousha}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${config.url.outaikaigi}${outai.id}\r\n------------------------------------------------------\r\n`
             });
 
             //メール送信
@@ -73,12 +65,11 @@ const startcron = () => {
 
             let page = await browser.newPage();
 
-            const URL = url_yoyaku;
-            await page.goto(URL, { waitUntil: "domcontentloaded" });
+            await page.goto(config.url.kanri, { waitUntil: "domcontentloaded" });
 
             // ログイン
-            await page.type('input[name="in_office"]', login_id);
-            await page.type('input[name="in_opassword"]', login_passwd);
+            await page.type('input[name="in_office"]', config.login_id);
+            await page.type('input[name="in_opassword"]', config.login_passwd);
             await page.click(
                 "body > table > tbody > tr > td > table > tbody > tr:nth-child(1) > td > form > table:nth-child(2) > tbody > tr > td:nth-child(2) > input"
             );
@@ -98,7 +89,7 @@ const startcron = () => {
             let newPage = await getNewPage(page);
 
             // パスワードの設定
-            await newPage.type('input[name="in_managerpassword"]', login_passwd);
+            await newPage.type('input[name="in_managerpassword"]', config.login_passwd);
             const inputElement = await newPage.$("input[type=submit]");
             await inputElement.click();
 
@@ -160,7 +151,7 @@ const startcron = () => {
                 // ダウンロード先の設定
                 await page._client.send(
                     'Page.setDownloadBehavior',
-                    { behavior: 'allow', downloadPath: dlpath }
+                    { behavior: 'allow', downloadPath: config.dlpath }
                 );
                 await a_tag.click();
                 await page.waitForTimeout(10000);
@@ -194,13 +185,13 @@ const startcron = () => {
 
         // ダウンロードディレクトリにあるcsvファイルを取得する
         let targetfilename = "";
-        fs.readdirSync(dlpath).forEach((filename) => {
+        fs.readdirSync(config.dlpath).forEach((filename) => {
             // *mdl.csvのファイルの場合処理をする
             if (filename.slice(-7) === "mdl.csv") {
                 targetfilename = filename;
                 // csvファイルはShift-JISのため
                 const src = fs
-                    .createReadStream(dlpath + "\\" + filename)
+                    .createReadStream(config.dlpath + "\\" + filename)
                     .pipe(iconv.decodeStream("Shift_JIS"));
                 src.on("data", (chunk) => {
                     let detaillog = "";
@@ -309,8 +300,8 @@ const startcron = () => {
                 src.on("end", () => {
                     // 対象ファイルを処理した場合は対象ファイルをリネーム
                     fs.rename(
-                        dlpath + "\\" + targetfilename,
-                        dlpath + "\\" + targetfilename + ".old",
+                        config.dlpath + "\\" + targetfilename,
+                        config.dlpath + "\\" + targetfilename + ".old",
                         (err) => {
                             if (err) {
                                 logger.info(`${targetfilename}ファイルは存在しません：${new Date()}`);
@@ -325,7 +316,7 @@ const startcron = () => {
 
     // 会議室　予約情報ダウンロード
     // 当月
-    cron.schedule('19 * * * 1-5', () => {
+    cron.schedule('0 23 * * 1-5', () => {
         // cron.schedule('0 23 * * 1-5', () => {
         dlinfo(0);
     })
@@ -347,7 +338,7 @@ const startcron = () => {
     })
 
     // 会議室　予約情報取込
-    cron.schedule('42 * * * 1-5', () => {
+    cron.schedule('5 23 * * 1-5', () => {
         // cron.schedule('5 23 * * 1-5', () => {
         setYoyakuInfo(0);
     });
@@ -365,7 +356,7 @@ const startcron = () => {
     });
 
     // 会議室稼働率情報設定
-    cron.schedule('43 23 * * 1-5', () => {
+    cron.schedule('50 23 * * 1-5', () => {
         setPerInfo(0);
     });
 
@@ -380,12 +371,11 @@ const startcron = () => {
 
             let page = await browser.newPage();
 
-            const URL = url_yoyaku;
-            await page.goto(URL, { waitUntil: "domcontentloaded" });
+            await page.goto(config.url.kanri, { waitUntil: "domcontentloaded" });
 
             // ログイン
-            await page.type('input[name="in_office"]', login_id);
-            await page.type('input[name="in_opassword"]', login_passwd);
+            await page.type('input[name="in_office"]', config.login_id);
+            await page.type('input[name="in_opassword"]', config.login_passwd);
             await page.click(
                 "body > table > tbody > tr > td > table > tbody > tr:nth-child(1) > td > form > table:nth-child(2) > tbody > tr > td:nth-child(2) > input"
             );
@@ -405,7 +395,7 @@ const startcron = () => {
             let newPage = await getNewPage(page);
 
             // パスワードの設定
-            await newPage.type('input[name="in_managerpassword"]', login_passwd);
+            await newPage.type('input[name="in_managerpassword"]', config.login_passwd);
             const inputElement = await newPage.$("input[type=submit]");
             await inputElement.click();
 
@@ -466,7 +456,7 @@ const startcron = () => {
                 // ダウンロード先の設定
                 await page._client.send(
                     'Page.setDownloadBehavior',
-                    { behavior: 'allow', downloadPath: dlpath }
+                    { behavior: 'allow', downloadPath: config.dlpath }
                 );
                 await a_tag.click();
                 await page.waitForTimeout(10000);
@@ -498,7 +488,7 @@ const startcron = () => {
     const setYoyakuInfo = (num) => {
         // ダウンロードディレクトリにあるcsvファイルを取得する
         let targetfilename = "";
-        fs.readdirSync(dlpath).forEach((filename) => {
+        fs.readdirSync(config.dlpath).forEach((filename) => {
             // *mdl.csvのファイルの場合処理をする
             if ((filename.slice(-7) === 'rdl.csv')) {
 
@@ -512,7 +502,7 @@ const startcron = () => {
 
                     // csvファイルはShift-JISのため
                     const src = fs
-                        .createReadStream(dlpath + "\\" + filename)
+                        .createReadStream(config.dlpath + "\\" + filename)
                         .pipe(iconv.decodeStream("Shift_JIS"));
 
                     // 1行ごとに読み込む
@@ -575,8 +565,8 @@ const startcron = () => {
                     src.on("end", () => {
                         // 対象ファイルを処理した場合は対象ファイルをリネーム
                         fs.rename(
-                            dlpath + "\\" + targetfilename,
-                            dlpath + "\\" + targetfilename + ".old",
+                            config.dlpath + "\\" + targetfilename,
+                            config.dlpath + "\\" + targetfilename + ".old",
                             (err) => {
                                 if (err) {
                                     logger.info(`${targetfilename}ファイルは存在しません：${new Date()}`);

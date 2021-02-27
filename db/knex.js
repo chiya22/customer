@@ -1,17 +1,18 @@
 const Knex = require("knex");
+const config = require("../config/app.config");
 
 const connect = () => {
-    const config = {
-        host: 'localhost',
-        user: 'pfs',
-        password: 'ps10001sp',
-        database: 'pfs',
-        // port: 58020,
+    const configdb= {
+        host: config.db.host,
+        user: config.db.user,
+        password: config.db.password,
+        database: config.db.database,
+        port: config.db.port,
     };
 
     const knex = Knex({
         client: "mysql",
-        connection: config,
+        connection: configdb,
     });
     knex.client.pool.max = 5;
     knex.client.pool.min = 5;
