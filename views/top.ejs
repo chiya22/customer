@@ -18,33 +18,33 @@
             <th>地下MTG</th>
             <th>地下PRJ</th>
           </tr>
-          <% results.forEach( result=> { %>
+          <% results.forEach( result => { %>
             <tr>
-              <td>
-                <%= result.ymd.slice(0,4) + '/' + result.ymd.slice(-2) %><br>
-                  <span class="kaigi__result__bikou">
+              <td class="kaigi__result__ymd">
+                <%= result.yyyymm.slice(0,4) + '/' + result.yyyymm.slice(-2) %><br>
+                <span class="kaigi__result__bikou">
                     <%= result.ymd_add.slice(0,4) + '/' + result.ymd_add.slice(4,6) + '/' + result.ymd_add.slice(-2)
                       +　'更新' %>
-                  </span>
-              </td>
-              <td>
-                <span class="kaigi__result__data">
-                  <%= result.per_total + '%' %>
-                  </span>
-              </td>
-              <td>
-                <span class="kaigi__result__data">
-                  <%= result.per_45 + '%' %>
                 </span>
               </td>
               <td>
                 <span class="kaigi__result__data">
-                  <%= result.per_mtg + '%' %>
+                  <%= result.per_all_all + '%' %>
+                  </span>
+              </td>
+              <td>
+                <span class="kaigi__result__data">
+                  <%= result.per_45_all + '%' %>
                 </span>
               </td>
               <td>
                 <span class="kaigi__result__data">
-                  <%= result.per_prj + '%' %>
+                  <%= result.per_mtg_all + '%' %>
+                </span>
+              </td>
+              <td>
+                <span class="kaigi__result__data">
+                  <%= result.per_prj_all + '%' %>
                 </span>
               </td>
             </tr>

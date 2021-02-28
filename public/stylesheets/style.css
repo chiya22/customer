@@ -994,18 +994,22 @@ dd.area__outai-content textarea {
 .kaigi__result__table th, .kaigi__result__table td {
   border: 3px solid white;
   padding: .6em;
-  text-align: center;
-  background: #fff;
 }
 
 .kaigi__result__table th {
   background: #cd5e42;
   color: #fff;
+  text-align: center;
   font-weight: normal;
 }
 
 .kaigi__result__table td {
   background: rgba(205, 94, 66, 0.2);
+  text-align: right;
+}
+
+.kaigi__result__ymd {
+  text-align: center;
 }
 
 .kaigi__result__bikou {
@@ -1016,5 +1020,6 @@ dd.area__outai-content textarea {
 .kaigi__result__data {
   display: inline-block;
   padding-top: 5px;
+  padding-right: 10px;
   font-size: 20px;
 }

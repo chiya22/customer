@@ -152,11 +152,11 @@ const getDays = (yyyymm, kubun) => {
 }
 
 // 年月と日付区分をもとに、時間を算出する
-// kubun: 1->通常日、2->土日祝、3->非稼働(通常日)、4->非稼働(土日祝)
+// kubun_day: 1->通常日、2->土日祝、3->非稼働(通常日)、4->非稼働(土日祝)
 // kubun_room: 1->全体、2->4階、5階、3->地下ミーティングルーム、4->地下プロジェクトルーム
-const getHourbyYYYYMM = (yyyymm, kubun, kubun_room) => {
+const getHourbyYYYYMM = (yyyymm, kubun_day, kubun_room) => {
 
-  const days = getDays(yyyymm, kubun);
+  const days = getDays(yyyymm, kubun_day);
 
   let num_room = 0;
   if (kubun_room === 1) {
@@ -169,9 +169,9 @@ const getHourbyYYYYMM = (yyyymm, kubun, kubun_room) => {
     num_room = 5;
   }
 
-  if ((kubun === 1) || (kubun === 3)) {
+  if ((kubun_day === 1) || (kubun_day === 3)) {
     return days * 13 * num_room;
-  } else if ((kubun === 2) || (kubun === 4)) {
+  } else if ((kubun_day === 2) || (kubun_day === 4)) {
     return days * 10 * num_room;
   } else {
     return 0;

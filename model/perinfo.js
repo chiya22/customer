@@ -8,7 +8,7 @@ const logger = log4js.configure('./config/log4js-config.json').getLogger();
 const findAll = (callback) => {
     (async () => {
         // const client = knex.connect();
-        await client.from("perinfo").orderBy("ymd", "desc")
+        await client.from("perinfo").orderBy("yyyymm", "desc")
             .then((retObj) => {
                 callback(null, retObj);
             })
@@ -21,7 +21,7 @@ const findAll = (callback) => {
 const findPKey = (inObj, callback) => {
     (async () => {
         // const client = knex.connect();
-        await client.from("perinfo").where({ ymd: inObj.ymd })
+        await client.from("perinfo").where({ yyyymm: inObj.yyyymm })
             .then((retObj) => {
                 callback(null, retObj[0]);
             })
@@ -33,8 +33,8 @@ const findPKey = (inObj, callback) => {
 
 const insert = (inObj, callback) => {
     (async () => {
-        const query = 'insert into perinfo values ("' + inObj.ymd + '",' + inObj.per_total + ',' + inObj.per_45 + ',' + inObj.per_mtg + ',' + inObj.per_prj + ')';
-        await logger.info('[' + inObj.ymd + ']' + query);
+        const query = 'insert into perinfo values ("' + inObj.yyyymm + '",' + inObj.per_all_all + ',' + inObj.per_all_weekday + ',' + inObj.per_all_holiday + ',' + inObj.per_45_all + ',' + inObj.per_45_weekday + ',' + inObj.per_45_holiday + ',' + inObj.per_mtg_all + ',' + inObj.per_mtg_weekday + ',' + inObj.per_mtg_holiday + ',' + inObj.per_prj_all + ',' + inObj.per_prj_weekday + ',' + inObj.per_prj_holiday + ',"' + inObj.ymd_add + '")';
+        await logger.info('[' + inObj.yyyymm + ']' + query);
         await client.raw(query)
             .then((retObj) => {
                 callback(null, retObj[0]);
@@ -46,11 +46,11 @@ const insert = (inObj, callback) => {
     })();
 };
 
-const update = (inObj, callback) => {
+const remove = (inObj, callback) => {
     (async () => {
         // const client = knex.connect();
-        const query = 'update perinfo set per_total = ' + inObj.per_total + ', per_45 = ' + inObj.per_45 + ', per_mtg = ' + inObj.per_mtg + ', per_prj = ' + inObj.per_prj + ' where id = "' + inObj.ymd + '"';
-        logger.info('[' + inObj.ymd + ']' + query);
+        const query = 'delete from perinfo where yyyymm = "' + inObj.yyyymm + '"';
+        logger.info('[' + inObj.yyyymm + ']' + query);
         await client.raw(query)
             .then((retObj) => {
                 callback(null, retObj[0]);
@@ -65,5 +65,5 @@ module.exports = {
     findAll,
     findPKey,
     insert,
-    update,
+    remove,
 };

@@ -20,13 +20,8 @@ const findPKey = function (inObj, callback) {
 const calcTime = ( inObj, callback) => {
     (async function () {
 
-        let query;
-        if (inObj.kubun_room === 1) {
-            query = 'SELECT left(ymd_riyou,6) AS ymd, kubun_day AS kubun_day, sum(CAST(time_end AS SIGNED)-CAST(time_start AS SIGNED))/100 AS totaltime FROM yoyakus where left(ymd_riyou, 6) = "' + inObj.yyyymm + '" group BY left(ymd_riyou,6), kubun_day order by kubun_day';
-        } else {
-            query = 'SELECT left(ymd_riyou,6) AS ymd, kubun_day AS kubun_day, sum(CAST(time_end AS SIGNED)-CAST(time_start AS SIGNED))/100 AS totaltime FROM yoyakus where left(ymd_riyou, 6) = "' + inObj.yyyymm + '" and kubun_room = "' + inObj.kubun_room + '" group BY left(ymd_riyou,6), kubun_day order by kubun_day';
-        }
-        await logger.info('[' + inObj.yyyymm +'_' + inObj.kubun_room + ']' + query);
+        let query = 'SELECT left(ymd_riyou,6) AS ymd, kubun_room, kubun_day AS kubun_day, sum(CAST(time_end AS SIGNED)-CAST(time_start AS SIGNED))/100 AS totaltime FROM yoyakus where left(ymd_riyou, 6) = "' + inObj.yyyymm + '" and id_riyousha <> "10001" and id_riyousha <> "00001" group BY left(ymd_riyou,6), kubun_room, kubun_day order by kubun_room, kubun_day'
+        await logger.info('[' + inObj.yyyymm + ']' + query);
         await client.raw(query)
             .then((retObj) => {
                 callback(null, retObj[0]);
@@ -40,7 +35,7 @@ const calcTime = ( inObj, callback) => {
 const insert = function (inObj, callback) {
     (async function () {
 
-        const query = 'insert into yoyakus values ("' + inObj.id + '","' + inObj.ymd_add + '","' + inObj.ymd_riyou + '",' + tool.returnvalue(inObj.ymd_upd) + ',"' + inObj.kubun_room + '","' + inObj.nm_room + '","' + inObj.time_yoyaku + '","' + inObj.time_start + '","' + inObj.time_end + '","' + inObj.id_riyousha + '","' + inObj.nm_riyousha + '","' + inObj.kana_riyousha + '",' + tool.returnvalue(inObj.no_yubin) + ',"' + inObj.address + '","' + inObj.email + '",' + tool.returnvalue(inObj.telno) + ',"' + inObj.mokuteki + '","' + inObj.nm_uketuke + '",' + inObj.num_person + ',' + inObj.price + ',' + tool.returnvalue(inObj.bikou) + ',"' + inObj.kubun_day + '","' + inObj.kubun_room + '")';
+        const query = 'insert into yoyakus values ("' + inObj.id + '","' + inObj.ymd_add + '","' + inObj.ymd_riyou + '",' + tool.returnvalue(inObj.ymd_upd) + ',"' + inObj.nm_kubun_room + '","' + inObj.nm_room + '","' + inObj.time_yoyaku + '","' + inObj.time_start + '","' + inObj.time_end + '","' + inObj.id_riyousha + '","' + inObj.nm_riyousha + '","' + inObj.kana_riyousha + '",' + tool.returnvalue(inObj.no_yubin) + ',"' + inObj.address + '","' + inObj.email + '",' + tool.returnvalue(inObj.telno) + ',"' + inObj.mokuteki + '","' + inObj.nm_uketuke + '",' + inObj.num_person + ',' + inObj.price + ',' + tool.returnvalue(inObj.bikou) + ',"' + inObj.kubun_day + '","' + inObj.kubun_room + '")';
         await logger.info('[' + inObj.id + ']' + query);
         await client.raw(query)
             .then((retObj) => {
