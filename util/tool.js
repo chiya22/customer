@@ -2,6 +2,13 @@
 const returnvalue = (value) => {
   return (value ? '"' + value + '"' : null);
 };
+const returnvalueWithoutNull = (value) => {
+  return (value ? value : '');
+}
+
+const returndateWithslash = (yyyymmdd) => {
+  return (yyyymmdd ? yyyymmdd.slice(0,4) + '/' + yyyymmdd.slice(4,6) + '/' + yyyymmdd.slice(-2) : '');
+}
 
 const getToday = () => {
   const d = new Date();
@@ -178,11 +185,46 @@ const getHourbyYYYYMM = (yyyymm, kubun_day, kubun_room) => {
   }
 }
 
+const getYYYYMMDD7dayAfter = () => {
+
+  let date = new Date();
+
+  //7日前を求める
+  date.setDate(date.getDate() -7);
+
+  for (let i = 1; i < 30; i++){
+
+    date.setDate(date.getDate() - 1);
+
+    if (getDayKubun(getYYYYMMDD(date)) === 1) {
+      break;
+    }
+  }
+
+  return getYYYYMMDD(date);
+}
+
+//
+// 日付よりyyyymmdd形式の文字列を返却する
+//
+const getYYYYMMDD = (date) => {
+
+  let tmp;
+  tmp = '' + date.getFullYear();
+  tmp += '' + ('0' + (date.getMonth() + 1)).slice(-2);
+  tmp += '' + ('0' + date.getDate()).slice(-2);
+  return tmp
+
+}
+
 module.exports = {
   returnvalue,
+  returnvalueWithoutNull,
+  returndateWithslash,
   getToday,
   getTodayTime,
   getDayKubun,
   getDays,
   getHourbyYYYYMM,
+  getYYYYMMDD7dayAfter,
 };

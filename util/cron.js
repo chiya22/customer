@@ -61,6 +61,32 @@ const startcron = () => {
     });
   });
 
+  cron.schedule(config.cron.mishukaigi, () => {
+
+    const targetYYYYMMDD = tool.getYYYYMMDD7dayAfter();
+    const query =
+      'SELECT * FROM ( SELECT * FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.ymd_upd IS NULL AND y.ymd_add < ' + targetYYYYMMDD + ' AND y.id_riyousha <> "00001" AND y.id_riyousha <> "10001" UNION ALL SELECT * FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.ymd_upd IS NOT NULL AND y.ymd_upd < ' + targetYYYYMMDD + ' AND y.id_riyousha <> "00001" AND y.id_riyousha <> "10001") y2 ORDER BY y2.ymd_riyou';
+
+      logger.info(query);
+
+      m_yoyaku.selectSQL(query, (err, retObj) => {
+      if (err) {
+        next(err);
+      }
+      let yoyakus = retObj;
+      let content = `未入金の会議室予約情報一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
+
+      yoyakus.forEach((yoyaku) => {
+        content += `利用日：${tool.returndateWithslash(yoyaku.ymd_riyou)}\r\n登録日：${tool.returndateWithslash(yoyaku.ymd_add)}\r\n更新日：${tool.returndateWithslash(yoyaku.ymd_upd)}\r\n会議室名：${yoyaku.nm_room}\r\n時間：${yoyaku.time_yoyaku}\r\n金額：${yoyaku.price}\r\n利用者：${yoyaku.id_riyousha} | ${yoyaku.nm_riyousha}\r\n受付：${yoyaku.nm_uketuke}\r\n備考：${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n------------------------------------------------------\r\n`;
+      });
+
+      //メール送信
+      mail.send("未入金会議室予約情報", content);
+
+      logger.info(`cronより通知メールを送信しました（未入金会議室予約）：${new Date()}`);
+    });
+  });
+
   // 会議室　利用者登録情報ダウンロード
   cron.schedule(config.cron.dlriyousha, () => {
     (async () => {
