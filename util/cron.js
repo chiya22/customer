@@ -125,10 +125,10 @@ const startcron = () => {
 
       const beforeOneMontYYYYMM = getCurrentYYYYMM(-1);
       const startYYYY = beforeOneMontYYYYMM.slice(0, 4);
-      const startMM = beforeOneMontYYYYMM.slice(-2);
+      const startMM = '' + Number(beforeOneMontYYYYMM.slice(-2));
       const currentYYYYMM = getCurrentYYYYMM(0);
       const currentYYYY = currentYYYYMM.slice(0, 4);
-      const currentMM = currentYYYYMM.slice(-2);
+      const currentMM = '' + Number(currentYYYYMM.slice(-2));
 
       // 開始へ設定する年月
       await newPageTouroku.select('select[name="start_y"]', startYYYY);
@@ -638,7 +638,8 @@ const startcron = () => {
               inObj.nm_uketuke = linecontents[14];
               inObj.num_person = linecontents[15];
               inObj.price = linecontents[16];
-              inObj.bikou = linecontents[17];
+              inObj.stat_shiharai = linecontents[17];
+              inObj.bikou = linecontents[18];
               inObj.kubun_day = tool.getDayKubun(inObj.ymd_riyou);
               if (inObj.nm_room.slice(0, 3) === "会議室") {
                 inObj.kubun_room = 1;
