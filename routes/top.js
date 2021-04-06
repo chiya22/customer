@@ -9,7 +9,7 @@ const perinfo = require("../model/perinfo");
 // index
 router.get('/', security.authorize(), function (req, res, next) {
 
-  perinfo.findAll((err,retObj) => {
+  perinfo.selectAll((err,retObj) => {
     if (err) { throw err};
     res.render('top', {
       results: retObj,
