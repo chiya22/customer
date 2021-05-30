@@ -402,10 +402,58 @@
 </body>
 <script>
 
+  // セレクトボックスのボタン制御
+  const roomselect = document.getElementsByClassName('room__select')[0];
+  const cabinetselect = document.getElementsByClassName('cabinet__select')[0];
+  const bicycleselect = document.getElementsByClassName('bicycle__select')[0];
+  const carselect = document.getElementsByClassName('car__select')[0];
+  const roomaddbtn = document.getElementById('add_btn_room');
+  const cabinetaddbtn = document.getElementById('add_btn_cabinet');
+  const bicycleaddbtn = document.getElementById('add_btn_bicycle');
+  const caraddbtn = document.getElementById('add_btn_car');
+  if (roomaddbtn){
+    roomaddbtn.style.display = 'none';
+    roomselect.addEventListener('change', () => {
+    roomselect.value === ''? roomaddbtn.style.display='none': roomaddbtn.style.display='block';
+    });
+  }
+  if (cabinetaddbtn) {
+    cabinetaddbtn.style.display = 'none';
+    cabinetselect.addEventListener('change', () => {
+    cabinetselect.value === ''? cabinetaddbtn.style.display='none': cabinetaddbtn.style.display='block';
+  })
+  }
+  if (bicycleaddbtn) {
+    bicycleaddbtn.style.display = 'none';
+    bicycleselect.addEventListener('change', () => {
+    bicycleselect.value === ''? bicycleaddbtn.style.display='none': bicycleaddbtn.style.display='block';
+  })
+  }
+  if (caraddbtn) {
+    caraddbtn.style.display = 'none';
+  carselect.addEventListener('change', () => {
+    carselect.value === ''? caraddbtn.style.display='none': caraddbtn.style.display='block';
+  })
+  }
+
+  /*
+   会社情報の解約ボタンを押した時、メッセージエリアを表示する
+  */
+  let cancelbtn = document.getElementById("cancelbtn");
+  cancelbtn.addEventListener('click', function () {
+    scrollTo(0, 0);
+    let msg = document.getElementsByClassName("msg")[0];
+    msg.style.visibility = "visible";
+  });
+
+  /*
+   会社情報以外の解約ボタン
+   押されたボタンのリンクをdeletelinkfieldに設定し、メッセージエリアを表示する
+  */
   let dellinks = document.getElementsByName("dellink");
   if (dellinks) {
     dellinks.forEach((dellink, index) => {
-    dellink.addEventListener('click', function (e) {
+    dellink.addEventListener('click', function(e) {
       e.preventDefault();
       let deletelinkfield = document.getElementsByName('deletelinkfield')[0];
       deletelinkfield.value = this.href;
@@ -416,19 +464,27 @@
     });
   }
 
+  /*
+   追加ボタン
+   押された追加ボタンのリンクをaddidに設定し、メッセージエリアを表示する
+  */
   let addbtns = document.getElementsByName("addbtn");
   if (addbtns) {
     addbtns.forEach((addbtn, index) => {
-    addbtn.addEventListener('click', function () {
+    addbtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      let addid = document.getElementsByName('addid')[0];
+      addid.value = this.id;
       scrollTo(0, 0);
       let msg_add = document.getElementsByClassName("msg_add")[0];
       msg_add.style.visibility = "visible";
-      let addid = document.getElementsByName('addid')[0];
-      addid.value = this.id;
-      })
+      });
     });
   }
 
+  /*
+   追加ボタンを押したときに表示されるメッセージエリアの制御
+  */
   let okbtn_add = document.getElementsByClassName("msgarea__okbtn_add")[0];
   if (okbtn_add) {
     okbtn_add.addEventListener('click', function () {
@@ -458,7 +514,6 @@
     }
     });
   }
-
   let ngbtn_add = document.getElementsByClassName("msgarea__ngbtn_add")[0];
   if (ngbtn_add) {
     ngbtn_add.addEventListener('click', function () {
@@ -467,13 +522,9 @@
   });
   }
 
-  let cancelbtn = document.getElementById("cancelbtn");
-  cancelbtn.addEventListener('click', function () {
-    scrollTo(0, 0);
-    let msg = document.getElementsByClassName("msg")[0];
-    msg.style.visibility = "visible";
-  });
-
+  /*
+   解約ボタンを押したときに表示されるメッセージエリアの制御
+  */
   let okbtn = document.getElementsByClassName("msgarea__okbtn")[0];
   okbtn.addEventListener('click', function () {
     let deletelinkfield = document.getElementsByName('deletelinkfield')[0];
