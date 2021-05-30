@@ -23,7 +23,7 @@
           <dl>
           <% if (mode === 'insert') { %>
           <dt>入居番号</dt>
-          <dd><input class="form__item-style" type="text" name="id" required></dd>
+          <dd><input class="form__item-style" type="text" name="id" maxlength="4" required></dd>
           <div class="form__btn">
             <input class="btn-base" type="button" id="btn_insert" value="登録">
             <% } else { %>
