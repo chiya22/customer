@@ -1,125 +1,127 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
-const security = require('../../util/security');
-const tool = require('../../util/tool');
+const security = require("../../util/security");
+const tool = require("../../util/tool");
 
-const m_room = require('../../model/rooms');
+const m_room = require("../../model/rooms");
 
 // TOPページ
-router.get('/', security.authorize(), function (req, res, next) {
-  m_room.findForAdmin( (err, retObj) => {
-    if (err) { next(err) };
-    res.render('admin/rooms', {
-      rooms: retObj,
+router.get("/", security.authorize(), (req, res, next) => {
+  (async () => {
+    const retObjRomm = await m_room.findForAdmin();
+    res.render("admin/rooms", {
+      rooms: retObjRomm,
     });
-  });
+  })();
 });
 
 // メニューから登録画面（roomForm）へ
-router.get('/insert', security.authorize(), function (req, res, next) {
-  res.render('admin/roomform', {
+router.get("/insert", security.authorize(), (req, res, next) => {
+  res.render("admin/roomform", {
     room: null,
-    mode: 'insert',
+    mode: "insert",
     message: null,
   });
 });
 
 //部屋IDを指定して更新画面（roomForm）へ
-router.get('/update/:id', security.authorize(), function (req, res, next) {
-  const id = req.params.id;
-  m_room.findPKey( id, (err, retObj) => {
-    if (err) { next(err) };
-    res.render('admin/roomform', {
-      room: retObj,
-      mode: 'update',
+router.get("/update/:id", security.authorize(), (req, res, next) => {
+  (async () => {
+    const retObjRoom = await m_room.findPKey(req.params.id);
+    res.render("admin/roomform", {
+      room: retObjRoom,
+      mode: "update",
       message: null,
     });
-  });
+  })();
 });
 
 //部屋情報の登録
-router.post('/insert', security.authorize(), function (req, res, next) {
-
-  let inObj = {};
-  inObj.id = req.body.id;
-  inObj.place = req.body.place;
-  inObj.floor = req.body.floor;
-  inObj.person = req.body.person;
-  inObj.name = req.body.name;
-  inObj.ymd_start = tool.getToday();
-  inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = req.user.id;
-  m_room.insert(inObj, (err, retObj) => {
-    if (err) {
+router.post("/insert", security.authorize(), (req, res, next) => {
+  (async () => {
+    let inObjRoom = {};
+    inObjRoom.id = req.body.id;
+    inObjRoom.place = req.body.place;
+    inObjRoom.floor = req.body.floor;
+    inObjRoom.person = req.body.person;
+    inObjRoom.name = req.body.name;
+    inObjRoom.ymd_start = tool.getToday();
+    inObjRoom.ymd_upd = tool.getToday();
+    inObjRoom.id_upd = req.user.id;
+    try {
+      const retObjRoom = await m_room.insert(inObjRoom);
+      res.redirect(req.baseUrl);
+    } catch (err) {
       if (err.errno === 1062) {
-        res.render('admin/roomform', {
+        res.render("admin/roomform", {
           room: null,
-          mode: 'insert',
-          message: '部屋【' + inObj.id + '】はすでに存在しています',
+          mode: "insert",
+          message: "部屋【" + inObjRoom.id + "】はすでに存在しています",
         });
       } else {
-        next(err)
-      };
-    } else {
-      res.redirect(req.baseUrl);
+        throw err;
+      }
     }
-  });
+  })();
 });
 
 //部屋情報の更新
-router.post('/update', security.authorize(), function (req, res, next) {
-  let inObj = {};
-  inObj.id = req.body.id;
-  inObj.place = req.body.place;
-  inObj.floor = req.body.floor;
-  inObj.person = req.body.person;
-  inObj.name = req.body.name;
-  inObj.ymd_start = req.body.ymd_start;
-  inObj.ymd_end = req.body.ymd_end;
-  inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = req.user.id;
-  inObj.before_ymd_end = req.body.before_ymd_end;
-  m_room.update(inObj, (err,retObj) => {
-    if (err) { next(err) };
+router.post("/update", security.authorize(), (req, res, next) => {
+  (async () => {
+    let inObjRoom = {};
+    inObjRoom.id = req.body.id;
+    inObjRoom.place = req.body.place;
+    inObjRoom.floor = req.body.floor;
+    inObjRoom.person = req.body.person;
+    inObjRoom.name = req.body.name;
+    inObjRoom.ymd_start = req.body.ymd_start;
+    inObjRoom.ymd_end = req.body.ymd_end;
+    inObjRoom.ymd_upd = tool.getToday();
+    inObjRoom.id_upd = req.user.id;
+    inObjRoom.before_ymd_end = req.body.before_ymd_end;
+    const retObjRoom = await m_room.update(inObjRoom);
     //更新時に対象レコードが存在しない場合
-    if (retObj.changedRows === 0) {
-      res.render('admin/roomform', {
+    if (retObjRoom.changedRows === 0) {
+      res.render("admin/roomform", {
         room: inObj,
-        mode: 'update',
-        message: '更新対象がすでに削除されています',
+        mode: "update",
+        message: "更新対象がすでに削除されています",
       });
     } else {
       res.redirect(req.baseUrl);
     }
-  });
+  })();
 });
 
 //部屋情報の削除
-router.post('/delete', security.authorize(), function (req, res, next) {
-  let inObj = {};
-  inObj.id = req.body.id;
-  inObj.id_upd = req.user.id;
+router.post("/delete", security.authorize(), (req, res, next) => {
+  (async () => {
+    let inObjRoom = {};
+    inObjRoom.id = req.body.id;
+    inObjRoom.id_upd = req.user.id;
 
-  m_room.remove( inObj, (err, retObj) => {
-    if (err) {
-      // 外部制約参照エラーの場合
-      if (err.errno === 1451) {
-        m_room.findPKey(id, (err, retObj) => {
-          if (err) { next(err)};
-          res.render('admin/roomform', {
-            room: retObj,
-            mode: 'update',
-            message: '削除対象の部屋は使用されています',
-          });
-        });
-      } else {
-        next(err)
-      }
-    } else {
+    try {
+      const retObjRoom = await m_room.remove(inObjRoom);
       res.redirect(req.baseUrl);
+    } catch (err) {
+      // 外部制約参照エラーの場合
+      if (err && err.errno === 1451) {
+        try {
+          const retObjRoom_again = await m_room.findPKey(inObjRoom.id);
+          res.render("admin/roomform", {
+            room: retObjRoom_again,
+            mode: "update",
+            message: "削除対象の部屋は使用されています",
+          });
+        } catch (err) {
+          throw err;
+        }
+      } else {
+        throw err;
+      }
     }
-  });
+  })();
 });
 
 module.exports = router;

@@ -1,20 +1,16 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const security = require('../util/security');
+const security = require("../util/security");
 const perinfo = require("../model/perinfo");
 
-// const log4js = require("log4js");
-// const logger = log4js.configure('./config/log4js-config.json').getLogger();
-
 // index
-router.get('/', security.authorize(), function (req, res, next) {
-
-  perinfo.selectAll((err,retObj) => {
-    if (err) { throw err};
-    res.render('top', {
-      results: retObj,
+router.get("/", security.authorize(), (req, res, next) => {
+  (async () => {
+    const retObjPer = await perinfo.selectAll();
+    res.render("top", {
+      results: retObjPer,
     });
-  })
+  })();
 });
 
 module.exports = router;

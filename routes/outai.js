@@ -1,347 +1,292 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
-const security = require('../util/security');
-const tool = require('../util/tool');
+const security = require("../util/security");
+const tool = require("../util/tool");
 
-const m_sq = require('../model/sq');
-const m_outai = require('../model/outais');
-const m_company = require('../model/company');
+const m_sq = require("../model/sq");
+const m_outai = require("../model/outais");
+const m_company = require("../model/companies");
+
+const count_perpage = 20;
 
 //応対履歴検索画面の初期表示
-router.get('/', security.authorize(), function (req, res, next) {
-
-  m_company.findForSelect((err, retObj) => {
-    if (err) { next(err) };
-    res.render('outais', {
+router.get("/", security.authorize(), (req, res, next) => {
+  (async () => {
+    const retObjSelectCompany = await m_company.findForSelect();
+    res.render("outais", {
       results: null,
       searchvalue: null,
       selectCompany: null,
-      companies: retObj,
+      companies: retObjSelectCompany,
       page_current: 0,
       page_max: 0,
       count_all: 0,
       includecomplete: null,
     });
-  });
+  })();
 });
 
-const count_perpage = 20;
-
 //検索文字列を指定して、応対履歴検索
-router.post('/', security.authorize(), function (req, res, next) {
+router.post("/", security.authorize(), (req, res, next) => {
+  (async () => {
+    const searchvalue = req.body.searchvalue; //検索文字列
+    const pagecount_current = req.body.page_current; //現在表示されているページ
+    const page_action = req.body.pageaction; //ページングアクション
 
-  const searchvalue = req.body.searchvalue;        //検索文字列
-  const pagecount_current = req.body.page_current; //現在表示されているページ
-  const page_action = req.body.pageaction;         //ページングアクション
+    const id_company = req.body.id_company;
+    const includecomplete = req.body.includecomplete;
 
-  const id_company = req.body.id_company;
-  const includecomplete = req.body.includecomplete;
+    //ページングアクションにより、表示対象のページ数を確定する
+    const pagecount_target =
+      page_action === "next"
+        ? parseInt(pagecount_current) + 1
+        : page_action === "prev"
+        ? parseInt(pagecount_current) - 1
+        : 1;
 
-  //ページングアクションにより、表示対象のページ数を確定する
-  let pagecount_target;
-  if (page_action === 'next') {
-    pagecount_target = parseInt(pagecount_current) + 1;
-  } else if (page_action === 'prev') {
-    pagecount_target = parseInt(pagecount_current) - 1;
-  } else {
-    pagecount_target = 1;
-  }
-  //表示開始位置を確定する
-  const offset = (pagecount_target - 1) * count_perpage;
+    //表示開始位置を確定する
+    const offset = (pagecount_target - 1) * count_perpage;
 
-  let query;
-  let query2;
-  if (id_company) {
-    if (includecomplete) {
-      query = ''
-      // query = 'select count(*) as count_all from outais where id_company = "' + id_company + '" and content like "%' + searchvalue + '%"'
-      query = 'select COUNT(*) as count_all FROM ( SELECT o.*,c.name as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id ) ocu WHERE ocu.id_company = "' + id_company + '" and (ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%" )'
-      // query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where id_company = "' + id_company + '" and content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
-      query2 = 'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.id_company = "' + id_company + '" AND ( ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%") ORDER BY ocu.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+    let query;
+    let query2;
+    if (id_company) {
+      if (includecomplete) {
+        // query = 'select count(*) as count_all from outais where id_company = "' + id_company + '" and content like "%' + searchvalue + '%"'
+        query =
+          'select COUNT(*) as count_all FROM ( SELECT o.*,c.name as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id ) ocu WHERE ocu.id_company = "' +
+          id_company +
+          '" and (ocu.content LIKE "%' +
+          searchvalue +
+          '%" OR ocu.name_company LIKE "%' +
+          searchvalue +
+          '%" )';
+        // query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where id_company = "' + id_company + '" and content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+        query2 =
+          'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.id_company = "' +
+          id_company +
+          '" AND ( ocu.content LIKE "%' +
+          searchvalue +
+          '%" OR ocu.name_company LIKE "%' +
+          searchvalue +
+          '%") ORDER BY ocu.ymdhms_upd desc limit ' +
+          count_perpage +
+          " offset " +
+          offset;
+      } else {
+        // query = 'select count(*) as count_all from outais where id_company = "' + id_company + '" and status != "完了" and content like "%' + searchvalue + '%"'
+        query =
+          'select COUNT(*) as count_all FROM ( SELECT o.*,c.name as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id ) ocu WHERE ocu.id_company = "' +
+          id_company +
+          '" and ocu.status != "完了" and (ocu.content LIKE "%' +
+          searchvalue +
+          '%" OR ocu.name_company LIKE "%' +
+          searchvalue +
+          '%" )';
+        // query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where id_company = "' + id_company + '" and status != "完了" and content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+        query2 =
+          'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.id_company = "' +
+          id_company +
+          '" AND ocu.status != "完了" AND ( ocu.content LIKE "%' +
+          searchvalue +
+          '%" OR ocu.name_company LIKE "%' +
+          searchvalue +
+          '%") ORDER BY ocu.ymdhms_upd desc limit ' +
+          count_perpage +
+          " offset " +
+          offset;
+      }
     } else {
-      // query = 'select count(*) as count_all from outais where id_company = "' + id_company + '" and status != "完了" and content like "%' + searchvalue + '%"'
-      query = 'select COUNT(*) as count_all FROM ( SELECT o.*,c.name as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id ) ocu WHERE ocu.id_company = "' + id_company + '" and ocu.status != "完了" and (ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%" )'
-      // query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where id_company = "' + id_company + '" and status != "完了" and content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
-      query2 = 'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.id_company = "' + id_company + '" AND ocu.status != "完了" AND ( ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%") ORDER BY ocu.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+      if (includecomplete) {
+        // query = 'select count(*) as count_all from outais where content like "%' + searchvalue + '%"'
+        query =
+          'select COUNT(*) as count_all FROM ( SELECT o.*,c.name as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id ) ocu WHERE (ocu.content LIKE "%' +
+          searchvalue +
+          '%" OR ocu.name_company LIKE "%' +
+          searchvalue +
+          '%" )';
+        // query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+        query2 =
+          'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ( ocu.content LIKE "%' +
+          searchvalue +
+          '%" OR ocu.name_company LIKE "%' +
+          searchvalue +
+          '%") ORDER BY ocu.ymdhms_upd desc limit ' +
+          count_perpage +
+          " offset " +
+          offset;
+      } else {
+        // query = 'select count(*) as count_all from outais where status != "完了" and content like "%' + searchvalue + '%"'
+        query =
+          'select COUNT(*) as count_all FROM ( SELECT o.*,c.name as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id ) ocu WHERE ocu.status != "完了" and (ocu.content LIKE "%' +
+          searchvalue +
+          '%" OR ocu.name_company LIKE "%' +
+          searchvalue +
+          '%" )';
+        // query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where status != "完了" and content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
+        query2 =
+          'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.status != "完了" AND ( ocu.content LIKE "%' +
+          searchvalue +
+          '%" OR ocu.name_company LIKE "%' +
+          searchvalue +
+          '%") ORDER BY ocu.ymdhms_upd desc limit ' +
+          count_perpage +
+          " offset " +
+          offset;
+      }
     }
-  } else {
-    if (includecomplete) {
-      // query = 'select count(*) as count_all from outais where content like "%' + searchvalue + '%"'
-      query = 'select COUNT(*) as count_all FROM ( SELECT o.*,c.name as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id ) ocu WHERE (ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%" )'
-      // query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
-      query2 = 'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ( ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%") ORDER BY ocu.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
-    } else {
-      // query = 'select count(*) as count_all from outais where status != "完了" and content like "%' + searchvalue + '%"'
-      query = 'select COUNT(*) as count_all FROM ( SELECT o.*,c.name as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id ) ocu WHERE ocu.status != "完了" and (ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%" )'
-      // query2 = 'select o.*, u1.name as name_add, u2.name as name_upd, ifnull(c.name,"会社指定なし") as name_company from ( select * from outais where status != "完了" and content like "%' + searchvalue + '%" ) as o left outer join users as u1 on o.id_add = u1.id left outer join users as u2 on o.id_upd = u2.id left outer join companies as c on o.id_company = c.id order by o.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
-      query2 = 'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.status != "完了" AND ( ocu.content LIKE "%' + searchvalue + '%" OR ocu.name_company LIKE "%' + searchvalue + '%") ORDER BY ocu.ymdhms_upd desc limit ' + count_perpage + ' offset ' + offset
-    }
-  }
 
-  m_outai.selectSQL(query, (err, retObj) => {
-    if (err) { next(err) };
-    let count_all;
-    count_all = retObj[0].count_all;
+    const retObjSelectOutaiCount = await m_outai.setSQL(query);
+    const count_all = retObjSelectOutaiCount[0].count_all;
     let pagecount_max = parseInt(count_all / count_perpage);
-    if ((count_all % count_perpage) > 0) {
+    if (count_all % count_perpage > 0) {
       pagecount_max += 1;
     }
-    m_outai.selectSQL(query2, (err, retObj) => {
-      if (err) { next(err) };
-      let outais = retObj;
-      let companies;
-      m_company.findForSelect((err, retObj) => {
-        if (err) { next(err) };
-        companies = retObj;
-        if (id_company) {
-          let inObjC = {};
-          inObjC.id = id_company;
-          m_company.findPKey(inObjC, (err, retObj) => {
-            if (err) { next(err) };
-            res.render('outais', {
-              results: outais,
-              searchvalue: searchvalue,
-              selectCompany: retObj,
-              companies: companies,
-              page_current: pagecount_target,
-              page_max: pagecount_max,
-              count_all: count_all,
-              includecomplete: includecomplete,
-            });
-          });
-        } else {
-          res.render('outais', {
-            results: outais,
-            searchvalue: searchvalue,
-            selectCompany: null,
-            companies: companies,
-            page_current: pagecount_target,
-            page_max: pagecount_max,
-            count_all: count_all,
-            includecomplete: includecomplete,
-          });
-        }
-      });
+    const retObjOutai = await m_outai.setSQL(query2);
+    const retObjSelectCompany = await m_company.findForSelect();
+    const retObjCompany = id_company
+      ? await m_company.findPKey(id_company, "99991231")
+      : null;
+    res.render("outais", {
+      results: retObjOutai,
+      searchvalue: searchvalue,
+      selectCompany: retObjCompany,
+      companies: retObjSelectCompany,
+      page_current: pagecount_target,
+      page_max: pagecount_max,
+      count_all: count_all,
+      includecomplete: includecomplete,
     });
-  });
+  })();
 });
 
 //応対履歴IDをもとに応対履歴情報表示へ
-router.get('/:id_outai', security.authorize(), function (req, res, next) {
+router.get("/:id_outai", security.authorize(), (req, res, next) => {
+  (async () => {
+    const retObjOutai = await m_outai.findPKey(req.params.id_outai);
+    const retObjCompany = retObjOutai.id_company
+      ? await m_company.findPKey(retObjOutai.id_company, "99991231")
+      : null;
 
-  let outai = {};
-
-  let inObj = {};
-  inObj.id = req.params.id_outai;
-  m_outai.findPKey(inObj, (err, retObj) => {
-    if (err) { next(err) };
-    outai = retObj;
-
-    if (outai.id_company) {
-      let inObjC = {};
-      inObjC.id = outai.id_company;
-      m_company.findPKey(inObjC, (err, retObj) => {
-        if (err) { next(err) };
-        res.render('outai', {
-          outai: outai,
-          selectCompany: retObj,
-          errors: null,
-        });
-      });
-    } else {
-      res.render('outai', {
-        outai: outai,
-        selectCompany: null,
-        errors: null,
-      });
-    }
-  });
+    res.render("outai", {
+      outai: retObjOutai,
+      selectCompany: retObjCompany,
+      errors: null,
+    });
+  })();
 });
 
 //応対履歴情報表示から「更新」ボタンで応対履歴を更新するフォームへ
-router.get('/update/:id_outai', security.authorize(), function (req, res, next) {
+router.get("/update/:id_outai", security.authorize(), (req, res, next) => {
+  (async () => {
+    const retObjOutai = await m_outai.findPKey(req.params.id_outai);
+    const retObjSelectCompany = await m_company.findForSelect();
 
-  let outai = {};
-  let companies = {};
-
-  let inObj = {};
-  inObj.id = req.params.id_outai;
-  m_outai.findPKey(inObj, (err, retObj) => {
-    if (err) { next(err) };
-    outai = retObj;
-
-    m_company.findForSelect((err, retObj) => {
-      if (err) { next(err) };
-      companies = retObj;
-
-      if (outai.id_company) {
-        let inObjC = {};
-        inObjC.id = outai.id_company;
-        m_company.findPKey(inObjC, (err, retObj) => {
-          if (err) { next(err) };
-          res.render('outaiform', {
-            outai: outai,
-            companies: companies,
-            selectCompany: retObj,
-            mode: 'update',
-            errors: null,
-          });
-        });
-      } else {
-        res.render('outaiform', {
-          outai: outai,
-          companies: companies,
-          selectCompany: null,
-          mode: 'update',
-          errors: null,
-        });
-      };
+    const retObjCompany = retObjOutai.id_company
+      ? await m_company.findPKey(retObjOutai.id_company, "99991231")
+      : null;
+    res.render("outaiform", {
+      outai: retObjOutai,
+      companies: retObjSelectCompany,
+      selectCompany: retObjCompany,
+      mode: "update",
+      errors: null,
     });
-  });
+  })();
 });
 
 //会社IDをもとに応対履歴を追加するフォームへ
-router.get('/insert/:id_company', security.authorize(), function (req, res, next) {
-
-  let company = {};
-
-  let inObj = {};
-  inObj.id = req.params.id_company;
-
-  m_company.findPKey(inObj, (err, retObj) => {
-    if (err) { next(err) };
-    company = retObj;
-
-    m_company.findForSelect((err, retObj) => {
-      if (err) { next(err) };
-      res.render('outaiform', {
-        outai: null,
-        companies: retObj,
-        selectCompany: company,
-        mode: 'insert',
-        errors: null,
-      });
+router.get("/insert/:id_company", security.authorize(), (req, res, next) => {
+  (async () => {
+    const retObjCompany = await m_company.findPKey(
+      req.params.id_company,
+      "99991231"
+    );
+    const retObjSelectCompany = await m_company.findForSelect();
+    res.render("outaiform", {
+      outai: null,
+      companies: retObjSelectCompany,
+      selectCompany: retObjCompany,
+      mode: "insert",
+      errors: null,
     });
-  });
+  })();
 });
 
 // 応対履歴情報の登録
-router.post('/insert', security.authorize(), function (req, res, next) {
+router.post("/insert", security.authorize(), (req, res, next) => {
+  (async () => {
+    let inObjOutai = getOutaiData(req.body);
+    inObjOutai.ymdhms_add = tool.getTodayTime();
+    inObjOutai.ymdhms_upd = tool.getTodayTime();
+    inObjOutai.id_add = req.user.id;
+    inObjOutai.id_upd = req.user.id;
 
-  let inObj = getRirekiData(req.body);
-  inObj.ymdhms_add = tool.getTodayTime();
-  inObj.ymdhms_upd = tool.getTodayTime();
-  inObj.id_add = req.user.id;
-  inObj.id_upd = req.user.id;
+    //入力チェック
+    let errors;
+    errors = validateData(req.body);
 
-  //エラー情報
-  let errors;
-
-  //会社情報
-  let company = {};
-  let inObjC = {};
-  inObjC.id = inObj.id_company;
-
-  //入力チェック
-  errors = validateData(req.body);
-
-  if (errors) {
-
-    //すでに会社を選択している場合
-    if (inObj.id_company) {
-
-      m_company.findPKey(inObjC, (err, retObj) => {
-        if (err) { next(err) };
-        company = retObj;
-
-        m_company.findForSelect((err, retObj) => {
-          if (err) { next(err) };
-          res.render('outaiform', {
-            outai: inObj,
-            companies: retObj,
-            selectCompany: company,
-            mode: 'insert',
-            errors: errors,
-          });
-        });
-      });
-
-      //会社を選択していない場合
-    } else {
-      m_company.findForSelect((err, retObj) => {
-        if (err) { next(err) };
-        res.render('outaiform', {
-          outai: inObj,
-          companies: retObj,
-          selectCompany: null,
-          mode: 'insert',
-          errors: errors,
-        });
-      });
-    }
-    return;
-  }
-
-  //応対履歴IDの採番号
-  m_sq.getSqOutai((err, retObj) => {
-    if (err) { next(err); }
-    inObj.id = 'O' + ('000000000' + retObj.no).slice(-9);
-    m_outai.insert(inObj, (err, retObj) => {
-      //個人のidは自動採番とするため、Duplicateエラーは考慮不要
-      if (err) { next(err); }
-      res.redirect('/outai');
-    });
-  });
-});
-
-
-//応対履歴情報の更新
-router.post('/update', security.authorize(), function (req, res, next) {
-  let inObj = getRirekiData(req.body);
-  inObj.ymdhms_upd = tool.getTodayTime();
-  inObj.id_upd = req.user.id;
-
-  //エラー情報
-  let errors;
-
-  //入力チェック
-  errors = validateData(req.body);
-  if (errors) {
-    m_company.findForSelect((err, retObj) => {
-      if (err) { next(err) };
-      res.render('outaiform', {
+    if (errors) {
+      //すでに会社を選択している場合
+      const retObjCompany = inObjOutai.id_company
+        ? await m_company.findPKey(inObjOutai.id_company, "99991231")
+        : null;
+      const retObjSelectCompany = await m_company.findForSelect();
+      res.render("outaiform", {
         outai: inObj,
         companies: retObj,
-        mode: 'update',
+        selectCompany: company,
+        mode: "insert",
         errors: errors,
       });
-    });
-    return;
-  }
+    }
 
-  m_outai.update(inObj, (err, retObj) => {
-    if (err) { next(err); }
-    if (retObj.changedRows === 0) {
-      let errors = {};
-      errors.common = '更新対象はすでに削除されています';
-      m_company.findForSelect((err, retObj) => {
-        if (err) { next(err) };
-        res.render('outaiform', {
-          outai: inObj,
-          companies: retObj,
-          mode: 'update',
-          errors: errors,
-        });
+    //応対履歴IDの採番号
+    const retObjOutaiSq = await m_sq.getSqOutai();
+    inObjOutai.id = "O" + ("000000000" + retObjOutaiSq.no).slice(-9);
+    const retObjOutai = await m_outai.insert(inObjOutai);
+    res.redirect("/outai");
+  })();
+});
+
+//応対履歴情報の更新
+router.post("/update", security.authorize(), (req, res, next) => {
+  (async () => {
+    let inObjOutai = getOutaiData(req.body);
+    inObjOutai.ymdhms_upd = tool.getTodayTime();
+    inObjOutai.id_upd = req.user.id;
+
+    //入力チェック
+    let errors;
+    errors = validateData(req.body);
+
+    const retObjSelectCompany = await m_company.findForSelect();
+
+    if (errors) {
+      res.render("outaiform", {
+        outai: inObj,
+        companies: retObjSelectCompany,
+        mode: "update",
+        errors: errors,
+      });
+    }
+
+    const retObjOutai = await m_outai.update(inObjOutai);
+    if (retObjOutai.changedRows === 0) {
+      errors.common = "更新対象はすでに削除されています";
+      res.render("outaiform", {
+        outai: inObjOutai,
+        companies: retObjSelectCompany,
+        mode: "update",
+        errors: errors,
       });
     } else {
-      res.redirect('/outai');
+      res.redirect("/outai");
     }
-  });
+  })();
 });
 
 function validateData(body) {
-
   let isValidated = true;
   let errors = {};
 
@@ -358,7 +303,7 @@ function validateData(body) {
   return isValidated ? undefined : errors;
 }
 
-function getRirekiData(body) {
+function getOutaiData(body) {
   let inObj = {};
   inObj.id = body.id;
   inObj.id_company = body.id_company;

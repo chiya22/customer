@@ -1,324 +1,277 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
-const security = require('../util/security');
-const tool = require('../util/tool');
+const security = require("../util/security");
+const tool = require("../util/tool");
 
-const m_company = require('../model/company');
-const m_person = require('../model/person');
-const m_sq = require('../model/sq');
+const m_company = require("../model/companies");
+const m_person = require("../model/persons");
+const m_sq = require("../model/sq");
 
 // 会社ページより「個人登録」をクリック
-router.get('/add/:id_company', security.authorize(), function (req, res, next) {
+router.get("/add/:id_company", security.authorize(), (req, res, next) => {
+  (async () => {
+    //会社情報
+    const retObjCompany = await m_company.findPKey(
+      req.params.id_company,
+      "99991231"
+    );
 
-  let company = {};
+    // 会社情報のセレクトボックス情報
+    const retObjSelectCompany = await m_company.findForSelect();
 
-  //会社情報
-  let inObj = {};
-  inObj.id = req.params.id_company;
-  m_company.findPKey(inObj, (err, retObj) => {
-    if (err) { next(err) };
-    company = retObj;
-
-    //会社セレクト情報
     let inObjP = {};
     inObjP.id_company = req.params.id_company;
-    m_company.findForSelect((err, retObj) => {
-      if (err) { next(err) };
-      res.render('personform', {
-        person: inObjP,
-        company: company,
-        companies: retObj,
-        mode: 'insert',
-        errors: null,
-      });
+
+    res.render("personform", {
+      person: inObjP,
+      company: retObjCompany,
+      companies: retObjSelectCompany,
+      mode: "insert",
+      errors: null,
     });
-  })
+  })();
 });
 
 // TOPページから「個人リンク選択」での個人ページへ遷移
-router.get('/:id', security.authorize(), function (req, res, next) {
-  let inObj = {};
-  inObj.id = req.params.id;
-  let person;
-  m_person.findPKey(inObj, (err, retObj) => {
-    if (err) { next(err); }
-    person = retObj;
-    if (person.id_company) {
-      let inObjC = {};
-      inObjC.id = person.id_company;
-      m_company.findPKey(inObjC, (err, retObj) => {
-        if (err) { next(err); }
-        res.render('person', {
-          person: person,
-          companyname: retObj.name,
-        });
-      })
+router.get("/:id", security.authorize(), (req, res, next) => {
+  (async () => {
+    const retObjPerson = await m_person.findPKey(req.params.id, "99991231");
+
+    if (retObjPerson.id_company) {
+      const retObjCompany = await m_company.findPKey(
+        retObjPerson.id_company,
+        "99991231"
+      );
+      res.render("person", {
+        person: retObjPerson,
+        companyname: retObjCompany.name,
+      });
     } else {
-      res.render('person', {
-        person: person,
+      res.render("person", {
+        person: retObjPerson,
         companyname: null,
       });
     }
-  });
+  })();
 });
 
 // 個人ページから「更新」リンクでの個人（編集）ページへの遷移
-router.get('/update/:id', security.authorize(), function (req, res, next) {
-  let companies;
-  let person;
+router.get("/update/:id", security.authorize(), (req, res, next) => {
+  (async () => {
+    const retObjPerson = await m_person.findPKey(req.params.id, "99991231");
+    const retObjCompany = await m_company.findPKey(
+      retObjPerson.id_company,
+      "99991231"
+    );
+    const retObjSelectCompany = await m_company.findForSelect();
 
-  //個人情報
-  let inObj = {};
-  inObj.id = req.params.id;
-  m_person.findPKey(inObj, (err, retObj) => {
-    if (err) { next(err) };
-    person = retObj;
-
-    //会社情報
-    let inObjC = {};
-    inObjC.id = person.id_company;
-    m_company.findPKey(inObjC, (err, retObj) => {
-      if (err) { next(err) };
-      company = retObj;
-
-      //会社セレクト情報
-      m_company.findForSelect((err, retObj) => {
-        if (err) { next(err) };
-        res.render('personform', {
-          person: person,
-          company: company,
-          companies: retObj,
-          mode: 'update',
-          errors: null,
-        });
-      });
+    res.render("personform", {
+      person: retObjPerson,
+      company: retObjCompany,
+      companies: retObjSelectCompany,
+      mode: "update",
+      errors: null,
     });
-  });
+  })();
 });
 
 // 個人ページから「削除」リンクでの個人（編集）ページへの遷移
-router.get('/delete/:id', security.authorize(), function (req, res, next) {
+router.get("/delete/:id", security.authorize(), (req, res, next) => {
+  (async () => {
+    const retObjPerson = await m_person.findPKey(req.params.id, "99991231");
+    const retObjCompany = await m_company.findPKey(
+      retObjPerson.id_company,
+      "99991231"
+    );
 
-  //個人情報
-  let person = {};
-  let inObj = {};
-  inObj.id = req.params.id;
-  m_person.findPKey(inObj, (err, retObj) => {
-    if (err) { next(err) };
-    person = retObj;
-
-    //会社情報
-    let inObjC = {};
-    inObjC.id = person.id_company;
-    m_company.findPKey(inObjC, (err, retObj) => {
-      if (err) { next(err); }
-      res.render('personform', {
-        person: person,
-        company: retObj,
-        companies: null,
-        mode: 'delete',
-        errors: null,
-      });
+    res.render("personform", {
+      person: retObjPerson,
+      company: retObjCompany,
+      companies: null,
+      mode: "delete",
+      errors: null,
     });
-  });
+  })();
 });
 
 // 個人情報の登録
-router.post('/insert', security.authorize(), function (req, res, next) {
-  let inObj = getPersonData(req.body);
-  inObj.ymd_start = tool.getToday();
-  inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = req.user.id;
+router.post("/insert", security.authorize(), (req, res, next) => {
+  (async () => {
+    let inObjPerson = getPersonData(req.body);
+    inObjPerson.ymd_start = tool.getToday();
+    inObjPerson.ymd_upd = tool.getToday();
+    inObjPerson.id_upd = req.user.id;
 
-  //エラー情報
-  let errors;
+    //エラー情報
+    let errors;
 
-  //権限チェック
-  if (req.user.role !== '社員') {
-    errors.role = "社員権限のみ実行できます";
-  }
+    //権限チェック
+    if (req.user.role !== "社員") {
+      errors.role = "社員権限のみ実行できます";
+    }
 
-  //入力チェック
-  errors = validateData(req.body);
-  if (errors) {
+    //入力チェック
+    errors = validateData(req.body);
 
-    //会社情報
-    let company = {};
-    let inObjC = {};
-    inObjC.id = inObj.id_company;
-    m_company.findPKey(inObjC, (err, retObj) => {
-      if (err) { next(err) };
-      company = retObj;
+    if (errors) {
+      //会社情報
+      const retObjCompany = await m_company.findPKey(
+        inObjPerson.id_company,
+        "99991231"
+      );
+      const retObjSelectCompany = await m_company.findForSelect();
 
-      //会社セレクト情報
-      m_company.findForSelect((err, retObj) => {
-        if (err) { next(err) };
-        res.render('personform', {
-          person: inObj,
-          company: company,
-          companies: retObj,
-          mode: 'insert',
-          errors: errors,
-        });
+      res.render("personform", {
+        person: inObjPerson,
+        company: retObjCompany,
+        companies: retObjSelectCompany,
+        mode: "insert",
+        errors: errors,
       });
-    });
-    return;
-  }
+    } else {
+      //個人IDの採番号
+      const retObjPersonNo = await m_sq.getSqPerson();
+      inObjPerson.id = "P" + ("00000" + retObjPersonNo.no).slice(-5);
+      const retObjPerson = await m_person.insert(inObjPerson);
 
-  //個人IDの採番号
-  m_sq.getSqPerson((err, retObj) => {
-    if (err) { next(err); }
-    inObj.id = 'P' + ('00000' + retObj.no).slice(-5);
-    m_person.insert(inObj, (err, retObj) => {
-      //個人のidは自動採番とするため、Duplicateエラーは考慮不要
-      if (err) { next(err); }
-      if (inObj.id_company) {
-        res.redirect('/company/' + inObj.id_company);
+      // 会社に紐づいている場合は会社情報に戻る
+      if (inObjPerson.id_company) {
+        res.redirect("/company/" + inObjPerson.id_company);
       } else {
-        res.redirect('/');
+        res.redirect("/");
       }
-    });
-  });
+    }
+  })();
 });
 
 //個人情報の更新
-router.post('/update', security.authorize(), function (req, res, next) {
-  let inObj = getPersonData(req.body);
-  inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = req.user.id;
+router.post("/update", security.authorize(), (req, res, next) => {
+  (async () => {
+    let inObjPerson = getPersonData(req.body);
+    inObjPerson.ymd_upd = tool.getToday();
+    inObjPerson.id_upd = req.user.id;
 
-  //会社情報
-  let company = {};
-  let inObjC = {};
-  inObjC.id = inObj.id_company;
-  m_company.findPKey(inObjC, (err, retObj) => {
-    if (err) { next(err) };
-    company = retObj;
-  });
+    //会社情報
+    const retObjCompany = await m_company.findPKey(
+      inObjPerson.id_company,
+      "99991231"
+    );
 
-  //エラー情報
-  let errors;
+    //エラー情報
+    let errors;
 
-  //権限チェック
-  if (req.user.role !== '社員') {
-    errors.role = "社員権限のみ実行できます";
-  }
-  //入力チェック
-  errors = validateData(req.body);
-  if (errors) {
-    m_company.findForSelect((err, retObj) => {
-      if (err) { next(err) };
-      res.render('personform', {
-        person: inObj,
-        company: company,
-        companies: retObj,
-        mode: 'update',
+    //権限チェック
+    if (req.user.role !== "社員") {
+      errors.role = "社員権限のみ実行できます";
+    }
+
+    //入力チェック
+    errors = validateData(req.body);
+
+    if (errors) {
+      const retObjSelectCompany = await m_company.findForSelect();
+      res.render("personform", {
+        person: inObjPerson,
+        company: retObjCompany,
+        companies: retObjSelectCompany,
+        mode: "update",
         errors: errors,
       });
-    });
-    return;
-  }
-
-  m_person.update(inObj, (err, retObj) => {
-    if (err) { next(err); }
-    if (retObj.changedRows === 0) {
-      m_company.findForSelect((err, retObj) => {
-        if (err) { next(err); }
+    } else {
+      const retObjPerson = await m_person.update(inObjPerson);
+      if (retObjPerson.changedRows === 0) {
+        const retObjSelectCompany = await m_company.findForSelect();
         let errors = {};
-        errors.common = '更新対象はすでに削除されています';
-        res.render('personform', {
-          person: inObj,
-          company: company,
-          companies: retObj,
-          mode: 'update',
+        errors.common = "更新対象はすでに削除されています";
+        res.render("personform", {
+          person: inObjPerson,
+          company: retObjCompany,
+          companies: retObjSelectCompany,
+          mode: "update",
           errors: errors,
         });
-      });
-    } else {
-      if (inObj.id_company) {
-        res.redirect('/company/' + inObj.id_company);
       } else {
-        res.redirect('/');
+        // 会社に紐づいている場合は会社情報に戻る
+        if (inObjPerson.id_company) {
+          res.redirect("/company/" + inObjPerson.id_company);
+        } else {
+          res.redirect("/");
+        }
       }
     }
-  });
+  })();
 });
 
 //個人情報の削除
-router.post('/delete', security.authorize(), function (req, res, next) {
+router.post("/delete", security.authorize(), (req, res, next) => {
+  (async () => {
+    let inObjPerson = getPersonData(req.body);
 
-  let inObj = getPersonData(req.body);
-  // 解約日が設定されていない場合は、解約日も設定する
-  if (inObj.ymd_kaiyaku === '99991231') {
-    inObj.ymd_kaiyaku = tool.getToday();
-  }
-  inObj.ymd_end = tool.getToday();
-
-  //会社情報
-  let company = {};
-  let inObjC = {};
-  inObjC.id = inObj.id_company;
-  m_company.findPKey(inObjC, (err, retObj) => {
-    if (err) { next(err) };
-    company = retObj;
-  });
-
-  //エラー情報
-  let errors;
-
-  //権限チェック
-  if (req.user.role !== '社員') {
-    errors.role = "社員権限のみ実行できます";
-  }
-
-  //入力チェック
-  if (errors) {
-    res.render('personform', {
-      person: inObj,
-      company: company,
-      companies: null,
-      mode: 'delete',
-      errors: errors,
-    });
-    return;
-  }
-  
-  m_person.remove(inObj, (err, retObj) => {
-    if (err) { next(err); }
-    if (req.body.id_company) {
-      res.redirect('/company/' + req.body.id_company);
-    } else {
-      res.redirect('/');
+    // 解約日が設定されていない場合は、解約日も設定する
+    if (inObjPerson.ymd_kaiyaku === "99991231") {
+      inObjPerson.ymd_kaiyaku = tool.getToday();
     }
-  });
+    inObjPerson.ymd_end = tool.getToday();
+
+    //会社情報
+    const retObjCompany = await m_company.findPKey(
+      inObjPerson.id_company,
+      "99991231"
+    );
+
+    //エラー情報
+    let errors;
+
+    //権限チェック
+    if (req.user.role !== "社員") {
+      errors.role = "社員権限のみ実行できます";
+    }
+
+    //入力チェック
+    if (errors) {
+      res.render("personform", {
+        person: inObjPerson,
+        company: retObjCompany,
+        companies: null,
+        mode: "delete",
+        errors: errors,
+      });
+    } else {
+      const retObjPerson = await m_person.remove(inObjPerson);
+      // 会社に紐づいている場合は会社情報に戻る
+      if (req.body.id_company) {
+        res.redirect("/company/" + req.body.id_company);
+      } else {
+        res.redirect("/");
+      }
+    }
+  })();
 });
 
 //個人情報の解約
-router.post('/cancel', security.authorize(), function (req, res, next) {
+router.post("/cancel", security.authorize(), (req, res, next) => {
+  (async () => {
+    let inObjPerson = {};
+    inObjPerson.id = req.body.id;
+    inObjPerson.ymd_kaiyaku = req.body.selected_ymd_kaiyaku
+      ? req.body.selected_ymd_kaiyaku
+      : tool.getToday();
+    inObjPerson.ymd_upd = tool.getToday();
+    inObjPerson.id_upd = req.user.id;
 
-  let inObj = {};
-  inObj.id = req.body.id;
-  if (req.body.selected_ymd_kaiyaku) {
-    inObj.ymd_kaiyaku = req.body.selected_ymd_kaiyaku;
-  } else {
-    inObj.ymd_kaiyaku = tool.getToday();
-  }
-  inObj.ymd_upd = tool.getToday();
-  inObj.id_upd = req.user.id;
+    const retObjPerson = await m_person.cancel(inObjPerson);
 
-  m_person.cancel(inObj, (err, retObj) => {
-    if (err) { next(err) }
-    if ((req.body.id_company) && (req.body.id_company !== '')) {
-      res.redirect('/company/' + req.body.id_company);
+    // 会社IDが設定されている場合は、会社情報へ遷移
+    if (req.body.id_company && req.body.id_company !== "") {
+      res.redirect("/company/" + req.body.id_company);
     } else {
-      res.redirect('/');
+      res.redirect("/");
     }
-  });
+  })();
 });
 
-
-function validateData(body) {
+const validateData = (body) => {
 
   let isValidated = true;
   let errors = {};
@@ -392,7 +345,7 @@ function validateData(body) {
   return isValidated ? undefined : errors;
 }
 
-function getPersonData(body) {
+const getPersonData = (body) => {
   let inObj = {};
   inObj.id = body.id;
   inObj.id_company = body.id_company;
