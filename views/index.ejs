@@ -15,7 +15,7 @@
           <form name="searchform" method="post" action="/">
             <div class="searchform__top">
               <input class="form__item-style width-base" type="text" id="field_search" name="searchvalue" placeholder="検索文字を入力してください"
-                value="<%= searchvalue %>">
+                value="<%= searchvalue %>" autofocus>
               <input class="btn-base ml-small" type="button" id="btn_search" value="検索" />
               <% if (locals.user.role === '社員') { %>
                 <a class="btn-link ml-small" href="/company">会社登録</a>
