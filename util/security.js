@@ -22,8 +22,8 @@ passport.use("local-strategy", new LocalStrategy({
 }, (req, username, password, done) => {
     logger.info('[LOGIN] username:' + username + ' password:' + password);
 
-    users.findPKey(username, (err, retObj) => {
-        if (err) { throw err };
+    async function main() {
+        const retObj = await users.findPKey(username)
         if (!retObj) {
             done(null, false, req.flash("message", "ユーザー名　または　パスワード　が間違っています。"));
         } else {
@@ -39,7 +39,8 @@ passport.use("local-strategy", new LocalStrategy({
                 done(null, false, req.flash("message", "ユーザー名　または　パスワード　が間違っています。"));
             }
         }
-    });
+    }
+    main();
 }));
 
 const initialize = function () {
