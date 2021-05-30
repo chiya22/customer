@@ -1,120 +1,81 @@
-const knex = require('../db/knex');
-const client = knex.connect();
+const knex = require('../db/knex').connect();
 
-const log4js = require("log4js");
-const logger = log4js.configure('./config/log4js-config.json').getLogger();
-
-const findPKey = function (pkey, callback) {
-    (async function () {
-        // const client = knex.connect();
-        await client.from("nyukyos").where({id:pkey})
-        .then( (retObj) => {
-            callback(null, retObj[0]);
-        })
-        .catch( (err) => {
-            callback(err, null);
-        });
-    })();
+const findPKey = async (id) => {
+    try {
+        const retObj = await  knex.from("nyukyos").where({id:id})
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }    
 };
 
-const find = function (callback) {
-    (async function () {
-        // const client = knex.connect();
-        await client.from("nyukyos").orderBy("id","asc")
-        .then( (retObj) => {
-            callback(null, retObj[0]);
-        })
-        .catch( (err) => {
-            callback(err, null);
-        });
-    })();
+const find = async () => {
+    try {
+        const retObj = await  knex.from("nyukyos").orderBy("id","asc")
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }    
 };
 
-const findForAdmin = function (callback) {
-    (async function () {
-        // const client = knex.connect();
+const findForAdmin = async () => {
+    try {
         const query = 'SELECT n.*, c.id as id_company, c.name AS name_company from nyukyos n left outer JOIN companies c ON n.id = c.id_nyukyo AND c.ymd_kaiyaku = "99991231" order by id asc';
-        await client.raw(query)
-        .then( (retObj) => {
-            callback(null, retObj[0]);
-        })
-        .catch( (err) => {
-            callback(err, null);
-        });
-    })();
+        const retObj = await  knex.raw(query);
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }    
 };
 
-const findForSelect = function (callback) {
-    (async function () {
-        // const client = knex.connect();
-        // const query = '(select "【使用中】" AS kubun, nyukyos.id AS id FROM nyukyos WHERE ymd_end = "99991231" and EXISTS (SELECT * FROM companies WHERE companies.ymd_kaiyaku = "99991231" and companies.id_nyukyo = nyukyos.id)) UNION ALL (SELECT "【未使用】" AS kubun, nyukyos.id AS id FROM nyukyos WHERE nyukyos.ymd_end = "99991231" and NOT EXISTS (SELECT * FROM companies WHERE companies.ymd_kaiyaku = "99991231" and companies.id_nyukyo = nyukyos.id)) ORDER BY kubun DESC, id asc';
+const findForSelect = async () => {
+    try {
         const query = 'SELECT n.id AS id, n.ymd_start AS ymd_start, n.ymd_end AS ymd_end, n.ymd_upd AS ymd_upd, n.id_upd AS id_upd, max(c.ymd_kaiyaku) AS ymd_kaiyaku FROM nyukyos AS n LEFT OUTER JOIN companies c ON n.id = c.id_nyukyo AND n.ymd_end = "99991231" AND c.ymd_end = "99991231" GROUP BY n.id ORDER BY ymd_kaiyaku ASC, id asc';
-        await client.raw(query)
-        .then( (retObj) => {
-            callback(null, retObj[0]);
-        })
-        .catch( (err) => {
-            callback(err, null);
-        });
-    })();
+        const retObj = await  knex.raw(query);
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }    
 };
 
-const insert = function (inObj, callback) {
-    (async function () {
-        // const client = knex.connect();
+const insert = async (inObj) => {
+    try {
         const query = 'insert into nyukyos values ("' + inObj.id + '","' + inObj.ymd_start + '", "99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '")';
-        logger.info('[' + inObj.id_upd + ']' + query);
-        await client.raw(query)
-        .then( (retObj) => {
-            callback(null, retObj[0]);
-        })
-        .catch( (err) => {
-            callback(err, null);
-        });
-    })();
+        const retObj = await  knex.raw(query);
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }    
 };
 
-const update = function (inObj, callback) {
-    (async function () {
-        // const client = knex.connect();
+const update = async (inObj) => {
+    try {
         const query = 'update nyukyos set ymd_start = "' + inObj.ymd_start + '", ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" where id = "' + inObj.id + '" and ymd_end = "' + inObj.before_ymd_end + '"';
-        logger.info('[' + inObj.id_upd + ']' + query);
-        await client.raw(query)
-        .then( (retObj) => {
-            callback(null, retObj[0]);
-        })
-        .catch( (err) => {
-            callback(err, null);
-        });
-    })();
+        const retObj = await  knex.raw(query);
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }    
 };
 
-const remove = function (inObj, callback) {
-    (async function () {
-        // const client = knex.connect();
+const remove = async (inObj) => {
+    try {
         const query = 'delete from nyukyos where id = "' + inObj.id + '"';
-        logger.info('[' + inObj.id_upd + ']' + query);
-        await client.raw(query)
-        .then( (retObj) => {
-            callback(null, retObj[0]);
-        })
-        .catch( (err) => {
-            callback(err, null);
-        });
-    })();
+        const retObj = await  knex.raw(query);
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }    
 };
 
-const findWithRoom = function (callback) {
-    (async function () {
+const findWithRoom = async () => {
+    try {
         const query = 'SELECT c.id_nyukyo , IFNULL(CONCAT(r.place, "_", r.floor, "_", r.name),"ON") AS name_room FROM companies c LEFT OUTER JOIN relation_comroom cr ON c.id = cr.id_company AND cr.ymd_end = "99991231" LEFT OUTER JOIN rooms r ON cr.id_room = r.id AND r.ymd_end = "99991231" WHERE c.ymd_kaiyaku = "99991231" ORDER BY c.id_nyukyo asc'
-        await client.raw(query)
-        .then( (retObj) => {
-            callback(null, retObj[0]);
-        })
-        .catch( (err) => {
-            callback(err, null);
-        });
-    })();
+        const retObj = await  knex.raw(query);
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }    
 }
 
 module.exports = {
