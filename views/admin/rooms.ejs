@@ -18,7 +18,7 @@
         <%  rooms.forEach( room => { %>
         <div class="admin_room">
           <a class="btn-link" href="/admin/rooms/update/<%= room.id %>">
-            <%= room.name %><span class="dateinfo-small">　開始：<%= room.ymd_start %>　終了：<%= room.ymd_end %></span>
+            <%= room.place %> <%= room.name %><span class="dateinfo-small">　開始：<%= room.ymd_start %>　終了：<%= room.ymd_end %></span>
             <% if (room.companyname) { %><%= room.companyname %><% } %>
           </a>
         </div>
