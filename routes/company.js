@@ -167,7 +167,7 @@ router.post("/update", security.authorize(), (req, res, next) => {
         errors: errors,
       });
     } else {
-      const retObjCompany = await m_company.update();
+      const retObjCompany = await m_company.update(inObjCompany);
       if (retObjCompany.changedRows === 0) {
         const retObjSelect = await m_nyukyo.findForSelect();
         let errors = {};
