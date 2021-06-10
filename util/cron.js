@@ -6,7 +6,7 @@ const cron = require("node-cron");
 
 const m_outai = require("../model/outais");
 const m_yoyaku = require("../model/yoyakus");
-const m_riyousha = require("../model/riyousha");
+const m_riyousha = require("../model/riyoushas");
 const m_perinfo = require("../model/perinfo");
 
 const readline = require("readline");
@@ -19,18 +19,16 @@ const fs = require("fs");
 // cron設定
 const startcron = () => {
   if (config.cron.effective === "on") {
+
     // 月曜日から金曜日の朝9:00に通知メールを送信する
     cron.schedule(config.cron.outai, () => {
-      query =
-        'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.status != "完了" ORDER BY ocu.ymdhms_upd desc';
-      m_outai.selectSQL(query, (err, retObj) => {
-        if (err) {
-          next(err);
-        }
-        let outais = retObj;
+      (async () => {
+        query =
+          'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.status != "完了" ORDER BY ocu.ymdhms_upd desc';
+        const retObjoutai = await m_outai.selectSQL(query);
         let content = `未完了の応対履歴一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
 
-        outais.forEach((outai) => {
+        retObjoutai.forEach((outai) => {
           content += `会社：${outai.name_company}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${config.url.outai}${outai.id}\r\n------------------------------------------------------\r\n`;
         });
 
@@ -42,16 +40,13 @@ const startcron = () => {
     });
 
     cron.schedule(config.cron.outaikaigi, () => {
-      query =
-        'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(r.name, "利用者指定なし") as name_riyousha FROM outaiskaigi o left outer JOIN riyoushas r ON o.id_riyousha = r.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) oru WHERE oru.status != "完了" ORDER BY oru.ymdhms_upd desc';
-      m_outai.selectSQL(query, (err, retObj) => {
-        if (err) {
-          next(err);
-        }
-        let outais = retObj;
+      (async () => {
+        query =
+          'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(r.name, "利用者指定なし") as name_riyousha FROM outaiskaigi o left outer JOIN riyoushas r ON o.id_riyousha = r.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) oru WHERE oru.status != "完了" ORDER BY oru.ymdhms_upd desc';
+        const retObjOutai = await m_outai.selectSQL(query);
         let content = `未完了の応対履歴（会議室）一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
 
-        outais.forEach((outai) => {
+        retObjOutai.forEach((outai) => {
           content += `利用者：${outai.name_riyousha}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${config.url.outaikaigi}${outai.id}\r\n------------------------------------------------------\r\n`;
         });
 
@@ -65,39 +60,31 @@ const startcron = () => {
     });
 
     cron.schedule(config.cron.mishukaigi, () => {
-      const targetYYYYMMDD = tool.getYYYYMMDD7dayAfter();
-      const query =
-        'SELECT * FROM ( SELECT * FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.ymd_upd IS NULL AND y.ymd_add < ' +
-        targetYYYYMMDD +
-        ' AND y.id_riyousha <> "00001" AND y.id_riyousha <> "10001" UNION ALL SELECT * FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.ymd_upd IS NOT NULL AND y.ymd_upd < ' +
-        targetYYYYMMDD +
-        ' AND y.id_riyousha <> "00001" AND y.id_riyousha <> "10001") y2 ORDER BY y2.ymd_riyou';
+      (async () => {
+        const targetYYYYMMDD = tool.getYYYYMMDD7dayAfter();
+        const query =
+          'SELECT * FROM ( SELECT * FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.ymd_upd IS NULL AND y.ymd_add < ' +
+          targetYYYYMMDD +
+          ' AND y.id_riyousha <> "00001" AND y.id_riyousha <> "10001" UNION ALL SELECT * FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.ymd_upd IS NOT NULL AND y.ymd_upd < ' +
+          targetYYYYMMDD +
+          ' AND y.id_riyousha <> "00001" AND y.id_riyousha <> "10001") y2 ORDER BY y2.ymd_riyou';
 
-      logger.info(query);
-
-      m_yoyaku.selectSQL(query, (err, retObj) => {
-        if (err) {
-          next(err);
-        }
-        let yoyakus = retObj;
+        const retObjYoyaku = await m_yoyaku.selectSQL(query);
         let content = `未入金の会議室予約情報一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
 
-        yoyakus.forEach((yoyaku) => {
+        retObjYoyaku.forEach((yoyaku) => {
           content += `利用日：${tool.returndateWithslash(
             yoyaku.ymd_riyou
           )}\r\n登録日：${tool.returndateWithslash(
             yoyaku.ymd_add
           )}\r\n更新日：${tool.returndateWithslash(
             yoyaku.ymd_upd
-          )}\r\n会議室名：${yoyaku.nm_room}\r\n時間：${
-            yoyaku.time_yoyaku
-          }\r\n金額：${yoyaku.price}\r\n利用者：${yoyaku.id_riyousha} | ${
-            yoyaku.nm_riyousha
-          }\r\n受付：${
-            yoyaku.nm_uketuke
-          }\r\n備考：${tool.returnvalueWithoutNull(
-            yoyaku.bikou
-          )}\r\n------------------------------------------------------\r\n`;
+          )}\r\n会議室名：${yoyaku.nm_room}\r\n時間：${yoyaku.time_yoyaku
+            }\r\n金額：${yoyaku.price}\r\n利用者：${yoyaku.id_riyousha} | ${yoyaku.nm_riyousha
+            }\r\n受付：${yoyaku.nm_uketuke
+            }\r\n備考：${tool.returnvalueWithoutNull(
+              yoyaku.bikou
+            )}\r\n------------------------------------------------------\r\n`;
         });
 
         //メール送信
@@ -238,17 +225,22 @@ const startcron = () => {
 
     // 会議室　利用者情報取込
     cron.schedule(config.cron.setriyousha, () => {
+
       // ダウンロードディレクトリにあるcsvファイルを取得する
       let targetfilename = "";
       fs.readdirSync(config.dlpath).forEach((filename) => {
+
         // *mdl.csvのファイルの場合処理をする
         if (filename.slice(-7) === "mdl.csv") {
           targetfilename = filename;
+
           // csvファイルはShift-JISのため
           const src = fs
             .createReadStream(config.dlpath + "\\" + filename)
             .pipe(iconv.decodeStream("Shift_JIS"));
+
           src.on("data", (chunk) => {
+
             let detaillog = "";
             const lines = chunk.split("\n");
             lines.forEach((line) => {
@@ -285,15 +277,14 @@ const startcron = () => {
                   linecontents[15].slice(5, 7) +
                   linecontents[15].slice(8, 10);
 
-                let inObj = {};
-                inObj.id = linecontents[12];
-                linecontents[0] = linecontents[0]
-                  .replace(/ /g, "　")
-                  .replace(/[*]/g, "＊");
-                m_riyousha.findPKey(inObj, (err, retObj) => {
-                  if (err) {
-                    throw err;
-                  }
+                (async () => {
+                  let inObj = {};
+                  inObj.id = linecontents[12];
+                  linecontents[0] = linecontents[0]
+                    .replace(/ /g, "　")
+                    .replace(/[*]/g, "＊");
+
+                  const retObjRiyousha = await m_riyousha.findPKey(linecontents[12]);
 
                   // 新規登録用、更新用のオブジェクトを作成
                   inObj.id = linecontents[12];
@@ -334,98 +325,90 @@ const startcron = () => {
                   inObj.ymd_upd = target_ymd_upd;
 
                   // すでに利用者が存在している場合
-                  if (retObj) {
+                  if (retObjRiyousha) {
                     // 更新されているかを判別する
                     if (
                       target_ymd_add !== retObj.ymd_add ||
                       target_ymd_upd !== retObj.ymd_upd
                     ) {
-                      m_riyousha.update(inObj, (err, retObj) => {
-                        if (err) {
-                          throw err;
-                        }
-                        if (retObj.changedRows === 0) {
-                          logger.info(`更新対象が存在しません：${inObj.id}`);
-                        } else {
-                          detaillog =
-                            inObj.id +
-                            "," +
-                            inObj.kubun +
-                            "," +
-                            inObj.kubun2 +
-                            "," +
-                            inObj.name +
-                            "," +
-                            inObj.kana +
-                            "," +
-                            inObj.sex +
-                            "," +
-                            inObj.no_yubin +
-                            "," +
-                            inObj.address +
-                            "," +
-                            inObj.no_tel +
-                            "," +
-                            inObj.mail1 +
-                            "," +
-                            inObj.mail2 +
-                            "," +
-                            inObj.kubun_riyousha +
-                            "," +
-                            inObj.kubun_vip +
-                            "," +
-                            inObj.bikou +
-                            "," +
-                            inObj.ymd_add +
-                            "," +
-                            inObj.ymd_upd +
-                            "\n";
-                          logger.info(`会議室利用者情報更新ログ：${detaillog}`);
-                        }
-                      });
+                      const retObjRiyoushaupdate = await m_riyousha.update(inObj);
+                      if (retObjRiyoushaupdate.changedRows === 0) {
+                        logger.info(`更新対象が存在しません：${inObj.id}`);
+                      } else {
+                        detaillog =
+                          inObj.id +
+                          "," +
+                          inObj.kubun +
+                          "," +
+                          inObj.kubun2 +
+                          "," +
+                          inObj.name +
+                          "," +
+                          inObj.kana +
+                          "," +
+                          inObj.sex +
+                          "," +
+                          inObj.no_yubin +
+                          "," +
+                          inObj.address +
+                          "," +
+                          inObj.no_tel +
+                          "," +
+                          inObj.mail1 +
+                          "," +
+                          inObj.mail2 +
+                          "," +
+                          inObj.kubun_riyousha +
+                          "," +
+                          inObj.kubun_vip +
+                          "," +
+                          inObj.bikou +
+                          "," +
+                          inObj.ymd_add +
+                          "," +
+                          inObj.ymd_upd +
+                          "\n";
+                        logger.info(`会議室利用者情報更新ログ：${detaillog}`);
+                      }
                     }
 
                     // 利用者に存在しない場合
                   } else {
-                    m_riyousha.insert(inObj, (err, retObj) => {
-                      if (err) {
-                        throw err;
-                      }
-                      detaillog =
-                        inObj.id +
-                        "," +
-                        inObj.kubun +
-                        "," +
-                        inObj.kubun2 +
-                        "," +
-                        inObj.name +
-                        "," +
-                        inObj.kana +
-                        "," +
-                        inObj.sex +
-                        "," +
-                        inObj.no_yubin +
-                        "," +
-                        inObj.address +
-                        "," +
-                        inObj.no_tel +
-                        "," +
-                        inObj.mail1 +
-                        "," +
-                        inObj.mail2 +
-                        "," +
-                        inObj.kubun_riyousha +
-                        "," +
-                        inObj.kubun_vip +
-                        "," +
-                        inObj.bikou +
-                        "," +
-                        inObj.ymd_add +
-                        "," +
-                        inObj.ymd_upd +
-                        "\n";
-                      logger.info(`会議室利用者情報登録ログ：${detaillog}`);
-                    });
+                    const retObjRiyoushainsert = await m_riyousha.insert(inObj);
+                    detaillog =
+                      inObj.id +
+                      "," +
+                      inObj.kubun +
+                      "," +
+                      inObj.kubun2 +
+                      "," +
+                      inObj.name +
+                      "," +
+                      inObj.kana +
+                      "," +
+                      inObj.sex +
+                      "," +
+                      inObj.no_yubin +
+                      "," +
+                      inObj.address +
+                      "," +
+                      inObj.no_tel +
+                      "," +
+                      inObj.mail1 +
+                      "," +
+                      inObj.mail2 +
+                      "," +
+                      inObj.kubun_riyousha +
+                      "," +
+                      inObj.kubun_vip +
+                      "," +
+                      inObj.bikou +
+                      "," +
+                      inObj.ymd_add +
+                      "," +
+                      inObj.ymd_upd +
+                      "\n";
+                    logger.info(`会議室利用者情報登録ログ：${detaillog}`);
                   }
                 });
               }
@@ -624,109 +607,108 @@ const startcron = () => {
 
     // 予約情報取込
     const setYoyakuInfo = (num) => {
+
+      (async () => {
+        // 当月のデータを削除
+        const retObjYoyakudelete = await m_yoyaku.deleteByMonth(getCurrentYYYYMM(num));
+        logger.info(`予約情報を初期化しました：${getCurrentYYYYMM(num)}`);
+      });
+
       // ダウンロードディレクトリにあるcsvファイルを取得する
       let targetfilename = "";
       fs.readdirSync(config.dlpath).forEach((filename) => {
+
         // *mdl.csvのファイルの場合処理をする
         if (filename.slice(-7) === "rdl.csv") {
-          targetfilename = filename;
 
+          targetfilename = filename;
           let max_id_yoyaku = 1;
 
-          // 当月のデータを削除
-          m_yoyaku.deleteByMonth(getCurrentYYYYMM(num), (err, retObj) => {
-            if (err) {
-              throw err;
-            }
+          // csvファイルはShift-JISのため
+          const src = fs
+            .createReadStream(config.dlpath + "\\" + filename)
+            .pipe(iconv.decodeStream("Shift_JIS"));
 
-            // csvファイルはShift-JISのため
-            const src = fs
-              .createReadStream(config.dlpath + "\\" + filename)
-              .pipe(iconv.decodeStream("Shift_JIS"));
+          // 1行ごとに読み込む
+          const rl = readline.createInterface({
+            input: src,
+            output: process.stdout,
+            terminal: false,
+          });
 
-            // 1行ごとに読み込む
-            const rl = readline.createInterface({
-              input: src,
-              output: process.stdout,
-              terminal: false,
-            });
+          // 1行ごとの処理
+          rl.on("line", (chunk) => {
+            const linecontents = chunk.split(",");
 
-            // 1行ごとの処理
-            rl.on("line", (chunk) => {
-              logger.info(`${chunk}：${new Date()}`);
-              const linecontents = chunk.split(",");
-
-              // ヘッダーは飛ばす
-              if (linecontents[0] !== "登録日" && linecontents[0] !== "") {
-                let inObj = {};
-                inObj.id =
-                  "Y" +
-                  linecontents[1].replace(/\-/g, "").slice(0, 6) +
-                  ("" + "0000000000000" + max_id_yoyaku).slice(-14);
-                // inObj.id = max_id_yoyaku;
-                max_id_yoyaku += 1;
-                inObj.ymd_add = linecontents[0].replace(/\-/g, "");
-                inObj.ymd_riyou = linecontents[1].replace(/\-/g, "");
-                if (linecontents[2] !== "") {
-                  inObj.ymd_upd = linecontents[2].replace(/\-/g, "");
-                } else {
-                  inObj.ymd_upd = linecontents[2];
-                }
-                inObj.nm_kubun_room = linecontents[3];
-                inObj.nm_room = linecontents[4];
-                inObj.time_yoyaku = linecontents[5];
-                inObj.time_start = linecontents[5]
-                  .slice(0, 5)
-                  .replace(/:/g, "");
-                inObj.time_end = linecontents[5].slice(6, 11).replace(/:/g, "");
-                inObj.id_riyousha = linecontents[6];
-                inObj.nm_riyousha = linecontents[7];
-                inObj.kana_riyousha = linecontents[8];
-                inObj.no_yubin = linecontents[9];
-                inObj.address = linecontents[10];
-                inObj.email = linecontents[11];
-                inObj.telno = linecontents[12];
-                inObj.mokuteki = linecontents[13];
-                inObj.nm_uketuke = linecontents[14];
-                inObj.num_person = linecontents[15];
-                inObj.price = linecontents[16];
-                inObj.stat_shiharai = linecontents[17];
-                inObj.bikou = linecontents[18];
-                inObj.kubun_day = tool.getDayKubun(inObj.ymd_riyou);
-                if (inObj.nm_room.slice(0, 3) === "会議室") {
-                  inObj.kubun_room = 1;
-                } else if (inObj.nm_room.slice(0, 6) === "プロジェクト") {
-                  inObj.kubun_room = 3;
-                } else {
-                  inObj.kubun_room = 2;
-                }
-                m_yoyaku.insert(inObj, (err, retObj) => {
-                  if (err) {
-                    throw err;
-                  }
-                  logger.info(`会議室予約情報ID：${inObj.id}`);
-                });
+            // ヘッダーは飛ばす
+            if (linecontents[0] !== "登録日" && linecontents[0] !== "") {
+              let inObj = {};
+              inObj.id =
+                "Y" +
+                linecontents[1].replace(/\-/g, "").slice(0, 6) +
+                ("" + "0000000000000" + max_id_yoyaku).slice(-14);
+              // inObj.id = max_id_yoyaku;
+              max_id_yoyaku += 1;
+              inObj.ymd_add = linecontents[0].replace(/\-/g, "");
+              inObj.ymd_riyou = linecontents[1].replace(/\-/g, "");
+              if (linecontents[2] !== "") {
+                inObj.ymd_upd = linecontents[2].replace(/\-/g, "");
+              } else {
+                inObj.ymd_upd = linecontents[2];
               }
-            });
-            src.on("end", () => {
-              // 対象ファイルを処理した場合は対象ファイルをリネーム
-              fs.rename(
-                config.dlpath + "\\" + targetfilename,
-                config.dlpath + "\\" + targetfilename + ".old",
-                (err) => {
-                  if (err) {
-                    logger.info(
-                      `${targetfilename}ファイルは存在しません：${new Date()}`
-                    );
-                    throw err;
-                  }
+              inObj.nm_kubun_room = linecontents[3];
+              inObj.nm_room = linecontents[4];
+              inObj.time_yoyaku = linecontents[5];
+              inObj.time_start = linecontents[5]
+                .slice(0, 5)
+                .replace(/:/g, "");
+              inObj.time_end = linecontents[5].slice(6, 11).replace(/:/g, "");
+              inObj.id_riyousha = linecontents[6];
+              inObj.nm_riyousha = linecontents[7];
+              inObj.kana_riyousha = linecontents[8];
+              inObj.no_yubin = linecontents[9];
+              inObj.address = linecontents[10];
+              inObj.email = linecontents[11];
+              inObj.telno = linecontents[12];
+              inObj.mokuteki = linecontents[13];
+              inObj.nm_uketuke = linecontents[14];
+              inObj.num_person = linecontents[15];
+              inObj.price = linecontents[16];
+              inObj.stat_shiharai = linecontents[17];
+              inObj.bikou = linecontents[18];
+              inObj.kubun_day = tool.getDayKubun(inObj.ymd_riyou);
+              if (inObj.nm_room.slice(0, 3) === "会議室") {
+                inObj.kubun_room = 1;
+              } else if (inObj.nm_room.slice(0, 6) === "プロジェクト") {
+                inObj.kubun_room = 3;
+              } else {
+                inObj.kubun_room = 2;
+              }
+              (async () => {
+                const retObjYoyakuinsert = await m_yoyaku.insert(inObj);
+                logger.info(`会議室予約情報ID：${inObj.id}`);
+              });
+            }
+          });
+          src.on("end", () => {
+            // 対象ファイルを処理した場合は対象ファイルをリネーム
+            fs.rename(
+              config.dlpath + "\\" + targetfilename,
+              config.dlpath + "\\" + targetfilename + ".old",
+              (err) => {
+                if (err) {
+                  logger.info(
+                    `${targetfilename}ファイルは存在しません：${new Date()}`
+                  );
+                  throw err;
                 }
-              );
-            });
+              }
+            );
           });
         }
       });
     };
+
     const getCurrentYYYYMM = (numM) => {
       const dt = new Date();
       const curYYYY = dt.getFullYear();
@@ -764,26 +746,25 @@ const startcron = () => {
 
     // 会議室稼働率情報設定
     const setPerInfo = (addnum) => {
-      const yyyymm = getCurrentYYYYMM(addnum);
+      (async () => {
 
-      // 現在の月の稼働時間を求める
-      // ◆平日
-      const weekdayTimeAll = tool.getHourbyYYYYMM(yyyymm, 1, 1);
-      const weekdayTime45 = tool.getHourbyYYYYMM(yyyymm, 1, 2);
-      const weekdayTimeMtg = tool.getHourbyYYYYMM(yyyymm, 1, 3);
-      const weekdayTimePrj = tool.getHourbyYYYYMM(yyyymm, 1, 4);
-      // ◆土日祝日
-      const holidayTimeAll = tool.getHourbyYYYYMM(yyyymm, 2, 1);
-      const holidayTime45 = tool.getHourbyYYYYMM(yyyymm, 2, 2);
-      const holidayTimeMtg = tool.getHourbyYYYYMM(yyyymm, 2, 3);
-      const holidayTimePrj = tool.getHourbyYYYYMM(yyyymm, 2, 4);
+        const yyyymm = getCurrentYYYYMM(addnum);
 
-      let inObj = {};
-      inObj.yyyymm = yyyymm;
-      m_yoyaku.calcTime(inObj, (err, retObj) => {
-        if (err) {
-          throw err;
-        }
+        // 現在の月の稼働時間を求める
+        // ◆平日
+        const weekdayTimeAll = tool.getHourbyYYYYMM(yyyymm, 1, 1);
+        const weekdayTime45 = tool.getHourbyYYYYMM(yyyymm, 1, 2);
+        const weekdayTimeMtg = tool.getHourbyYYYYMM(yyyymm, 1, 3);
+        const weekdayTimePrj = tool.getHourbyYYYYMM(yyyymm, 1, 4);
+        // ◆土日祝日
+        const holidayTimeAll = tool.getHourbyYYYYMM(yyyymm, 2, 1);
+        const holidayTime45 = tool.getHourbyYYYYMM(yyyymm, 2, 2);
+        const holidayTimeMtg = tool.getHourbyYYYYMM(yyyymm, 2, 3);
+        const holidayTimePrj = tool.getHourbyYYYYMM(yyyymm, 2, 4);
+
+        let inObj = {};
+        inObj.yyyymm = yyyymm;
+        const retObjYoyakucalc = await m_yoyaku.calcTime(inObj);
         let weekdayWorktimeAll = 0;
         let weekdayWorktime45 = 0;
         let weekdayWorktimeMtg = 0;
@@ -793,7 +774,7 @@ const startcron = () => {
         let holidayWorktimeMtg = 0;
         let holidayWorktimePrj = 0;
 
-        retObj.forEach((row) => {
+        retObjYoyakucalc.forEach((row) => {
           if (row.kubun_room === "1" && row.kubun_day === "1") {
             weekdayWorktime45 = row.totaltime;
           } else if (row.kubun_room === "1" && row.kubun_day === "2") {
@@ -818,8 +799,8 @@ const startcron = () => {
           Math.round(
             ((weekdayWorktimeAll + holidayWorktimeAll) /
               (weekdayTimeAll + holidayTimeAll)) *
-              100 *
-              100
+            100 *
+            100
           ) / 100;
         inObj.per_all_weekday =
           Math.round((weekdayWorktimeAll / weekdayTimeAll) * 100 * 100) / 100;
@@ -830,8 +811,8 @@ const startcron = () => {
           Math.round(
             ((weekdayWorktime45 + holidayWorktime45) /
               (weekdayTime45 + holidayTime45)) *
-              100 *
-              100
+            100 *
+            100
           ) / 100;
         inObj.per_45_weekday =
           Math.round((weekdayWorktime45 / weekdayTime45) * 100 * 100) / 100;
@@ -842,8 +823,8 @@ const startcron = () => {
           Math.round(
             ((weekdayWorktimeMtg + holidayWorktimeMtg) /
               (weekdayTimeMtg + holidayTimeMtg)) *
-              100 *
-              100
+            100 *
+            100
           ) / 100;
         inObj.per_mtg_weekday =
           Math.round((weekdayWorktimeMtg / weekdayTimeMtg) * 100 * 100) / 100;
@@ -854,8 +835,8 @@ const startcron = () => {
           Math.round(
             ((weekdayWorktimePrj + holidayWorktimePrj) /
               (weekdayTimePrj + holidayTimePrj)) *
-              100 *
-              100
+            100 *
+            100
           ) / 100;
         inObj.per_prj_weekday =
           Math.round((weekdayWorktimePrj / weekdayTimePrj) * 100 * 100) / 100;
@@ -864,22 +845,14 @@ const startcron = () => {
 
         inObj.ymd_add = tool.getToday();
 
-        m_perinfo.remove(inObj, (err, retObj) => {
-          if (err) {
-            throw err;
-          }
-          m_perinfo.insert(inObj, (err, retObj) => {
-            if (err) {
-              throw err;
-            }
-            logger.info(
-              `${inObj.yyyymm}のレコードを登録しました：${new Date()}`
-            );
-          });
-        });
+        const retObjPerinforemove = await m_perinfo.remove(inObj);
+        const retObjPerinfoinsert = await m_perinfo.insert(inObj);
+        logger.info(
+          `${inObj.yyyymm}のレコードを登録しました：${new Date()}`
+        );
       });
     };
-  }
+  };
 };
 
 module.exports = {
