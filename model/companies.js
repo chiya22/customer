@@ -162,6 +162,20 @@ const cancel = async (inObj) => {
 };
 
 /**
+ * 表示パネル用の情報取得（会社区分が「その他」「市町村」は除く）
+ * @returns 会社情報の一覧（会社名、会社名かな、入居者番号、入居年月日、解約年月日）
+ */
+const findForDispPanel = async () => {
+    try {
+        const query = 'SELECT c.name, c.kana, c.id_nyukyo, c.ymd_nyukyo, c.ymd_kaiyaku FROM companies c WHERE (c.kubun_company <> "その他" and c.kubun_company <> "市町村") AND c.ymd_kaiyaku = "99991231" order BY c.kana';
+        const retObj = await knex.raw(query)
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }
+}
+
+/**
  * 渡されたSQLを実行する
  * @param {*} sql 
  * @returns SQL実行結果
@@ -183,6 +197,7 @@ module.exports = {
     findByNyukyoWithoutKaiyaku,
     findLikeCount,
     findLikeForPaging,
+    findForDispPanel,
     insert,
     update,
     remove,

@@ -4,6 +4,7 @@ const security = require("../../util/security");
 
 const m_person = require("../../model/persons");
 const m_nyukyo = require("../../model/nyukyos");
+const m_company = require("../../model/companies");
 
 /* GET home page. */
 router.get("/", security.authorize(), (req, res, next) => {
@@ -46,7 +47,7 @@ router.post("/download/persons", (req, res, next) => {
         "\r\n";
     });
 
-    res.setHeader("Content-disposition", "attachment; filename=data.csv");
+    res.setHeader("Content-disposition", "attachment; filename=persons.csv");
     res.setHeader("Content-Type", "text/csv; charset=UTF-8");
     res.status(200).send(csv);
   })();
@@ -87,7 +88,34 @@ router.post("/download/personsordernyukyo", (req, res, next) => {
         "\r\n";
     });
 
-    res.setHeader("Content-disposition", "attachment; filename=data.csv");
+    res.setHeader("Content-disposition", "attachment; filename=persons_orderbynyukyo_.csv");
+    res.setHeader("Content-Type", "text/csv; charset=UTF-8");
+    res.status(200).send(csv);
+  })();
+});
+
+/* 正面パネル会社リストダウンロード */
+router.post("/download/companiespanelinfo", (req, res, next) => {
+  (async () => {
+    const retObjCompanyuPanelinfo = await m_company.findForDispPanel();
+    csv =
+      "会社名・屋号,ふりがな（会社名）,入居者番号,入居年月日,解約年月日" +
+      "\r\n";
+      retObjCompanyuPanelinfo.forEach((obj) => {
+      csv +=
+        obj.name +
+        "," +
+        obj.kana +
+        "," +
+        obj.id_nyukyo +
+        "," +
+        obj.ymd_nyukyo +
+        "," +
+        obj.ymd_kaiyaku +
+        "\r\n";
+    });
+
+    res.setHeader("Content-disposition", "attachment; filename=companypanelinfo.csv");
     res.setHeader("Content-Type", "text/csv; charset=UTF-8");
     res.status(200).send(csv);
   })();
