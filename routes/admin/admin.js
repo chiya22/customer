@@ -99,10 +99,12 @@ router.post("/download/companiespanelinfo", (req, res, next) => {
   (async () => {
     const retObjCompanyuPanelinfo = await m_company.findForDispPanel();
     csv =
-      "会社名・屋号,ふりがな（会社名）,入居者番号,入居年月日,解約年月日" +
+      "行, 会社名・屋号,ふりがな,入居者番号,入居年月日,解約年月日" +
       "\r\n";
       retObjCompanyuPanelinfo.forEach((obj) => {
       csv +=
+        obj.line + 
+        "," +
         obj.name +
         "," +
         obj.kana +

@@ -167,7 +167,7 @@ const cancel = async (inObj) => {
  */
 const findForDispPanel = async () => {
     try {
-        const query = 'SELECT LEFT(c.kana, 1), c.name, c.kana, c.id_nyukyo, c.ymd_nyukyo, c.ymd_kaiyaku FROM companies c WHERE (c.kubun_company <> "その他" and c.kubun_company <> "市町村") AND c.ymd_kaiyaku = "99991231" order BY c.kana';
+        const query = 'SELECT LEFT(c.kana, 1) as line, c.name, c.kana, c.id_nyukyo, c.ymd_nyukyo, c.ymd_kaiyaku FROM companies c WHERE (c.kubun_company <> "その他" and c.kubun_company <> "市町村") AND c.ymd_kaiyaku = "99991231" order BY c.kana';
         const retObj = await knex.raw(query)
         return retObj[0];
     } catch(err) {
