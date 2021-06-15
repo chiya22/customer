@@ -689,7 +689,7 @@ const startcron = () => {
               (async () => {
                 const retObjYoyakuinsert = await m_yoyaku.insert(inObj);
                 logger.info(`会議室予約情報ID：${inObj.id}`);
-              });
+              })();
             }
           });
           src.on("end", () => {
