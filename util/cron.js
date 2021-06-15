@@ -25,7 +25,7 @@ const startcron = () => {
       (async () => {
         query =
           'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.status != "完了" ORDER BY ocu.ymdhms_upd desc';
-        const retObjoutai = await m_outai.selectSQL(query);
+        const retObjoutai = await m_outai.setSQL(query);
         let content = `未完了の応対履歴一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
 
         retObjoutai.forEach((outai) => {
@@ -36,14 +36,14 @@ const startcron = () => {
         mail.send("応対履歴一覧", content);
 
         logger.info(`cronより通知メールを送信しました：${new Date()}`);
-      });
+      })();
     });
 
     cron.schedule(config.cron.outaikaigi, () => {
       (async () => {
         query =
           'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(r.name, "利用者指定なし") as name_riyousha FROM outaiskaigi o left outer JOIN riyoushas r ON o.id_riyousha = r.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) oru WHERE oru.status != "完了" ORDER BY oru.ymdhms_upd desc';
-        const retObjOutai = await m_outai.selectSQL(query);
+        const retObjOutai = await m_outai.setSQL(query);
         let content = `未完了の応対履歴（会議室）一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
 
         retObjOutai.forEach((outai) => {
@@ -56,7 +56,7 @@ const startcron = () => {
         logger.info(
           `cronより通知メールを送信しました（会議室）：${new Date()}`
         );
-      });
+      })();
     });
 
     cron.schedule(config.cron.mishukaigi, () => {
@@ -69,7 +69,7 @@ const startcron = () => {
           targetYYYYMMDD +
           ' AND y.id_riyousha <> "00001" AND y.id_riyousha <> "10001") y2 ORDER BY y2.ymd_riyou';
 
-        const retObjYoyaku = await m_yoyaku.selectSQL(query);
+        const retObjYoyaku = await m_yoyaku.setSQL(query);
         let content = `未入金の会議室予約情報一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
 
         retObjYoyaku.forEach((yoyaku) => {
@@ -93,7 +93,7 @@ const startcron = () => {
         logger.info(
           `cronより通知メールを送信しました（未入金会議室予約）：${new Date()}`
         );
-      });
+      })();
     });
 
     // 会議室　利用者登録情報ダウンロード
@@ -370,6 +370,8 @@ const startcron = () => {
                           "\n";
                         logger.info(`会議室利用者情報更新ログ：${detaillog}`);
                       }
+                    } else {
+                      logger.info(`会議室利用者情報更新ログ：更新なし`);
                     }
 
                     // 利用者に存在しない場合
@@ -410,7 +412,7 @@ const startcron = () => {
                       "\n";
                     logger.info(`会議室利用者情報登録ログ：${detaillog}`);
                   }
-                });
+                })();
               }
             });
           });
@@ -612,7 +614,7 @@ const startcron = () => {
         // 当月のデータを削除
         const retObjYoyakudelete = await m_yoyaku.deleteByMonth(getCurrentYYYYMM(num));
         logger.info(`予約情報を初期化しました：${getCurrentYYYYMM(num)}`);
-      });
+      })();
 
       // ダウンロードディレクトリにあるcsvファイルを取得する
       let targetfilename = "";
@@ -850,7 +852,7 @@ const startcron = () => {
         logger.info(
           `${inObj.yyyymm}のレコードを登録しました：${new Date()}`
         );
-      });
+      })();
     };
   };
 };
