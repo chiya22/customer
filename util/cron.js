@@ -301,6 +301,7 @@ const startcron = () => {
                   } else {
                     if (linecontents[0].indexOf("■") !== -1) {
                       inObj.kubun = "入居者";
+                      inObj.kubun2 = "";
                     } else {
                       inObj.kubun = "千代田区内";
                       if (linecontents[0].indexOf("◆") === -1) {
@@ -459,6 +460,42 @@ const startcron = () => {
       dlinfo(4);
     });
 
+    // 会議室　予約情報取込
+    cron.schedule(config.cron.setyoyaku_0, () => {
+      // cron.schedule('5 23 * * 1-5', () => {
+      setYoyakuInfo(0);
+    });
+    cron.schedule(config.cron.setyoyaku_1, () => {
+      setYoyakuInfo(1);
+    });
+    cron.schedule(config.cron.setyoyaku_2, () => {
+      setYoyakuInfo(2);
+    });
+    cron.schedule(config.cron.setyoyaku_3, () => {
+      setYoyakuInfo(3);
+    });
+    cron.schedule(config.cron.setyoyaku_4, () => {
+      setYoyakuInfo(4);
+    });
+
+    // 会議室稼働率情報設定
+    cron.schedule(config.cron.calcperyoyaku_0, () => {
+      setPerInfo(0);
+    });
+    cron.schedule(config.cron.calcperyoyaku_1, () => {
+      setPerInfo(1);
+    });
+    cron.schedule(config.cron.calcperyoyaku_2, () => {
+      setPerInfo(2);
+    });
+    cron.schedule(config.cron.calcperyoyaku_3, () => {
+      setPerInfo(3);
+    });
+    cron.schedule(config.cron.calcperyoyaku_4, () => {
+      setPerInfo(4);
+    });
+
+
     //　予約情報ダウンロード
     const dlinfo = (num) => {
       const addnum = num;
@@ -589,24 +626,6 @@ const startcron = () => {
       })();
     };
 
-    // 会議室　予約情報取込
-    cron.schedule(config.cron.setyoyaku_0, () => {
-      // cron.schedule('5 23 * * 1-5', () => {
-      setYoyakuInfo(0);
-    });
-    cron.schedule(config.cron.setyoyaku_1, () => {
-      setYoyakuInfo(1);
-    });
-    cron.schedule(config.cron.setyoyaku_2, () => {
-      setYoyakuInfo(2);
-    });
-    cron.schedule(config.cron.setyoyaku_3, () => {
-      setYoyakuInfo(3);
-    });
-    cron.schedule(config.cron.setyoyaku_4, () => {
-      setYoyakuInfo(4);
-    });
-
     // 予約情報取込
     const setYoyakuInfo = (num) => {
 
@@ -728,23 +747,6 @@ const startcron = () => {
 
       return "" + retYYYY + ("" + "0" + retMM).slice(-2);
     };
-
-    // 会議室稼働率情報設定
-    cron.schedule(config.cron.calcperyoyaku_0, () => {
-      setPerInfo(0);
-    });
-    cron.schedule(config.cron.calcperyoyaku_1, () => {
-      setPerInfo(1);
-    });
-    cron.schedule(config.cron.calcperyoyaku_2, () => {
-      setPerInfo(2);
-    });
-    cron.schedule(config.cron.calcperyoyaku_3, () => {
-      setPerInfo(3);
-    });
-    cron.schedule(config.cron.calcperyoyaku_4, () => {
-      setPerInfo(4);
-    });
 
     // 会議室稼働率情報設定
     const setPerInfo = (addnum) => {
