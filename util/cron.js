@@ -438,6 +438,11 @@ const startcron = () => {
     });
 
     // 会議室　予約情報ダウンロード
+    // 当月－１
+    cron.schedule(config.cron.dlyoyaku_minus1, () => {
+      // cron.schedule('0 23 * * 1-5', () => {
+      dlinfo(-1);
+    });
     // 当月
     cron.schedule(config.cron.dlyoyaku_0, () => {
       // cron.schedule('0 23 * * 1-5', () => {
@@ -461,6 +466,10 @@ const startcron = () => {
     });
 
     // 会議室　予約情報取込
+    cron.schedule(config.cron.setyoyaku_minus1, () => {
+      // cron.schedule('5 23 * * 1-5', () => {
+      setYoyakuInfo(-1);
+    });
     cron.schedule(config.cron.setyoyaku_0, () => {
       // cron.schedule('5 23 * * 1-5', () => {
       setYoyakuInfo(0);
@@ -479,6 +488,9 @@ const startcron = () => {
     });
 
     // 会議室稼働率情報設定
+    cron.schedule(config.cron.calcperyoyaku_minus1, () => {
+      setPerInfo(-1);
+    });
     cron.schedule(config.cron.calcperyoyaku_0, () => {
       setPerInfo(0);
     });
