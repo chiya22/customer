@@ -41,18 +41,21 @@ module.exports = {
     // 会議室利用者情報取込
     setriyousha: "30 9 * * 1-5",
     // 会議室予約情報ダウンロード
+    dlyoyaku_minus1: "25 23 * * *",
     dlyoyaku_0: "30 23 * * *",
     dlyoyaku_1: "35 23 * * *",
     dlyoyaku_2: "40 23 * * *",
     dlyoyaku_3: "45 23 * * *",
     dlyoyaku_4: "50 23 * * *",
     // 会議室予約情報取込
+    setyoyaku_minus1: "28 23 * * *",
     setyoyaku_0: "33 23 * * *",
     setyoyaku_1: "38 23 * * *",
     setyoyaku_2: "43 23 * * *",
     setyoyaku_3: "48 23 * * *",
     setyoyaku_4: "53 23 * * *",
     // 会議室稼働率計算
+    calcperyoyaku_minus1: "35 23 * * *",
     calcperyoyaku_0: "55 23 * * *",
     calcperyoyaku_1: "56 23 * * *",
     calcperyoyaku_2: "57 23 * * *",
