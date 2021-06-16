@@ -19,7 +19,7 @@ var personRouter = require('./routes/person');
 var outaisRouter = require('./routes/outai');
 var riyoushaRouter = require('./routes/riyousha');
 var outaiskaigiRouter = require('./routes/outaikaigi');
-var topRouter = require('./routes/top');
+// var topRouter = require('./routes/top');
 
 var app = express();
 
@@ -64,7 +64,7 @@ app.use('/outai', outaisRouter);
 
 app.use('/riyousha', riyoushaRouter);
 app.use('/outaikaigi', outaiskaigiRouter);
-app.use('/top', topRouter);
+// app.use('/top', topRouter);
 
 const cron = require('./util/cron')
 cron.startcron();

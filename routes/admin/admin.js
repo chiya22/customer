@@ -5,6 +5,7 @@ const security = require("../../util/security");
 const m_person = require("../../model/persons");
 const m_nyukyo = require("../../model/nyukyos");
 const m_company = require("../../model/companies");
+const m_perinfo = require("../../model/perinfo");
 
 /* GET home page. */
 router.get("/", security.authorize(), (req, res, next) => {
@@ -101,9 +102,9 @@ router.post("/download/companiespanelinfo", (req, res, next) => {
     csv =
       "行, 会社名・屋号,ふりがな,入居者番号,入居年月日,解約年月日" +
       "\r\n";
-      retObjCompanyuPanelinfo.forEach((obj) => {
+    retObjCompanyuPanelinfo.forEach((obj) => {
       csv +=
-        obj.line + 
+        obj.line +
         "," +
         obj.name +
         "," +
@@ -120,6 +121,18 @@ router.post("/download/companiespanelinfo", (req, res, next) => {
     res.setHeader("Content-disposition", "attachment; filename=companypanelinfo.csv");
     res.setHeader("Content-Type", "text/csv; charset=UTF-8");
     res.status(200).send(csv);
+  })();
+});
+
+/**
+ * 会議室稼働率画面へ
+ */
+router.get("/perinfo", security.authorize(), (req, res, next) => {
+  (async () => {
+    const retObjPer = await m_perinfo.selectAll();
+    res.render("admin/top", {
+      results: retObjPer,
+    });
   })();
 });
 
