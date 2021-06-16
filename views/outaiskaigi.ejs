@@ -107,15 +107,15 @@
             <% if (result.status === '完了') { %>
             <a class="btn-link bd-left-disabled" href="./outaikaigi/<%= result.id %>">
               <span class="color-disabled"><%= title %></span>
-              <span class="dateinfo-small">　　登録：<%= result.ymdhms_add %>（<%= result.name_add %>）
-                更新：<%= result.ymdhms_upd %>（<%= result.name_upd %>）</span>
-            </a>
+              <span class="dateinfo-small">　　登録：<%= result.ymdhms_add.slice(0,4) %>.<%= result.ymdhms_add.slice(4,6) %>.<%= result.ymdhms_add.slice(6,8) %>（<%= result.name_add %>）
+                更新：<%= result.ymdhms_upd.slice(0,4) %>.<%= result.ymdhms_upd.slice(4,6) %>.<%= result.ymdhms_upd.slice(6,8) %>（<%= result.name_upd %>）</span>
+              </a>
             <div class="balloon"><pre><%= result.content %></pre></div>
             <% } else { %>
             <a class="btn-link" href="./outaikaigi/<%= result.id %>">
               <span><%= title %></span>
-              <span class="dateinfo-small">　　登録：<%= result.ymdhms_add %>（<%= result.name_add %>）
-                更新：<%= result.ymdhms_upd %>（<%= result.name_upd %>）</span>
+              <span class="dateinfo-small">　　登録：<%= result.ymdhms_add.slice(0,4) %>.<%= result.ymdhms_add.slice(4,6) %>.<%= result.ymdhms_add.slice(6,8) %>（<%= result.name_add %>）
+                更新：<%= result.ymdhms_upd.slice(0,4) %>.<%= result.ymdhms_upd.slice(4,6) %>.<%= result.ymdhms_upd.slice(6,8) %>（<%= result.name_upd %>）</span>
             </a>
             <div class="balloon"><pre><%= result.content %></pre></div>
             <% } %>

@@ -19,7 +19,7 @@
         <div class="admin__car">
           <a class="btn-link" href="/admin/cars/update/<%= car.id %>">
             <%= car.id %>　<%= car.name %><span
-              class="dateinfo-small">　開始：<%= car.ymd_start %>　終了：<%= car.ymd_end %></span>
+              class="dateinfo-small">　開始：<%= car.ymd_start.slice(0,4) %>.<%= car.ymd_start.slice(4,6) %>.<%= car.ymd_start.slice(-2) %>　終了：<%= car.ymd_end.slice(0,4) %>.<%= car.ymd_end.slice(4,6) %>.<%= car.ymd_end.slice(-2) %>　</span>
               <% if (car.companyname) { %>
                 <%= car.companyname %>
               <% } %>

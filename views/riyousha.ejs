@@ -57,11 +57,11 @@
           <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.mail2 %>" disabled>
           </dd>
           <dt>登録年月日</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= riyousha.ymd_add %>"
+          <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= riyousha.ymd_add.slice(0,4) %>.<%= riyousha.ymd_add.slice(4,6) %>.<%= riyousha.ymd_add.slice(-2) %>"
               disabled>
           </dd>
           <dt>更新年月日</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="ymd_kaiyaku" value="<%= riyousha.ymd_upd %>"
+          <dd><input type="text" class="form__item-readonly-style" name="ymd_kaiyaku" value="<%= riyousha.ymd_upd.slice(0,4) %>.<%= riyousha.ymd_upd.slice(4,6) %>.<%= riyousha.ymd_upd.slice(-2) %>"
               disabled>
           </dd>
           <dt>備考</dt>

@@ -59,11 +59,11 @@
           <dd><input type="text" class="form__item-readonly-style" name="address" value="<%= person.address %>"
               disabled></dd>
           <dt>入居年月日</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= person.ymd_nyukyo %>"
+          <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= person.ymd_nyukyo.slice(0,4) %>.<%= person.ymd_nyukyo.slice(4,6) %>.<%= person.ymd_nyukyo.slice(-2) %>"
               required>
           </dd>
           <dt>解約年月日</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="ymd_kaiyaku" value="<%= person.ymd_kaiyaku %>"
+          <dd><input type="text" class="form__item-readonly-style" name="ymd_kaiyaku" value="<%= person.ymd_kaiyaku.slice(0,4) %>.<%= person.ymd_kaiyaku.slice(4,6) %>.<%= person.ymd_kaiyaku.slice(-2) %>"
               required>
           </dd>
           <dt>備考</dt>

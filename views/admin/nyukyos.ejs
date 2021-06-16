@@ -18,7 +18,7 @@
           <%  nyukyos.forEach( nyukyo => { %>
           <div class="admin_nyukyo">
             <a class="btn-link" href="/admin/nyukyos/update/<%= nyukyo.id %>">
-              <%= nyukyo.id %><span class="dateinfo-small">　開始：<%= nyukyo.ymd_start %>　終了：<%= nyukyo.ymd_end %></span>
+              <%= nyukyo.id %><span class="dateinfo-small">　開始：<%= nyukyo.ymd_start.slice(0,4) %>.<%= nyukyo.ymd_start.slice(4,6) %>.<%= nyukyo.ymd_start.slice(6,8) %>　終了：<%= nyukyo.ymd_end.slice(0,4) %>.<%= nyukyo.ymd_end.slice(4,6) %>.<%= nyukyo.ymd_end.slice(6,8) %>　</span>
               <%= nyukyo.id_company %><%= nyukyo.name_company %>
             </a>
           </div>

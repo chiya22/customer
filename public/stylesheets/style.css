@@ -1008,10 +1008,6 @@ dd.area__outai-content textarea {
   text-align: right;
 }
 
-.kaigi__result__ymd {
-  text-align: center;
-}
-
 .kaigi__result__bikou {
   font-size: 10px;
   color: gray;
@@ -1022,4 +1018,8 @@ dd.area__outai-content textarea {
   padding-top: 5px;
   padding-right: 10px;
   font-size: 20px;
+}
+
+.kaigi__result__ymd {
+  text-align: center;
 }

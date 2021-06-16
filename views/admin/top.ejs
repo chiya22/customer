@@ -20,12 +20,15 @@
           </tr>
           <% results.forEach( result => { %>
             <tr>
-              <td class="kaigi__result__ymd">
-                <%= result.yyyymm.slice(0,4) + '/' + result.yyyymm.slice(-2) %><br>
+              <td>
+                <div class="kaigi__result__ymd">
+                <%= result.yyyymm.slice(0,4) + '年' + result.yyyymm.slice(-2) + '月' %>
+                <br />
                 <span class="kaigi__result__bikou">
-                    <%= result.ymd_add.slice(0,4) + '/' + result.ymd_add.slice(4,6) + '/' + result.ymd_add.slice(-2)
+                    <%= result.ymd_add.slice(0,4) + '年' + result.ymd_add.slice(4,6) + '月' + result.ymd_add.slice(-2)
                       +　'更新' %>
                 </span>
+                </div>
               </td>
               <td>
                 <span class="kaigi__result__data">

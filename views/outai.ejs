@@ -26,11 +26,11 @@
         <dt></dt>
         <dd></dd>
         <dt>登録日時</dt>
-        <dd><input type="text" class="form__item-readonly-style" name="ymdhms_add" value="<%= outai.ymdhms_add %>" disabled></dd>
+        <dd><input type="text" class="form__item-readonly-style" name="ymdhms_add" value="<%= outai.ymdhms_add.slice(0,4) %>.<%= outai.ymdhms_add.slice(4,6) %>.<%= outai.ymdhms_add.slice(6,8) %> <%= outai.ymdhms_add.slice(8,10) %>:<%= outai.ymdhms_add.slice(10,12) %>:<%= outai.ymdhms_add.slice(12,14) %>" disabled></dd>
         <dt>登録者</dt>
         <dd><input type="text" class="form__item-readonly-style" name="id_add" value="<%= outai.name_add %>" disabled></dd>
         <dt>更新日時</dt>
-        <dd><input type="text" class="form__item-readonly-style" name="ymdhms_upd" value="<%= outai.ymdhms_upd %>" disabled></dd>
+        <dd><input type="text" class="form__item-readonly-style" name="ymdhms_upd" value="<%= outai.ymdhms_upd.slice(0,4) %>.<%= outai.ymdhms_upd.slice(4,6) %>.<%= outai.ymdhms_upd.slice(6,8) %> <%= outai.ymdhms_upd.slice(8,10) %>:<%= outai.ymdhms_upd.slice(10,12) %>:<%= outai.ymdhms_upd.slice(12,14) %>" disabled></dd>
         <dt>更新者</dt>
         <dd><input type="text" class="form__item-readonly-style" name="id_upd" value="<%= outai.name_upd %>" disabled></dd>
       </dl>

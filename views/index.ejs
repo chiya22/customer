@@ -113,8 +113,8 @@
                   <p class="tag bg-disabled"><%= result.kubun %></p>
                   <p class="tag bg-disabled">解約</p>
                   <span class="color-disabled"><%= result.name %></span>
-                  <span class="dateinfo color-disabled">入居：<%= result.ymd_nyukyo %>　
-                    解約：<%= result.ymd_kaiyaku %></span>
+                  <span class="dateinfo color-disabled">入居：<%= result.ymd_nyukyo.slice(0,4) %>.<%= result.ymd_nyukyo.slice(4,6) %>.<%= result.ymd_nyukyo.slice(-2) %>
+                    解約：<%= result.ymd_kaiyaku.slice(0,4) %>.<%= result.ymd_kaiyaku.slice(4,6) %>.<%= result.ymd_kaiyaku.slice(-2) %></span>
                   </a>
                   <% if (result.header !== '個人') { %>
                   <form method="POST" action="/outai">
@@ -136,9 +136,9 @@
                   <% } %>
                   <p class="tag"><%= result.kubun %></p>
                   <%= result.name %>
-                  <span class="dateinfo">入居：<%= result.ymd_nyukyo %>
+                  <span class="dateinfo">入居：<%= result.ymd_nyukyo.slice(0,4) %>.<%= result.ymd_nyukyo.slice(4,6) %>.<%= result.ymd_nyukyo.slice(-2) %>
                     <% if (result.ymd_kaiyaku !== '99991231') { %>
-                      解約：<%= result.ymd_kaiyaku %></span>
+                      解約：<%= result.ymd_kaiyaku.slice(0,4) %>.<%= result.ymd_kaiyaku.slice(4,6) %>.<%= result.ymd_kaiyaku.slice(-2) %></span>
                     <% } %>
                   </a>
                   <% if (result.header !== '個人') { %>

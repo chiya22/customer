@@ -19,7 +19,7 @@
         <div class="admin__bicycle">
           <a class="btn-link" href="/admin/bicycles/update/<%= bicycle.id %>">
             <%= bicycle.id %>　<%= bicycle.name %><span
-              class="dateinfo-small">　開始：<%= bicycle.ymd_start %>　終了：<%= bicycle.ymd_end %></span>
+              class="dateinfo-small">　開始：<%= bicycle.ymd_start.slice(0,4) %>.<%= bicycle.ymd_start.slice(4,6) %>.<%= bicycle.ymd_start.slice(-2) %>　終了：<%= bicycle.ymd_end.slice(0,4) %>.<%= bicycle.ymd_end.slice(4,6) %>.<%= bicycle.ymd_end.slice(-2) %>　</span>
               <% if (bicycle.companyname) { %>
                 <%= bicycle.companyname %>
               <% } %>

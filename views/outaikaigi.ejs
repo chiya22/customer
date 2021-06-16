@@ -26,11 +26,11 @@
         <dt></dt>
         <dd></dd>
         <dt>登録日時</dt>
-        <dd><input type="text" class="form__item-readonly-style" name="ymdhms_add" value="<%= outaikaigi.ymdhms_add %>" disabled></dd>
+        <dd><input type="text" class="form__item-readonly-style" name="ymdhms_add" value="<%= outaikaigi.ymdhms_add.slice(0,4) %>.<%= outaikaigi.ymdhms_add.slice(4,6) %>.<%= outaikaigi.ymdhms_add.slice(6,8) %> <%= outaikaigi.ymdhms_add.slice(8,10) %>:<%= outaikaigi.ymdhms_add.slice(10,12) %>:<%= outaikaigi.ymdhms_add.slice(12,14) %>" disabled></dd>
         <dt>登録者</dt>
         <dd><input type="text" class="form__item-readonly-style" name="id_add" value="<%= outaikaigi.name_add %>" disabled></dd>
         <dt>更新日時</dt>
-        <dd><input type="text" class="form__item-readonly-style" name="ymdhms_upd" value="<%= outaikaigi.ymdhms_upd %>" disabled></dd>
+        <dd><input type="text" class="form__item-readonly-style" name="ymdhms_upd" value="<%= outaikaigi.ymdhms_upd.slice(0,4) %>.<%= outaikaigi.ymdhms_upd.slice(4,6) %>.<%= outaikaigi.ymdhms_upd.slice(6,8) %> <%= outaikaigi.ymdhms_upd.slice(8,10) %>:<%= outaikaigi.ymdhms_upd.slice(10,12) %>:<%= outaikaigi.ymdhms_upd.slice(12,14) %>" disabled></dd>
         <dt>更新者</dt>
         <dd><input type="text" class="form__item-readonly-style" name="id_upd" value="<%= outaikaigi.name_upd %>" disabled></dd>
       </dl>

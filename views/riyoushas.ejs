@@ -65,7 +65,7 @@
                 <p class="tag"><%= result.kubun2 %></p>
                 <% } %>
                 <%= result.name %>
-                <span class="dateinfo">　|　登録日：<%= result.ymd_add %></span>
+                <span class="dateinfo">　|　登録日：<%= result.ymd_add.slice(0,4) %>.<%= result.ymd_add.slice(4,6) %>.<%= result.ymd_add.slice(-2) %></span>
               </a>
               <form method="POST" action="/outaikaigi">
                 <div class="btn-outai">

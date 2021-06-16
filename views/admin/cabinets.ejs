@@ -18,7 +18,7 @@
           <%  cabinets.forEach( cabinet => { %>
             <div class="admin__cabinet">
               <a class="btn-link" href="/admin/cabinets/update/<%= cabinet.id %>">
-                <%= cabinet.place %> <%= cabinet.name %><span class="dateinfo-small">　開始：<%= cabinet.ymd_start %>　終了：<%= cabinet.ymd_end %></span>
+                <%= cabinet.place %> <%= cabinet.name %><span class="dateinfo-small">　開始：<%= cabinet.ymd_start.slice(0,4) %>.<%= cabinet.ymd_start.slice(4,6) %>.<%= cabinet.ymd_start.slice(-2) %>　終了：<%= cabinet.ymd_end.slice(0,4) %>.<%= cabinet.ymd_end.slice(4,6) %>.<%= cabinet.ymd_end.slice(-2) %>　</span>
                 <%= cabinet.name_company %>
               </a>
             </div>

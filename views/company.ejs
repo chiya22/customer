@@ -75,12 +75,12 @@
             <dd><input type="text" class="form__item-readonly-style" name="kana" value="<%= company.kana %>" disabled>
             </dd>
             <dt>入居年月日</dt>
-            <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= company.ymd_nyukyo %>"
+            <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= company.ymd_nyukyo.slice(0,4) %>.<%= company.ymd_nyukyo.slice(4,6) %>.<%= company.ymd_nyukyo.slice(-2) %>"
                 disabled>
             </dd>
             <dt>解約年月日</dt>
             <dd><input type="text" class="form__item-readonly-style" name="ymd_kaiyaku"
-                value="<%= company.ymd_kaiyaku %>" disabled>
+                value="<%= company.ymd_kaiyaku.slice(0,4) %>.<%= company.ymd_kaiyaku.slice(4,6) %>.<%= company.ymd_kaiyaku.slice(-2) %>" disabled>
             </dd>
             <dt>備考</dt>
             <dd><input type="text" class="form__item-readonly-style" name="bikou" value="<%= company.bikou %>" disabled>
@@ -130,9 +130,9 @@
             <% if (person.ymd_kaiyaku >= current_yyyymmdd) { %>
             <a class="btn-link" href="/person/<%= person.id %>"><span
                 class="tag"><%= person.kubun_person %></span><%= person.name %><span
-                class="dateinfo">　入居：<%= person.ymd_nyukyo %></span>
+                class="dateinfo">　入居：<%= person.ymd_nyukyo.slice(0,4) %>.<%= person.ymd_nyukyo.slice(4,6) %>.<%= person.ymd_nyukyo.slice(-2) %></span>
               <% if (person.ymd_kaiyaku !== '99991231') { %>
-              　解約：<%= person.ymd_kaiyaku %>
+              　解約：<%= person.ymd_kaiyaku.slice(0,4) %>.<%= person.ymd_kaiyaku.slice(4,6) %>.<%= person.ymd_kaiyaku.slice(-2) %>
               <% } %>
             </a>
             <% } else { %>
@@ -140,7 +140,7 @@
               <span class="tag bg-disabled">解約</span>
               <span class="tag bg-disabled"><%= person.kubun_person %></span>
               <span class="color-disabled"><%= person.name %><span
-                  class="dateinfo">　入居：<%= person.ymd_nyukyo %>　解約：<%= person.ymd_kaiyaku %></span></span>
+                  class="dateinfo">　入居：<%= person.ymd_nyukyo.slice(0,4) %>.<%= person.ymd_nyukyo.slice(4,6) %>.<%= person.ymd_nyukyo.slice(-2) %>　解約：<%= person.ymd_kaiyaku.slice(0,4) %>.<%= person.ymd_kaiyaku.slice(4,6) %>.<%= person.ymd_kaiyaku.slice(-2) %></span></span>
             </a>
             <% } %>
           </div>
@@ -195,9 +195,9 @@
               roomname = room.name + '（' + room.person + '名）'
             }
             if (room.ymd_end === '99991231') {
-              dateinfo = '開始：' + room.ymd_start
+              dateinfo = `開始：${room.ymd_start.slice(0,4)}.${room.ymd_start.slice(4,6)}.${room.ymd_start.slice(-2)}`
             } else {
-              dateinfo = '開始：' + room.ymd_start + '　終了：' + room.ymd_end
+              dateinfo = `開始：${room.ymd_start.slice(0,4)}.${room.ymd_start.slice(4,6)}.${room.ymd_start.slice(-2)}　終了：${room.ymd_end.slice(0,4)}.${room.ymd_end.slice(4,6)}.${room.ymd_end.slice(-2)}`
             }
           %>
           <!-- 部屋の解約日　＞＝　現在の日付　※解約予定だが、解約日を過ぎていない場合　-->
@@ -252,9 +252,9 @@
           <%
             let dateinfo;
             if (cabinet.ymd_end === '99991231') {
-              dateinfo = '開始：' + cabinet.ymd_start
+              dateinfo = `開始：${cabinet.ymd_start.slice(0,4)}.${cabinet.ymd_start.slice(4,6)}.${cabinet.ymd_start.slice(-2)}`
             } else {
-              dateinfo = '開始：' + cabinet.ymd_start + '　終了：' + cabinet.ymd_end
+              dateinfo = `開始：${cabinet.ymd_start.slice(0,4)}.${cabinet.ymd_start.slice(4,6)}.${cabinet.ymd_start.slice(-2)}　終了：${cabinet.ymd_end.slice(0,4)}.${cabinet.ymd_end.slice(4,6)}.${cabinet.ymd_end.slice(-2)}`
             }
           %>
           <!-- キャビネットの解約日　＞＝　現在の日付　※解約予定だが、解約日を過ぎていない場合　-->
@@ -310,9 +310,9 @@
         bicyclename = bicycle.id + ' ' + bicycle.name
         let dateinfo;
         if (bicycle.ymd_end === '99991231') {
-          dateinfo = '開始：' + bicycle.ymd_start
-        } else {
-          dateinfo = '開始：' + bicycle.ymd_start + '　終了：' + bicycle.ymd_end
+          dateinfo = `開始：${bicycle.ymd_start.slice(0,4)}.${bicycle.ymd_start.slice(4,6)}.${bicycle.ymd_start.slice(-2)}`
+            } else {
+          dateinfo = `開始：${bicycle.ymd_start.slice(0,4)}.${bicycle.ymd_start.slice(4,6)}.${bicycle.ymd_start.slice(-2)}　終了：${bicycle.ymd_end.slice(0,4)}.${bicycle.ymd_end.slice(4,6)}.${bicycle.ymd_end.slice(-2)}`
         }
         %>
           <!-- 駐輪場の解約日　＞＝　現在の日付　※解約予定だが、解約日を過ぎていない場合　-->
@@ -368,9 +368,9 @@
             carname = car.id + ' ' + car.name
             let dateinfo;
             if (car.ymd_end === '99991231') {
-              dateinfo = '開始：' + car.ymd_start
+              dateinfo = `開始：${car.ymd_start.slice(0,4)}.${car.ymd_start.slice(4,6)}.${car.ymd_start.slice(-2)}`
             } else {
-              dateinfo = '開始：' + car.ymd_start + '　終了：' + car.ymd_end
+              dateinfo = `開始：${car.ymd_start.slice(0,4)}.${car.ymd_start.slice(4,6)}.${car.ymd_start.slice(-2)}　終了：${car.ymd_end.slice(0,4)}.${car.ymd_end.slice(4,6)}.${car.ymd_end.slice(-2)}`
             }
             %>
                 <!-- 駐車場の解約日　＞＝　現在の日付　※解約予定だが、解約日を過ぎていない場合　-->
