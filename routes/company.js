@@ -11,6 +11,7 @@ const m_re_comroom = require("../model/relation_comroom");
 const m_re_comcabi = require("../model/relation_comcabi");
 const m_re_combicycle = require("../model/relation_combicycle");
 const m_re_comcar = require("../model/relation_comcar");
+const m_re_comtelno = require("../model/relation_comtelno")
 const m_sq = require("../model/sq");
 
 /**
@@ -57,6 +58,12 @@ router.get("/:id", security.authorize(), (req, res, next) => {
       // 部屋空き情報取得
       const retObjSelectRooms = await m_re_comroom.findForSelect();
 
+      // 電話番号情報取得
+      const retObjTelnos = await m_re_comtelno.findByCompany(req.params.id);
+
+      // 電話番号空き情報取得
+      const retObjFreeTelnos = await m_re_comtelno.findFree();
+
       // 駐車場情報取得
       const retObjCars = await m_re_comcar.findByCompany(req.params.id);
 
@@ -76,6 +83,8 @@ router.get("/:id", security.authorize(), (req, res, next) => {
         freecabinets: retObjFreeCabinets,
         rooms: retObjRooms,
         selectrooms: retObjSelectRooms,
+        telnos: retObjTelnos,
+        freetelnos: retObjFreeTelnos,
         bicycles: retObjBicycles,
         freebicycles: retObjFreeBicycles,
         cars: retObjCars,
@@ -251,15 +260,18 @@ router.post("/cancel", security.authorize(), (req, res, next) => {
     //会社⇔部屋情報の解約
     const reObjComroom = await m_re_comroom.cancelByCompany(inObjRelation);
 
-    //入居番号⇔キャビネットの解約
+    //会社⇔キャビネットの解約
     const retObjComcabi = await m_re_comcabi.cancelByCompany(inObjRelation);
 
-    //入居番号⇔駐輪場の解約
+    //会社⇔電話番号の解約
+    const retObjComtelno = await m_re_comtelno.cancelByCompany(inObjRelation);
+
+    //会社⇔駐輪場の解約
     const retObjCombicycle = await m_re_combicycle.cancelByCompany(
       inObjRelation
     );
 
-    //入居番号⇔駐車場の解約
+    //会社⇔駐車場の解約
     const retObjComcar = await m_re_comcar.cancelByCompany(inObjRelation);
 
     res.redirect("/");
@@ -277,7 +289,7 @@ router.post("/addroom", security.authorize(), (req, res, next) => {
       let ibObjComroom = {};
       ibObjComroom.id_company = id_company;
       ibObjComroom.id_room = req.body.id_room;
-      ibObjComroom.ymd_start = req.body.selected_ymd_kaiyaku_room;
+      ibObjComroom.ymd_start = req.body.selected_ymd_add_room;
       ibObjComroom.ymd_upd = tool.getToday();
       ibObjComroom.id_upd = req.user.id;
       const retObjComroom = await m_re_comroom.insert(ibObjComroom);
@@ -321,7 +333,7 @@ router.post("/addcabinet", security.authorize(), (req, res, next) => {
       let inObjComcabi = {};
       inObjComcabi.id_company = id_company;
       inObjComcabi.id_cabinet = req.body.id_cabinet;
-      inObjComcabi.ymd_start = req.body.selected_ymd_kaiyaku_cabinet;
+      inObjComcabi.ymd_start = req.body.selected_ymd_add_cabinet;
       inObjComcabi.ymd_upd = tool.getToday();
       inObjComcabi.id_upd = req.user.id;
       const retObjComcabi = await m_re_comcabi.insert(inObjComcabi);
@@ -354,6 +366,50 @@ router.get(
 );
 
 /**
+ * 会社に電話番号を紐づける
+ */
+ router.post("/addtelno", security.authorize(), (req, res, next) => {
+  (async () => {
+    const id_company = req.body.id_company;
+
+    if (req.body.id_telno !== "") {
+      let inObjComtelno = {};
+      inObjComtelno.id_company = id_company;
+      inObjComtelno.id_telno = req.body.telno;
+      inObjComtelno.transfer_telno = req.body.selected_transfer_telno;
+      inObjComtelno.ymd_start = req.body.selected_ymd_add_telno;
+      inObjComtelno.ymd_upd = tool.getToday();
+      inObjComtelno.id_upd = req.user.id;
+      const retObjComtelno = await m_re_comtelno.insert(inObjComtelno);
+      res.redirect("/company/" + id_company);
+    } else {
+      res.redirect("/company/" + id_company);
+    }
+  })();
+});
+
+/**
+ * 会社に紐づいている電話番号を外す
+ */
+router.get(
+  "/deletetelno/:id_company/:id_telno/:no_seq/:ymd_kaiyaku",
+  security.authorize(),
+  (req, res, next) => {
+    (async () => {
+      let inObjComtelno = {};
+      inObjComtelno.id_company = req.params.id_company;
+      inObjComtelno.id_telno = req.params.id_telno;
+      inObjComtelno.no_seq = req.params.no_seq;
+      inObjComtelno.ymd_end = req.params.ymd_kaiyaku;
+      inObjComtelno.ymd_upd = tool.getToday();
+      inObjComtelno.id_upd = req.user.id;
+      const retObjComtelno = await m_re_comtelno.remove(inObjComtelno);
+      res.redirect("/company/" + req.params.id_company);
+    })();
+  }
+);
+
+/**
  * 会社に駐輪場を紐づける
  */
 router.post("/addbicycle", security.authorize(), (req, res, next) => {
@@ -364,7 +420,7 @@ router.post("/addbicycle", security.authorize(), (req, res, next) => {
       let inObjCombicycle = {};
       inObjCombicycle.id_company = id_company;
       inObjCombicycle.id_bicycle = req.body.id_bicycle;
-      inObjCombicycle.ymd_start = req.body.selected_ymd_kaiyaku_bicycle;
+      inObjCombicycle.ymd_start = req.body.selected_ymd_add_bicycle;
       inObjCombicycle.ymd_upd = tool.getToday();
       inObjCombicycle.id_upd = req.user.id;
       const retObjCombicycle = await m_re_combicycle.insert(inObjCombicycle);
@@ -407,7 +463,7 @@ router.post("/addcar", security.authorize(), (req, res, next) => {
       let inObjComcar = {};
       inObjComcar.id_company = id_company;
       inObjComcar.id_car = req.body.id_car;
-      inObjComcar.ymd_start = req.body.selected_ymd_kaiyaku_car;
+      inObjComcar.ymd_start = req.body.selected_ymd_add_car;
       inObjComcar.ymd_upd = tool.getToday();
       inObjComcar.id_upd = req.user.id;
       const retObjComcar = await m_re_comcar.insert(inObjComcar);

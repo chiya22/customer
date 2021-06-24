@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>電話番号管理</title>
+  <%- include("../common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("../common/header.ejs", {current: 'master'}) %>
+  <div class="main">
+    <div class="main__wrapper">
+      <div class="area-admin-link">
+        <a class="btn-base" href="/admin/telnos/insert">登録</a>
+      </div>
+      <div class="admin__telnos">
+        <% if (telnos) { %>
+        <%  telnos.forEach( telno => { %>
+        <div class="admin_telno">
+          <a class="btn-link" href="/admin/telnos/update/<%= telno.telno %>">
+            <%= telno.place %> <%= telno.kubun %> <%= telno.telno %> <%= telno.bikou %> <span class="dateinfo-small">　開始：<%= telno.ymd_start.slice(0,4) %>.<%= telno.ymd_start.slice(4,6) %>.<%= telno.ymd_start.slice(6,8) %>　終了：<%= telno.ymd_end.slice(0,4) %>.<%= telno.ymd_end.slice(4,6) %>.<%= telno.ymd_end.slice(6,8) %>　</span>
+            <% if (telno.companyname) { %><%= telno.companyname %><% } %>
+          </a>
+        </div>
+        <%  }) %>
+        <% } %>
+      </div>
+      <!-- /.admin__room -->
+    </div>
+    <!-- /.main__wrapper -->
+  </div>
+  <!-- /.main -->
+</body>
+<%- include("../common/javascripts.ejs") %>
+
+</html>

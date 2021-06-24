@@ -316,7 +316,7 @@ input:checked + .checkbox_label::before {
   margin: 20px;
 }
 
-.msg, .msg_add {
+.msg, .msg_add, .msg_add_telno {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -325,7 +325,7 @@ input:checked + .checkbox_label::before {
   visibility: hidden;
 }
 
-.msgarea, .msgarea_add {
+.msgarea, .msgarea_add, .msgarea_add_telno {
   position: relative;
   top: 50%;
   left: 50%;
@@ -333,12 +333,12 @@ input:checked + .checkbox_label::before {
   background-color: #fff;
   border-radius: 15px;
   font-size: 1rem;
-  width: 400px;
+  width: 450px;
   text-align: center;
   padding: 1rem;
 }
 
-.msgarea input, .msgarea_add input {
+.msgarea input, .msgarea_add input, .msgarea_add_telno input {
   margin-bottom: 20px;
 }
 
@@ -350,7 +350,9 @@ input:checked + .checkbox_label::before {
 .msgarea__okbtn,
 .msgarea__ngbtn,
 .msgarea__okbtn_add,
-.msgarea__ngbtn_add {
+.msgarea__ngbtn_add,
+.msgarea__okbtn_add_telno,
+.msgarea__ngbtn_add_telno {
   font-size: 1rem;
   color: #808080;
   border: 1px solid #808080;
@@ -880,6 +882,35 @@ dd.area__outai-content textarea {
   opacity: 0.7;
 }
 
+.telno {
+  margin-bottom: 0.5rem;
+}
+
+.telno .telno__form {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.telno .telno__items {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.telno .telno__items .telno__item {
+  background-color: #f7f7f7;
+  color: #cd5e42;
+  font-weight: bold;
+  padding: 0.5em 1rem;
+  border: solid 1px #cd5e42;
+  font-size: 0.75rem;
+  margin: 5px 15px 5px 0;
+}
+
+.telno .telno__items .telno__item a:hover {
+  opacity: 0.7;
+}
+
 .bicycle {
   margin-bottom: 0.5rem;
 }
@@ -961,6 +992,7 @@ dd.area__outai-content textarea {
 .admin__rooms,
 .admin__bicycles,
 .admin__cars,
+.admin__telnos,
 .admin__cabinets {
   margin-top: 0.5rem;
   margin-left: 1.5rem;
@@ -971,6 +1003,7 @@ dd.area__outai-content textarea {
 .admin__rooms a,
 .admin__bicycles a,
 .admin__cars a,
+.admin__telnos a,
 .admin__cabinets a {
   margin: 0.5rem 0.5rem;
 }

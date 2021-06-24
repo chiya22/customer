@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>電話番号管理（編集）</title>
+  <%- include("../common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("../common/header.ejs", {current: 'master'}) %>
+  <div class="main">
+    <div class="main__wrapper">
+      <div class="area-admin-link">
+        <a class="btn-base" href="/admin/telnos">戻る</a>
+      </div>
+      <% if (message && message.length !== 0) { %>
+      <div class="alert alert-danger">
+        <%= message %>
+      </div>
+      <% } %>
+      <div class="admin__telno">
+        <form name="telnoform" method="POST">
+          <dl>
+          <% if (mode === 'insert') { %>
+          <dt>電話番号</dt>
+          <dd><input class="form__item-style" type="text" name="telno" placeholder="03-9999-9999" maxlength="11" required></dd>
+          <dt>区分</dt>
+          <dd><input class="form__item-style" type="text" name="kubun" placeholder="内線/外線" required></dd>
+          <dt>場所</dt>
+          <dd><input class="form__item-style" type="text" name="place" placeholder="本館/アネックス05/アネックス10" required></dd>
+          <dt>備考</dt>
+          <dd><input class="form__item-style" type="text" name="bikou" required></dd>
+          <div class="form__btn">
+            <input class="btn-base" type="button" id="btn_insert" value="登録">
+          <% } else { %>
+          <dt>電話番号</dt>
+          <dd><input class="form__item-style bg-input-disabled" type="text" name="telno" value="<%= telno.telno %>" disabled></dd>
+          <input class="form__item-style" type="hidden" name="telno" value="<%= telno.telno %>">
+          <dt>区分</dt>
+          <dd><input class="form__item-style" type="text" name="kubun" value="<%= telno.kubun %>" required></dd>
+          <dt>場所</dt>
+          <dd><input class="form__item-style" type="text" name="place" value="<%= telno.place %>" required></dd>
+          <dt>備考</dt>
+          <dd><input class="form__item-style" type="text" name="bikou" value="<%= telno.bikou %>" required></dd>
+          <dt>適用開始日</dt>
+          <dd><input class="form__item-style flatpickr" type="text" name="ymd_start" value="<%= telno.ymd_start %>" required></dd>
+          <dt>適用終了日</dt>
+          <dd><input class="form__item-style flatpickr" type="text" name="ymd_end" value="<%= telno.ymd_end %>" required></dd>
+          <input type="hidden" name="before_ymd_end" value="<%= telno.ymd_end %>">
+          <div class="form__btn">
+            <input class="btn-base" type="button" id="btn_update" value="更新">
+          <input class="btn-base" type="button" id="btn_delete" value="削除">
+          <% } %>
+        </div>
+        <input type="hidden" id="field_mode">
+        </dl>
+        </form>
+      </div>
+      <!-- /.admin__telno -->
+    </div>
+    <!-- /.main__wrapper -->
+  </div>
+  <!-- /.main -->
+  <script>
+    let insertbtn = document.getElementById("btn_insert");
+    if (insertbtn) {
+      insertbtn.addEventListener("click", function () {
+        document.telnoform.action = "/admin/telnos/insert";
+        document.telnoform.submit();
+      })
+    }
+    let updatebtn = document.getElementById("btn_update");
+    if (updatebtn) {
+      updatebtn.addEventListener("click", function () {
+        document.telnoform.action = "/admin/telnos/update";
+        document.telnoform.submit();
+      })
+    }
+    let deletebtn = document.getElementById("btn_delete");
+    if (deletebtn) {
+      deletebtn.addEventListener("click", function () {
+        document.telnoform.action = "/admin/telnos/delete";
+        document.telnoform.submit();
+      })
+    }
+  </script>
+</body>
+<%- include("../common/javascripts.ejs") %>
+
+</html>

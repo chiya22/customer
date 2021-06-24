@@ -17,6 +17,19 @@
       <input type="hidden" name="addid" />
     </div>
   </div>
+  <div class="msg_add_telno">
+    <div class="msgarea_add_telno">
+      <p class="msgarea__text">設定された年月日で開始します。<br>よろしいですか？</p>
+      <input type="text" placeholder="開始日を選択する" class="form__item-style flatpickr" name="select_ymd_add_telno"
+        id="select_ymd_add_telno">
+      <p class="msgarea__text">転送先電話番号を設定する場合は、<br />ハイフン付で転送先電話番号を入力してください。</p>
+      <input type="text" placeholder="転送先電話番号入力" class="form__item-style" name="input_transfer_telno"
+        id="input_transfer_telno">
+      <button class="msgarea__okbtn_add_telno">はい</button>
+      <button class="msgarea__ngbtn_add_telno">いいえ</button>
+      <input type="hidden" name="addid_telno" />
+    </div>
+  </div>
   <div class="msg">
     <div class="msgarea">
       <p class="msgarea__text">設定された年月日で解約します。<br>よろしいですか？</p>
@@ -179,7 +192,7 @@
           </select>
           <input class="btn-base ml-small" name="addbtn" id="add_btn_room" type="button" value="追加">
           <input type="hidden" name="id_company" value="<%= company.id %>">
-          <input type="hidden" name="selected_ymd_kaiyaku_room" id="selected_ymd_kaiyaku_room" value="">
+          <input type="hidden" name="selected_ymd_add_room" id="selected_ymd_add_room" value="">
         </form>
         <% } %>
         <% } %>
@@ -242,7 +255,7 @@
           </select>
           <input class="btn-base ml-small" name="addbtn" id="add_btn_cabinet" type="button" value="追加">
           <input type="hidden" name="id_company" value="<%= company.id %>">
-          <input type="hidden" name="selected_ymd_kaiyaku_cabinet" id="selected_ymd_kaiyaku_cabinet" value="">
+          <input type="hidden" name="selected_ymd_add_cabinet" id="selected_ymd_add_cabinet" value="">
         </form>
         <% } %>
         <% } %>
@@ -280,6 +293,69 @@
       </div>
       <!-- /.cabinet -->
 
+      <div class="telno">
+        <div class="telno__header">
+          <p class="midashi">電話番号</p>
+        </div>
+        <!-- /.telno__header -->
+        <% if (company.ymd_kaiyaku === '99991231') { %>
+        <% if (locals.user.role === '社員') { %>
+        <form name="telnoForm" class="telno__form" method="POST" action="/company/addtelno">
+          <select name="telno" class="form__item-style telno__select">
+            <option value="" selected>-- 電話番号選択 --</option>
+            <% freetelnos.forEach(function (freetelno) { %>
+            <option value="<%= freetelno.telno %>">
+              <%= freetelno.telno %>　<%= freetelno.kubun %>　<%= freetelno.place %>　<%= freetelno.bikou %>
+            </option>
+            <% }) %>
+          </select>
+          <input class="btn-base ml-small" name="addbtn_telno" id="add_btn_telno" type="button" value="追加">
+          <input type="hidden" name="id_company" value="<%= company.id %>">
+          <input type="hidden" name="selected_ymd_add_telno" id="selected_ymd_add_telno" value="">
+          <input type="hidden" name="selected_transfer_telno" id="selected_transfer_telno" value="">
+        </form>
+        <% } %>
+        <% } %>
+        <div class="telno__items">
+          <% if (telnos) { %>
+          <%  telnos.forEach( telno => { %>
+          <%
+            let dateinfo;
+            if (telno.ymd_end === '99991231') {
+              dateinfo = `開始：${telno.ymd_start.slice(0,4)}.${telno.ymd_start.slice(4,6)}.${telno.ymd_start.slice(-2)}`
+            } else {
+              dateinfo = `開始：${telno.ymd_start.slice(0,4)}.${telno.ymd_start.slice(4,6)}.${telno.ymd_start.slice(-2)}　終了：${telno.ymd_end.slice(0,4)}.${telno.ymd_end.slice(4,6)}.${telno.ymd_end.slice(-2)}`
+            }
+            let telno_disp;
+            if (telno.transfer_telno) {
+              telno_disp = `${telno.telno}（${telno.transfer_telno}）`
+            } else {
+              telno_disp = `${telno.telno}`
+            }
+          %>
+          <!-- 電話番の解約日　＞＝　現在の日付　※解約予定だが、解約日を過ぎていない場合　-->
+          <% if (telno.ymd_end >= current_yyyymmdd) { %>
+          <div class="telno__item">
+            <span><%= telno_disp %>　<%= telno.kubun %>　<%= telno.place %>　<%= telno.bikou %>　<%= dateinfo %></span>
+          <% } else { %>
+          <div class="telno__item bd-disabled pd-disabled">
+            <span class="color-disabled"><%= telno_disp %>　<%= telno.kubun %>　<%= telno.place %>　<%= telno.bikou %>　<%= dateinfo %></span>
+          <% } %>
+            <% if ((company.ymd_kaiyaku === '99991231') && (telno.ymd_end === '99991231')) { %>
+            <% if (locals.user.role === '社員') { %>
+            <a name="dellink" class="tag"
+              href="/company/deletetelno/<%= company.id %>/<%= telno.id_telno %>/<%= telno.no_seq %>">解約</a>
+            <% } %>
+            <% } %>
+          </div>
+          <!-- /.telno__item -->
+          <%  }) %>
+          <% } %>
+        </div>
+        <!-- /.telno__items -->
+      </div>
+      <!-- /.telno -->
+
       <div class="bicycle">
         <div class="bicycle__header">
           <p class="midashi">駐輪場</p>
@@ -298,7 +374,7 @@
           </select>
           <input class="btn-base ml-small" name="addbtn" id="add_btn_bicycle" type="button" value="追加">
           <input type="hidden" name="id_company" value="<%= company.id %>">
-          <input type="hidden" name="selected_ymd_kaiyaku_bicycle" id="selected_ymd_kaiyaku_bicycle" value="">
+          <input type="hidden" name="selected_ymd_add_bicycle" id="selected_ymd_add_bicycle" value="">
         </form>
         <% } %>
         <% } %>
@@ -356,7 +432,7 @@
                 </select>
                 <input class="btn-base ml-small" name="addbtn" id="add_btn_car" type="button" value="追加">
                 <input type="hidden" name="id_company" value="<%= company.id %>">
-                <input type="hidden" name="selected_ymd_kaiyaku_car" id="selected_ymd_kaiyaku_car" value="">
+                <input type="hidden" name="selected_ymd_add_car" id="selected_ymd_add_car" value="">
               </form>
               <% } %>
               <% } %>
@@ -404,13 +480,20 @@
 
   // セレクトボックスのボタン制御
   const roomselect = document.getElementsByClassName('room__select')[0];
-  const cabinetselect = document.getElementsByClassName('cabinet__select')[0];
-  const bicycleselect = document.getElementsByClassName('bicycle__select')[0];
-  const carselect = document.getElementsByClassName('car__select')[0];
   const roomaddbtn = document.getElementById('add_btn_room');
+
+  const cabinetselect = document.getElementsByClassName('cabinet__select')[0];
   const cabinetaddbtn = document.getElementById('add_btn_cabinet');
+
+  const telnoselect = document.getElementsByClassName('telno__select')[0];
+  const telnoaddbtn = document.getElementById('add_btn_telno');
+
+  const bicycleselect = document.getElementsByClassName('bicycle__select')[0];
   const bicycleaddbtn = document.getElementById('add_btn_bicycle');
+
+  const carselect = document.getElementsByClassName('car__select')[0];
   const caraddbtn = document.getElementById('add_btn_car');
+
   if (roomaddbtn){
     roomaddbtn.style.display = 'none';
     roomselect.addEventListener('change', () => {
@@ -421,19 +504,25 @@
     cabinetaddbtn.style.display = 'none';
     cabinetselect.addEventListener('change', () => {
     cabinetselect.value === ''? cabinetaddbtn.style.display='none': cabinetaddbtn.style.display='block';
-  })
+  });
+  }
+  if (telnoaddbtn) {
+    telnoaddbtn.style.display = 'none';
+    telnoselect.addEventListener('change', () => {
+    telnoselect.value === ''? telnoaddbtn.style.display='none': telnoaddbtn.style.display='block';
+  });
   }
   if (bicycleaddbtn) {
     bicycleaddbtn.style.display = 'none';
     bicycleselect.addEventListener('change', () => {
     bicycleselect.value === ''? bicycleaddbtn.style.display='none': bicycleaddbtn.style.display='block';
-  })
+  });
   }
   if (caraddbtn) {
     caraddbtn.style.display = 'none';
-  carselect.addEventListener('change', () => {
+    carselect.addEventListener('change', () => {
     carselect.value === ''? caraddbtn.style.display='none': caraddbtn.style.display='block';
-  })
+  });
   }
 
   /*
@@ -483,6 +572,24 @@
   }
 
   /*
+   追加（電話番号）ボタン
+   押された追加ボタンのリンクをaddidに設定し、メッセージエリアを表示する
+  */
+  let addtelnobtns = document.getElementsByName("addbtn_telno");
+  if (addtelnobtns) {
+    addtelnobtns.forEach((addbtn, index) => {
+    addbtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      let addid = document.getElementsByName('addid_telno')[0];
+      addid.value = this.id;
+      scrollTo(0, 0);
+      let msg_add_telno = document.getElementsByClassName("msg_add_telno")[0];
+      msg_add_telno.style.visibility = "visible";
+      });
+    });
+  }
+
+  /*
    追加ボタンを押したときに表示されるメッセージエリアの制御
   */
   let okbtn_add = document.getElementsByClassName("msgarea__okbtn_add")[0];
@@ -491,18 +598,19 @@
     let addid = document.getElementsByName('addid')[0];
     let select = document.getElementsByName('select_ymd_add')[0];
     let selected;
+    let transfer_telno;
     let selectform;
     if (addid.value === 'add_btn_room') {
-      selected = document.getElementById("selected_ymd_kaiyaku_room");
+      selected = document.getElementById("selected_ymd_add_room");
       selectform = document.roomForm;
     } else if (addid.value === 'add_btn_cabinet') {
-      selected = document.getElementById("selected_ymd_kaiyaku_cabinet");
+      selected = document.getElementById("selected_ymd_add_cabinet");
       selectform = document.cabinetForm;
     } else if (addid.value === 'add_btn_bicycle') {
-      selected = document.getElementById("selected_ymd_kaiyaku_bicycle");
+      selected = document.getElementById("selected_ymd_add_bicycle");
       selectform = document.bicycleForm;
     } else if (addid.value === 'add_btn_car') {
-      selected = document.getElementById("selected_ymd_kaiyaku_car");
+      selected = document.getElementById("selected_ymd_add_car");
       selectform = document.carForm;
     }
     if (select.value) {
@@ -518,6 +626,38 @@
   if (ngbtn_add) {
     ngbtn_add.addEventListener('click', function () {
     let msg = document.getElementsByClassName("msg_add")[0];
+    msg.style.visibility = "hidden";
+  });
+  }
+
+  /*
+   追加（電話番号）ボタンを押したときに表示されるメッセージエリアの制御
+  */
+  let okbtn_add_telno = document.getElementsByClassName("msgarea__okbtn_add_telno")[0];
+  if (okbtn_add_telno) {
+    okbtn_add_telno.addEventListener('click', function () {
+
+    const select = document.getElementsByName('select_ymd_add_telno')[0];
+    const select_transfer_telno = document.getElementById("input_transfer_telno");
+
+    selectedtransferno = document.getElementById("selected_transfer_telno");
+    selected = document.getElementById("selected_ymd_add_telno");
+    selectform = document.telnoForm;
+
+    if (select.value) {
+      selected.value = select.value;
+      selectedtransferno.value = select_transfer_telno.value;
+      selectform.submit();
+    } else {
+      select.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
+      return false;
+    }
+    });
+  }
+  let ngbtn_add_telno = document.getElementsByClassName("msgarea__ngbtn_add_telno")[0];
+  if (ngbtn_add_telno) {
+    ngbtn_add_telno.addEventListener('click', function () {
+    let msg = document.getElementsByClassName("msg_add_telno")[0];
     msg.style.visibility = "hidden";
   });
   }
@@ -542,7 +682,6 @@
       return false;
     }
   });
-
   let ngbtn = document.getElementsByClassName("msgarea__ngbtn")[0];
   ngbtn.addEventListener('click', function () {
     let msg = document.getElementsByClassName("msg")[0];
