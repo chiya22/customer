@@ -56,12 +56,16 @@
           <dt>メール２</dt>
           <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.mail2 %>" disabled>
           </dd>
+		  <%
+			const ymd_add = (riyousha.ymd_add ? `${riyousha.ymd_add.slice(0,4)}.${riyousha.ymd_add.slice(4,6)}.${riyousha.ymd_add.slice(-2)}` : '');
+			const ymd_upd = (riyousha.ymd_upd ? `${riyousha.ymd_upd.slice(0,4)}.${riyousha.ymd_upd.slice(4,6)}.${riyousha.ymd_upd.slice(-2)}` : '');
+		  %>
           <dt>登録年月日</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= riyousha.ymd_add.slice(0,4) %>.<%= riyousha.ymd_add.slice(4,6) %>.<%= riyousha.ymd_add.slice(-2) %>"
+          <dd><input type="text" class="form__item-readonly-style" name="ymd_add" value="<%= ymd_add %>"
               disabled>
           </dd>
           <dt>更新年月日</dt>
-          <dd><input type="text" class="form__item-readonly-style" name="ymd_kaiyaku" value="<%= riyousha.ymd_upd.slice(0,4) %>.<%= riyousha.ymd_upd.slice(4,6) %>.<%= riyousha.ymd_upd.slice(-2) %>"
+          <dd><input type="text" class="form__item-readonly-style" name="ymd_upd" value="<%= ymd_upd %>"
               disabled>
           </dd>
           <dt>備考</dt>
@@ -120,33 +124,6 @@
   </div>
 </body>
 
-<script>
-
-  let cancelbtn = document.getElementById("cancelbtn");
-  cancelbtn.addEventListener('click', function () {
-    scrollTo(0, 0);
-    let msg = document.getElementsByClassName("msg")[0];
-    msg.style.visibility = "visible";
-  });
-  let okbtn = document.getElementsByClassName("msgarea__okbtn")[0];
-  let ngbtn = document.getElementsByClassName("msgarea__ngbtn")[0];
-  okbtn.addEventListener('click', function () {
-    let select = document.getElementById("select_ymd_kaiyaku");
-    let selected = document.getElementById("selected_ymd_kaiyaku");
-    if (select.value) {
-      selected.value = select.value;
-      document.cancelForm.submit();
-    } else {
-      select.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
-      return false;
-    }
-  });
-  ngbtn.addEventListener('click', function () {
-    let msg = document.getElementsByClassName("msg")[0];
-    msg.style.visibility = "hidden";
-  });
-
-</script>
 <%- include("./common/javascripts.ejs") %>
 
 </html>

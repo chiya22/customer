@@ -51,7 +51,7 @@ const findLikeForPaging = async (likevalue, percount, offset) => {
 
 const insert = async (inObj) => {
     try {
-        const query = 'insert into riyoushas values ("' + inObj.id + '","' + inObj.kubun + '","' + inObj.kubun2 + '","' + inObj.name + '",' + tool.returnvalueWithoutNull(inObj.kana) + ',' + tool.returnvalueWithoutNull(inObj.sex) + ',' + tool.returnvalueWithoutNull(inObj.no_yubin) + ',' + tool.returnvalueWithoutNull(inObj.address) + ',' + tool.returnvalueWithoutNull(inObj.no_tel) + ',' + tool.returnvalueWithoutNull(inObj.mail1) + ',' + tool.returnvalueWithoutNull(inObj.mail2) + ',' + tool.returnvalueWithoutNull(inObj.kubun_riyousha) + ',' + tool.returnvalueWithoutNull(inObj.kubun_vip) + ',' + tool.returnvalueWithoutNull(inObj.bikou) + ',' + tool.returnvalueWithoutNull(inObj.ymd_add) + ',' + tool.returnvalueWithoutNull(inObj.ymd_upd) + ')';
+        const query = 'insert into riyoushas values ("' + inObj.id + '","' + inObj.kubun + '","' + inObj.kubun2 + '","' + inObj.name + '",' + tool.returnvalue(inObj.kana) + ',' + tool.returnvalue(inObj.sex) + ',' + tool.returnvalue(inObj.no_yubin) + ',' + tool.returnvalue(inObj.address) + ',' + tool.returnvalue(inObj.no_tel) + ',' + tool.returnvalue(inObj.mail1) + ',' + tool.returnvalue(inObj.mail2) + ',' + tool.returnvalue(inObj.kubun_riyousha) + ',' + tool.returnvalue(inObj.kubun_vip) + ',' + tool.returnvalue(inObj.bikou) + ',' + tool.returnvalue(inObj.ymd_add) + ',' + tool.returnvalue(inObj.ymd_upd) + ')';
         const retObj = await knex.raw(query);
         return retObj[0];
     } catch(err) {
@@ -62,7 +62,7 @@ const insert = async (inObj) => {
 
 const update = async (inObj) => {
     try {
-        const query = 'update riyoushas set kubun = ' + tool.returnvalueWithoutNull(inObj.kubun) + ', kubun2 = ' + tool.returnvalueWithoutNull(inObj.kubun2) + ', name = "' + inObj.name + '", kana = ' + tool.returnvalueWithoutNull(inObj.kana) + ', sex = ' + tool.returnvalueWithoutNull(inObj.sex) + ', no_yubin = ' + tool.returnvalueWithoutNull(inObj.no_yubin) + ', address = ' + tool.returnvalueWithoutNull(inObj.address) + ', no_tel = ' + tool.returnvalueWithoutNull(inObj.no_tel) + ', mail1 = ' + tool.returnvalue(inObj.mail1) + ', mail2 = ' + tool.returnvalue(inObj.mail2) + ', kubun_riyousha = ' + tool.returnvalueWithoutNull(inObj.kubun_riyousha) + ', kubun_vip = ' + tool.returnvalueWithoutNull(inObj.kubun_vip) + ', bikou = ' + tool.returnvalueWithoutNull(inObj.bikou) + ', ymd_add = "' + tool.returnvalueWithoutNull(inObj.ymd_add) + '", ymd_upd = "' + tool.returnvalueWithoutNull(inObj.ymd_upd) + '" where id = ' + tool.returnvalue(inObj.id) + '';
+        const query = 'update riyoushas set kubun = ' + tool.returnvalue(inObj.kubun) + ', kubun2 = ' + tool.returnvalue(inObj.kubun2) + ', name = "' + inObj.name + '", kana = ' + tool.returnvalue(inObj.kana) + ', sex = ' + tool.returnvalue(inObj.sex) + ', no_yubin = ' + tool.returnvalue(inObj.no_yubin) + ', address = ' + tool.returnvalue(inObj.address) + ', no_tel = ' + tool.returnvalue(inObj.no_tel) + ', mail1 = ' + tool.returnvalue(inObj.mail1) + ', mail2 = ' + tool.returnvalue(inObj.mail2) + ', kubun_riyousha = ' + tool.returnvalue(inObj.kubun_riyousha) + ', kubun_vip = ' + tool.returnvalue(inObj.kubun_vip) + ', bikou = ' + tool.returnvalue(inObj.bikou) + ', ymd_add = "' + tool.returnvalue(inObj.ymd_add) + '", ymd_upd = "' + tool.returnvalue(inObj.ymd_upd) + '" where id = ' + tool.returnvalue(inObj.id) + '';
         const retObj = await knex.raw(query);
         return retObj[0];
     } catch(err) {
