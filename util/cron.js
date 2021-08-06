@@ -63,28 +63,27 @@ const startcron = () => {
       (async () => {
         const targetYYYYMMDD = tool.getYYYYMMDD7dayAfter();
         const query =
-          'SELECT * FROM ( SELECT * FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.ymd_upd IS NULL AND y.ymd_add < ' +
+          'SELECT y.* FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.ymd_riyou < ' +
           targetYYYYMMDD +
-          ' AND y.id_riyousha <> "00001" AND y.id_riyousha <> "10001" UNION ALL SELECT * FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.ymd_upd IS NOT NULL AND y.ymd_upd < ' +
-          targetYYYYMMDD +
-          ' AND y.id_riyousha <> "00001" AND y.id_riyousha <> "10001") y2 ORDER BY y2.ymd_riyou';
+          ' ORDER BY ymd_riyou, id_riyousha';
 
         const retObjYoyaku = await m_yoyaku.setSQL(query);
-        let content = `未入金の会議室予約情報一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
-
+        let content = `直近1週間における未入金の会議室予約情報一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
+        content += `利用日 | 利用者 | 会議室名 | 時間 | 金額 | 備考\r\n`;
         retObjYoyaku.forEach((yoyaku) => {
-          content += `利用日：${tool.returndateWithslash(
-            yoyaku.ymd_riyou
-          )}\r\n登録日：${tool.returndateWithslash(
-            yoyaku.ymd_add
-          )}\r\n更新日：${tool.returndateWithslash(
-            yoyaku.ymd_upd
-          )}\r\n会議室名：${yoyaku.nm_room}\r\n時間：${yoyaku.time_yoyaku
-            }\r\n金額：${yoyaku.price}\r\n利用者：${yoyaku.id_riyousha} | ${yoyaku.nm_riyousha
-            }\r\n受付：${yoyaku.nm_uketuke
-            }\r\n備考：${tool.returnvalueWithoutNull(
-              yoyaku.bikou
-            )}\r\n------------------------------------------------------\r\n`;
+          content += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
+          // content += `利用日：${tool.returndateWithslash(
+          //   yoyaku.ymd_riyou
+          // )}\r\n登録日：${tool.returndateWithslash(
+          //   yoyaku.ymd_add
+          // )}\r\n更新日：${tool.returndateWithslash(
+          //   yoyaku.ymd_upd
+          // )}\r\n会議室名：${yoyaku.nm_room}\r\n時間：${yoyaku.time_yoyaku
+          //   }\r\n金額：${yoyaku.price}\r\n利用者：${yoyaku.id_riyousha} | ${yoyaku.nm_riyousha
+          //   }\r\n受付：${yoyaku.nm_uketuke
+          //   }\r\n備考：${tool.returnvalueWithoutNull(
+          //     yoyaku.bikou
+          //   )}\r\n------------------------------------------------------\r\n`;
         });
 
         //メール送信
