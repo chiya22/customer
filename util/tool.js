@@ -189,12 +189,13 @@ const getYYYYMMDD7dayAfter = () => {
 
   let date = new Date();
 
-  //7日前を求める
-  date.setDate(date.getDate() -7);
+  // 7日後を求める
+  // 7日後が平日ではない場合は、7日後以降の平日
+  date.setDate(date.getDate() + 7);
 
   for (let i = 1; i < 30; i++){
 
-    date.setDate(date.getDate() - 1);
+    date.setDate(date.getDate() + 1);
 
     if (getDayKubun(getYYYYMMDD(date)) === 1) {
       break;
