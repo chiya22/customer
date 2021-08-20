@@ -99,7 +99,6 @@ router.post("/update/delete", security.authorize(), (req, res, next) => {
   (async () => {
     let inObjUser = {};
     inObjUser.id = req.body.id;
-    inObjUser.id_upd = req.user.id;
     try {
       const retObjUser = await users.remove(inObjUser);
       res.redirect(req.baseUrl);
