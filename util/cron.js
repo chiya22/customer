@@ -63,9 +63,9 @@ const startcron = () => {
       (async () => {
         const targetYYYYMMDD = tool.getYYYYMMDD7dayAfter();
         const query =
-          'SELECT y.* FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.ymd_riyou < ' +
+          'SELECT y.* FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.id_riyousha <> "00001" AND y.id_riyousha <> "10001"  AND y.ymd_riyou < ' +
           targetYYYYMMDD +
-          ' ORDER BY ymd_riyou, id_riyousha';
+          ' ORDER BY y.ymd_riyou, y.id_riyousha';
 
         const retObjYoyaku = await m_yoyaku.setSQL(query);
         let content = `直近1週間における未入金の会議室予約情報一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
@@ -326,11 +326,11 @@ const startcron = () => {
 
                   // すでに利用者が存在している場合
                   if (retObjRiyousha) {
+                    if (!retObjRiyousha.ymd_upd) {
+                      retObjRiyousha.ymd_upd = '';
+                    }
                     // 更新されているかを判別する
-                    if (
-                      target_ymd_add !== retObj.ymd_add ||
-                      target_ymd_upd !== retObj.ymd_upd
-                    ) {
+                    if (target_ymd_add !== retObjRiyousha.ymd_add || target_ymd_upd !== retObjRiyousha.ymd_upd) {
                       const retObjRiyoushaupdate = await m_riyousha.update(inObj);
                       if (retObjRiyoushaupdate.changedRows === 0) {
                         logger.info(`更新対象が存在しません：${inObj.id}`);
@@ -744,17 +744,17 @@ const startcron = () => {
     const getCurrentYYYYMM = (numM) => {
       const dt = new Date();
       const curYYYY = dt.getFullYear();
-      const curMM = dt.getMonth();
+      const curMM = dt.getMonth() + 1;
 
       // 現在の日付の年月をもとに、月数を求める
-      const fullMonth = curYYYY * 12 + (curMM + 1);
+      const fullMonth = (curYYYY * 12) + curMM;
 
       // 引数で設定された値を加算する
       const targetMonth = fullMonth + numM;
 
       // 年月を求める
-      const retYYYY = Math.floor(targetMonth / 12);
-      const retMM = targetMonth % 12;
+      const retYYYY = (targetMonth % 12 === 0 ? Math.floor(targetMonth / 12) - 1 : Math.floor(targetMonth / 12));
+      const retMM = (targetMonth % 12 === 0 ? 12 : targetMonth % 12);
 
       return "" + retYYYY + ("" + "0" + retMM).slice(-2);
     };
