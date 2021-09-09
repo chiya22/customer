@@ -464,6 +464,28 @@ const startcron = () => {
       dlinfo(4);
     });
 
+    // 会議室　予約情報初期化
+    cron.schedule(config.cron.calcperyoyaku_minus1, () => {
+      // cron.schedule('5 23 * * 1-5', () => {
+      clearyYoyakuInfo(-1);
+    });
+    cron.schedule(config.cron.clearyoyaku_0, () => {
+      // cron.schedule('5 23 * * 1-5', () => {
+      clearyYoyakuInfo(0);
+    });
+    cron.schedule(config.cron.clearyoyaku_1, () => {
+      clearyYoyakuInfo(1);
+    });
+    cron.schedule(config.cron.clearyoyaku_2, () => {
+      clearyYoyakuInfo(2);
+    });
+    cron.schedule(config.cron.clearyoyaku_3, () => {
+      clearyYoyakuInfo(3);
+    });
+    cron.schedule(config.cron.clearyoyaku_4, () => {
+      clearyYoyakuInfo(4);
+    });
+
     // 会議室　予約情報取込
     cron.schedule(config.cron.setyoyaku_minus1, () => {
       // cron.schedule('5 23 * * 1-5', () => {
@@ -509,8 +531,10 @@ const startcron = () => {
 
     //　予約情報ダウンロード
     const dlinfo = (num) => {
-      const addnum = num;
 
+      logger.info(`予約情報ダウンロード開始：${num}`);
+
+      const addnum = num;
       (async () => {
         const browser = await puppeteer.launch({ headless: true });
 
@@ -579,6 +603,9 @@ const startcron = () => {
           0
         ).getDate();
 
+        await logger.info(`対象年月日：${inYYYY_MM}`);
+        await logger.info(`末日：${in_DD_matubi}`);
+
         await newPageTouroku.select('select[name="in_month"]', inYYYY_MM);
         await newPageTouroku.select('select[name="in_sday"]', "1");
         await newPageTouroku.select(
@@ -606,7 +633,7 @@ const startcron = () => {
 
         const a_tag = await newPageResult.$("a");
         if (a_tag) {
-          await logger.info(`予約情報をダウンロードしました：${new Date()}`);
+          await logger.info(`予約情報をダウンロードしました：${inYYYY_MM}：${new Date()}`);
 
           // ダウンロード先の設定
           await page._client.send("Page.setDownloadBehavior", {
@@ -616,7 +643,7 @@ const startcron = () => {
           await a_tag.click();
           await page.waitForTimeout(10000);
         } else {
-          await logger.info(`予約情報がありませんでした：${new Date()}`);
+          await logger.info(`予約情報がありませんでした：${inYYYY_MM}：${new Date()}`);
         }
         await browser.close();
 
@@ -635,16 +662,25 @@ const startcron = () => {
           return newPage;
         }
       })();
+
+      logger.info(`予約情報ダウンロード終了：${num}`);
     };
 
-    // 予約情報取込
-    const setYoyakuInfo = (num) => {
-
+    // 予約情報初期化
+    const clearyYoyakuInfo = (num) => {
+      logger.info(`予約情報初期化開始：${num}`);
       (async () => {
         // 当月のデータを削除
         const retObjYoyakudelete = await m_yoyaku.deleteByMonth(getCurrentYYYYMM(num));
         logger.info(`予約情報を初期化しました：${getCurrentYYYYMM(num)}`);
       })();
+      logger.info(`予約情報初期化終了：${num}`);
+    }
+
+    // 予約情報取込
+    const setYoyakuInfo = (num) => {
+
+      logger.info(`予約情報取込開始：${num}`);
 
       // ダウンロードディレクトリにあるcsvファイルを取得する
       let targetfilename = "";
@@ -739,6 +775,7 @@ const startcron = () => {
           });
         }
       });
+      logger.info(`予約情報取込終了：${num}`);
     };
 
     const getCurrentYYYYMM = (numM) => {
