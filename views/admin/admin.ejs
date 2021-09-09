@@ -27,6 +27,10 @@
         <form action="/admin/download/companiespanelinfo" method="POST">
           <input type="submit" class="btn-link" value="正面パネル会社リストダウンロード">
         </form>
+        <form action="/admin/download/yoyakunyukinzumi" method="POST">
+          <input type="submit" class="btn-link" value="入金済予約情報ダウンロード">
+          <input type="text" style="display:inline-block;width:200px" class="form__item-style" name="target_yyyymm" placeholder="yyyymmで入力" required />
+        </form>
         <a class="btn-link" href="/admin/perinfo">会議室稼働率</a>
       </div>
       <!-- /.area-admin -->
