@@ -6,6 +6,11 @@ const m_person = require("../../model/persons");
 const m_nyukyo = require("../../model/nyukyos");
 const m_company = require("../../model/companies");
 const m_perinfo = require("../../model/perinfo");
+const m_yoyaku = require("../../model/yoyakus");
+
+const tool = require("../../util/tool");
+
+const iconv = require('iconv-lite');
 
 /* GET home page. */
 router.get("/", security.authorize(), (req, res, next) => {
@@ -47,6 +52,8 @@ router.post("/download/persons", (req, res, next) => {
         obj.telno_mobile +
         "\r\n";
     });
+
+    csv = 
 
     res.setHeader("Content-disposition", "attachment; filename=persons.csv");
     res.setHeader("Content-Type", "text/csv; charset=UTF-8");
@@ -121,6 +128,68 @@ router.post("/download/companiespanelinfo", (req, res, next) => {
     res.setHeader("Content-disposition", "attachment; filename=companypanelinfo.csv");
     res.setHeader("Content-Type", "text/csv; charset=UTF-8");
     res.status(200).send(csv);
+  })();
+});
+
+/* 入金済予約情報ダウンロード */
+router.post("/download/yoyakunyukinzumi", (req, res, next) => {
+  (async () => {
+    const target_yyyymm = req.body.target_yyyymm;
+    const retObjYoyakuNyukinZumi = await m_yoyaku.downloadNyukinZumi(target_yyyymm);
+    csv =
+      "ID, 登録年月日,利用年月日,更新年月日,部屋区分名,部屋名,予約時間,開始時間,終了時間,利用者ID,利用者名,利用者名（カナ）,郵便番号,住所,メールアドレス,電話番号,目的,受付者,人数,価格,支払状況,備考" +
+      "\r\n";
+      retObjYoyakuNyukinZumi.forEach((obj) => {
+      csv +=
+        obj.id +
+        "," +
+        tool.returndateWithslash(obj.ymd_add) +
+        "," +
+        tool.returndateWithslash(obj.ymd_riyou) +
+        "," +
+        (obj.ymd_upd? tool.returndateWithslash(obj.ymd_upd):'') +
+        "," +
+        obj.nm_kubun_room +
+        "," +
+        obj.nm_room +
+        "," +
+        obj.time_yoyaku +
+        "," +
+        obj.time_start +
+        "," +
+        obj.time_end +
+        "," +
+        obj.id_riyousha +
+        "," +
+        obj.nm_riyousha +
+        "," +
+        obj.kana_riyousha +
+        "," +
+        obj.no_yubin +
+        "," +
+        obj.address +
+        "," +
+        obj.email +
+        "," +
+        obj.telno +
+        "," +
+        obj.mokuteki +
+        "," +
+        obj.nm_uketuke +
+        "," +
+        obj.num_person +
+        "," +
+        obj.price +
+        "," +
+        obj.stat_shiharai +
+        "," +
+        (obj.bikou?obj.bikou:'') +
+        "\r\n";
+    });
+
+    res.setHeader("Content-disposition", "attachment; filename=yoyakunyukinzumi.csv");
+    res.setHeader("Content-Type", "text/csv; charset=UTF-8");
+    res.status(200).send(iconv.encode(csv, "Shift_JIS"));
   })();
 });
 
