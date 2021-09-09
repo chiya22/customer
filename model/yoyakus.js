@@ -50,10 +50,21 @@ const setSQL = async (sql) => {
     }
 }
 
+const downloadNyukinZumi = async (target_yyyymm) => {
+    try {
+        const query = 'SELECT * FROM yoyakus a WHERE left(a.ymd_riyou,6) >= "' + target_yyyymm + '" AND a.stat_shiharai = "受"'
+        const retObj = await knex.raw(query);
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }
+}
+
 module.exports = {
     findPKey,
     calcTime,
     insert,
     deleteByMonth,
     setSQL,
+    downloadNyukinZumi,
 };
