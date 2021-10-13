@@ -218,6 +218,15 @@ const getYYYYMMDD = (date) => {
 
 }
 
+//
+// 日付より1日前の日付をyyyymmdd形式の文字列で返却する
+//
+const getYYYYMMDDBefore1Day = (yyyymmdd) => {
+  let date = new Date(yyyymmdd.slice(0, 4), yyyymmdd.slice(4, 6)-1, yyyymmdd.slice(-2));
+  date.setDate(date.getDate() - 1);
+  return getYYYYMMDD(date);
+}
+
 module.exports = {
   returnvalue,
   returnvalueWithoutNull,
@@ -228,4 +237,5 @@ module.exports = {
   getDays,
   getHourbyYYYYMM,
   getYYYYMMDD7dayAfter,
+  getYYYYMMDDBefore1Day,
 };
