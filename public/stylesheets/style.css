@@ -399,7 +399,7 @@ input:checked + .checkbox_label::before {
   background-color: #cd5e42;
   border-radius: 28px;
   font-size: 12px;
-  padding: 2px 7px 2px;
+  padding: 3px 7px 1px;
   margin-right: 5px;
   font-weight: normal;
 }
