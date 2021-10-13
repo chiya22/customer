@@ -279,6 +279,62 @@ router.post("/cancel", security.authorize(), (req, res, next) => {
 });
 
 /**
+ * 会社をCNからONへ変更
+ */
+ router.post("/change", security.authorize(), (req, res, next) => {
+  (async () => {
+    let inObjCompany = getCompanyData(req.body);
+    inObjCompany.ymd_upd = tool.getToday();
+    inObjCompany.ymd_kaiyaku = tool.getYYYYMMDDBefore1Day(req.body.selected_ymd_change);;
+    inObjCompany.id_upd = req.user.id;
+
+    //入力チェック
+    const errors = validateData(req.body);
+    if (req.body.kubun_company !== "CN") {
+      errors.kubun_company = "会社区分「CN」のみ「ON」へ変更できます。";
+    }
+  
+    if (errors) {
+      const retObjSelect = await m_nyukyo.findForSelect();
+      res.render("companyform", {
+        company: inObjCompany,
+        nyukyos: retObjSelect,
+        mode: "update",
+        errors: errors,
+      });
+    } else {
+      // 解約日を設定
+      const retObjCompany = await m_company.update(inObjCompany);
+      if (retObjCompany.changedRows === 0) {
+        const retObjSelect = await m_nyukyo.findForSelect();
+        let errors = {};
+        errors.common = "更新対象がすでに削除されています";
+        res.render("companyform", {
+          company: inObjCompany,
+          nyukyos: retObjSelect,
+          mode: "update",
+          errors: errors,
+        });
+      } else {
+        //CNの会社のIDを退避
+        const before_id_company = inObjCompany.id;
+        //会社IDの採番号
+        const retObj = await m_sq.getSqCompany();
+        inObjCompany.id = "C" + ("00000" + retObj.no).slice(-5);
+        //ONで会社登録
+        inObjCompany.kubun_company = "ON";
+        inObjCompany.ymd_nyukyo = req.body.selected_ymd_change;
+        inObjCompany.ymd_kaiyaku = "99991231";
+        await m_company.insert(inObjCompany);
+        // res.redirect("/");
+        res.redirect("/company/" + before_id_company);
+      }
+    }
+  })();
+});
+
+
+/**
  * 会社に部屋を紐づける
  */
 router.post("/addroom", security.authorize(), (req, res, next) => {

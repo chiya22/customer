@@ -7,6 +7,15 @@
 </head>
 
 <body>
+  <div class="msg">
+    <div class="msgarea">
+      <p class="msgarea__text">設定された年月日からONに変更しす。<br>よろしいですか？</p>
+      <input type="text" placeholder="年月日を選択する" class="form__item-style flatpickr" name="select_ymd_change"
+        id="select_ymd_change">
+      <button class="msgarea__okbtn">はい</button>
+      <button class="msgarea__ngbtn">いいえ</button>
+    </div>
+  </div>
   <%- include("./common/header.ejs", {current: 'nyukyo'}) %>
   <section class="main">
     <div class="main__wrapper">
@@ -192,6 +201,12 @@
             <input type="hidden" id="name" value="<%= company.id %>">
             <div class="form__btn">
               <input type="button" class="btn-base" id="btn_update" value="更新">
+              <% if (company.kubun_company === "CN") { %>
+                <input type="button" class="btn-base" id="btn_change" value="ONへ変更">
+              <% } %>
+              <input type="hidden" name="selected_ymd_change" id="selected_ymd_change" value="">
+              <input type="hidden" name="ymd_start" id="ymd_start" value="<%= company.ymd_start %>">
+              <input type="hidden" name="ymd_end" id="ymd_end" value="<%= company.ymd_end %>">
               <a class="btn-move" href="/company/<%= company.id %>">会社情報へ</a>
             </div>
 
@@ -236,6 +251,38 @@
     </div>
   </section>
   <script>
+    /*
+    「ONへ変更」ボタンをクリックした際のメッセージエリア表示制御
+    */
+    let changebtn = document.getElementById("btn_change");
+    changebtn.addEventListener('click', function () {
+      scrollTo(0, 0);
+      let msg = document.getElementsByClassName("msg")[0];
+      msg.style.visibility = "visible";
+    });
+    /*
+    「ONへ変更」ボタンをクリックした際に表示されるメッセージエリアで「OK」「NG」をクリックした際の挙動
+    */
+    let okbtn = document.getElementsByClassName("msgarea__okbtn")[0];
+    okbtn.addEventListener('click', function () {
+      let deletelinkfield = document.getElementsByName('deletelinkfield')[0];
+      let select = document.getElementById("select_ymd_change");
+      let selected = document.getElementById("selected_ymd_change");
+      if (select.value) {
+        selected.value = select.value;
+        document.companyform.action = "/company/change";
+        document.companyform.submit();
+      } else {
+        select.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
+        return false;
+      }
+    });
+    let ngbtn = document.getElementsByClassName("msgarea__ngbtn")[0];
+    ngbtn.addEventListener('click', function () {
+      let msg = document.getElementsByClassName("msg")[0];
+      msg.style.visibility = "hidden";
+    });
+    
     let insertbtn = document.getElementById("btn_insert");
     if (insertbtn) {
       insertbtn.addEventListener("click", function () {
