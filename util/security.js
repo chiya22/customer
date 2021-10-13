@@ -21,22 +21,26 @@ passport.use("local-strategy", new LocalStrategy({
     passReqToCallback: true
 }, (req, username, password, done) => {
     logger.info('[LOGIN] username:' + username + ' password:' + password);
-
+    
     async function main() {
         const retObj = await users.findPKey(username)
         if (!retObj) {
             done(null, false, req.flash("message", "ユーザー名　または　パスワード　が間違っています。"));
         } else {
-            if (retObj[0].password === hash(password)) {
-                req.session.regenerate((err) => {
-                    if (err) {
-                        done(err);
-                    } else {
-                        done(null, retObj[0]);
-                    }
-                });
-            } else {
+            if (retObj.length === 0) {
                 done(null, false, req.flash("message", "ユーザー名　または　パスワード　が間違っています。"));
+            } else {
+                if (retObj[0].password === hash(password)) {
+                    req.session.regenerate((err) => {
+                        if (err) {
+                            done(err);
+                        } else {
+                            done(null, retObj[0]);
+                        }
+                    });
+                } else {
+                    done(null, false, req.flash("message", "ユーザー名　または　パスワード　が間違っています。"));
+                }
             }
         }
     }
