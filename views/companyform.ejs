@@ -73,12 +73,14 @@
           <dd>
             <input id="kubun_company_1" class="form__radio-style" type="radio" value="ON" checked="checked"
               name="kubun_company"><label for="kubun_company_1" class="form__radio-label">ON</label>
-            <input id="kubun_company_2" class="form__radio-style" type="radio" value="CN" name="kubun_company"><label
-              for="kubun_company_2" class="form__radio-label">CN</label>
-            <input id="kubun_company_3" class="form__radio-style" type="radio" value="TS" name="kubun_company"><label
-              for="kubun_company_3" class="form__radio-label">TS</label>
-              <input id="kubun_company_4" class="form__radio-style" type="radio" value="市町村" name="kubun_company"><label
-              for="kubun_company_4" class="form__radio-label">市町村</label>
+            <input id="kubun_company_2" class="form__radio-style" type="radio" value="ONL" name="kubun_company"><label 
+              for="kubun_company_2" class="form__radio-label">ONL</label>
+            <input id="kubun_company_3" class="form__radio-style" type="radio" value="CN" name="kubun_company"><label
+              for="kubun_company_3" class="form__radio-label">CN</label>
+            <input id="kubun_company_4" class="form__radio-style" type="radio" value="TS" name="kubun_company"><label
+              for="kubun_company_4" class="form__radio-label">TS</label>
+              <input id="kubun_company_5" class="form__radio-style" type="radio" value="市町村" name="kubun_company"><label
+              for="kubun_company_5" class="form__radio-label">市町村</label>
           </dd>
           <!-- <dd><input type="text" class="form__item-style" name="kubun_company" required></dd> -->
 
@@ -130,10 +132,13 @@
           <dd>
             <%
             let flgON = "";
+            let flgONL = "";
             let flgCN = "";
             let flgTS = "";
             if (company.kubun_company === 'ON') {
               flgON = "checked";
+            } else if (company.kubun_company === 'ONL') {
+              flgONL = "checked";
             } else if (company.kubun_company === 'CN') {
               flgCN = "checked";
             } else if (company.kubun_company === 'TS') {
@@ -142,12 +147,14 @@
             %> 
             <input id="kubun_company_1" class="form__radio-style" type="radio" value="ON" name="kubun_company" <%= flgON %> >
             <label for="kubun_company_1" class="form__radio-label">ON</label>
-            <input id="kubun_company_2" class="form__radio-style" type="radio" value="CN" name="kubun_company" <%= flgCN %> >
-            <label for="kubun_company_2" class="form__radio-label">CN</label>
-            <input id="kubun_company_3" class="form__radio-style" type="radio" value="TS" name="kubun_company" <%= flgTS %> >
-            <label for="kubun_company_3" class="form__radio-label">TS</label>
-            <input id="kubun_company_4" class="form__radio-style" type="radio" value="市町村" name="kubun_company" <%= flgTS %> >
-            <label for="kubun_company_4" class="form__radio-label">市町村</label>
+            <input id="kubun_company_2" class="form__radio-style" type="radio" value="ONL" name="kubun_company" <%= flgONL %> >
+            <label for="kubun_company_2" class="form__radio-label">ONL</label>
+            <input id="kubun_company_3" class="form__radio-style" type="radio" value="CN" name="kubun_company" <%= flgCN %> >
+            <label for="kubun_company_3" class="form__radio-label">CN</label>
+            <input id="kubun_company_4" class="form__radio-style" type="radio" value="TS" name="kubun_company" <%= flgTS %> >
+            <label for="kubun_company_4" class="form__radio-label">TS</label>
+            <input id="kubun_company_5" class="form__radio-style" type="radio" value="市町村" name="kubun_company" <%= flgTS %> >
+            <label for="kubun_company_5" class="form__radio-label">市町村</label>
           </dd>
           <dt><span class="tag">必須</span>会社名</dt>
           <dd><input type="text" class="form__item-style" name="name" value="<%= company.name %>" required></dd>
@@ -255,11 +262,13 @@
     「ONへ変更」ボタンをクリックした際のメッセージエリア表示制御
     */
     let changebtn = document.getElementById("btn_change");
-    changebtn.addEventListener('click', function () {
-      scrollTo(0, 0);
-      let msg = document.getElementsByClassName("msg")[0];
-      msg.style.visibility = "visible";
-    });
+    if (changebtn) {
+      changebtn.addEventListener('click', function () {
+        scrollTo(0, 0);
+        let msg = document.getElementsByClassName("msg")[0];
+        msg.style.visibility = "visible";
+      });
+    }
     /*
     「ONへ変更」ボタンをクリックした際に表示されるメッセージエリアで「OK」「NG」をクリックした際の挙動
     */

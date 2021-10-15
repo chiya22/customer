@@ -30,6 +30,7 @@ router.get('/', security.authorize(), function (req, res, next) {
   let searchdetail = {};
   searchdetail.search_kubun_company_cn = "checked";
   searchdetail.search_kubun_company_on = "checked";
+  searchdetail.search_kubun_company_onl = "checked";
   searchdetail.search_kubun_company_ts = "checked";
   searchdetail.search_kubun_company_city = "checked";
   searchdetail.search_kubun_company_other = "checked";
@@ -81,6 +82,7 @@ router.post('/', security.authorize(), function (req, res, next) {
   let searchdetail = {};
   searchdetail.search_kubun_company_cn = req.body.kubun_company_cn;
   searchdetail.search_kubun_company_on = req.body.kubun_company_on;
+  searchdetail.search_kubun_company_onl = req.body.kubun_company_onl;
   searchdetail.search_kubun_company_ts = req.body.kubun_company_ts;
   searchdetail.search_kubun_company_city = req.body.kubun_company_city;
   searchdetail.search_kubun_company_other = req.body.kubun_company_other;
@@ -103,6 +105,7 @@ router.post('/', security.authorize(), function (req, res, next) {
 
   //   会社区分
   search_kubun_company = searchdetail.search_kubun_company_on?search_kubun_company += `,'ON'`:search_kubun_company;
+  search_kubun_company = searchdetail.search_kubun_company_onl?search_kubun_company += `,'ONL'`:search_kubun_company;
   search_kubun_company = searchdetail.search_kubun_company_cn?search_kubun_company += `,'CN'`:search_kubun_company;
   search_kubun_company = searchdetail.search_kubun_company_ts?search_kubun_company += `,'TS'`:search_kubun_company;
   search_kubun_company = searchdetail.search_kubun_company_city?search_kubun_company += `,'市町村'`:search_kubun_company;
