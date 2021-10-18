@@ -631,20 +631,35 @@ const startcron = () => {
         // 新しく開いたページを取得
         let newPageResult = await getNewPage(newPageTouroku);
 
-        const a_tag = await newPageResult.$("a");
-        if (a_tag) {
-          await logger.info(`予約情報をダウンロードしました：${inYYYY_MM}：${new Date()}`);
+        let a_tag = await newPageResult.$("a");
+        const input_tag = await newPageResult.$("body > div > table > tbody > tr:nth-child(5) > th > input.redbtn_180-30");
 
-          // ダウンロード先の設定
-          await page._client.send("Page.setDownloadBehavior", {
-            behavior: "allow",
-            downloadPath: config.dlpath,
-          });
-          await a_tag.click();
-          await page.waitForTimeout(10000);
-        } else {
-          await logger.info(`予約情報がありませんでした：${inYYYY_MM}：${new Date()}`);
+        for (let i = 0; i<10; i++) {
+          if (a_tag) {
+            // ダウンロード先の設定
+            await page._client.send("Page.setDownloadBehavior", {
+              behavior: "allow",
+              downloadPath: config.dlpath,
+            });
+            await a_tag.click();
+            await logger.info(`予約情報をダウンロードしました：${inYYYY_MM}：${new Date()}`);
+            await page.waitForTimeout(10000);
+            break;
+          } else {
+            if (input_tag) {
+              await newPageResult.click(
+                "body > div > table > tbody > tr:nth-child(5) > th > input.redbtn_180-30"
+              );
+              await page.waitForTimeout(10000);
+              // ダウンロードリンクが表示されているかもしれないので取り直す
+              a_tag = await newPageResult.$("a");
+            } else {
+              await logger.info(`予約情報がありませんでした：${inYYYY_MM}：${new Date()}`);
+              break;
+            }
+          }
         }
+
         await browser.close();
 
         /**
