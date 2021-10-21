@@ -14,17 +14,18 @@
                     <% } %>
                 </div>
                 <div>
-                    <% if (current === 'kaigi') { %>
-                    <a class="btn-header-current" href="/riyousha">会議室利用者</a>
-                    <% } else { %>
-                    <a class="btn-header" href="/riyousha">会議室利用者</a>
-                    <% } %>
-                </div>
-                <div>
                     <% if (current === 'outai') { %>
                     <a class="btn-header-current" href="/outai">応対履歴</a>
                     <% } else { %>
                     <a class="btn-header" href="/outai">応対履歴</a>
+                    <% } %>
+                </div>
+                　
+                <div>
+                    <% if (current === 'kaigi') { %>
+                    <a class="btn-header-current" href="/riyousha">会議室利用者</a>
+                    <% } else { %>
+                    <a class="btn-header" href="/riyousha">会議室利用者</a>
                     <% } %>
                 </div>
                 <div>
@@ -35,6 +36,7 @@
                     <% } %>
                 </div>
                 <% if (locals.user.role === '社員') { %>
+                　
                 <div>
                     <% if (current === 'master') { %>
                     <a class="btn-header-current" href="/admin">マスタ管理</a>
