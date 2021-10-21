@@ -11,8 +11,10 @@ const m_re_comroom = require("../model/relation_comroom");
 const m_re_comcabi = require("../model/relation_comcabi");
 const m_re_combicycle = require("../model/relation_combicycle");
 const m_re_comcar = require("../model/relation_comcar");
-const m_re_comtelno = require("../model/relation_comtelno")
+const m_re_comtelno = require("../model/relation_comtelno");
+const m_outai = require("../model/outais");
 const m_sq = require("../model/sq");
+
 
 /**
  * 会社情報の新規登録画面
@@ -76,6 +78,9 @@ router.get("/:id", security.authorize(), (req, res, next) => {
       // 駐輪場空き情報取得
       const retObjFreeBicycles = await m_re_combicycle.findFree();
 
+      // 応対履歴情報
+      const retObjOutais = await m_outai.findByCompanyForOutai(req.params.id);
+
       res.render("company", {
         company: retObjCompany,
         persons: retObjPersons,
@@ -89,6 +94,7 @@ router.get("/:id", security.authorize(), (req, res, next) => {
         freebicycles: retObjFreeBicycles,
         cars: retObjCars,
         freecars: retObjFreeCars,
+        outais: retObjOutais,
       });
     }
   })();

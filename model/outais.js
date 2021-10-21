@@ -14,7 +14,7 @@ const findPKey = async (id) => {
 
 const find = async () => {
     try {
-        const query = 'select o.*, u1.name as name_add, u2.name as name_upd from ( select * from outais order by ymdhms_add desc) as o left outer join users u1 on u1.id = o.id_add left outer join users u2 on u2.id = o.id_upd';
+        const query = 'select o.*, u1.name as name_add, u2.name as name_upd from ( select * from outais) as o left outer join users u1 on u1.id = o.id_add left outer join users u2 on u2.id = o.id_upd order by o.ymdhms_add desc';
         const retObj = await knex.raw(query);
         return retObj[0];
     } catch(err) {
@@ -24,7 +24,17 @@ const find = async () => {
 
 const findByCompany = async (inObj) => {
     try {
-        const query = 'select o.*, u1.name as name_add, u2.name as name_upd from ( select * from outais where id_company = ' + tool.returnvalue(inObj.id_company) + ' order by ymdhms_add desc) as o left outer join users u1 on u1.id = o.id_add left outer join users u2 on u2.id = o.id_upd';
+        const query = 'select o.*, u1.name as name_add, u2.name as name_upd from ( select * from outais where id_company = ' + tool.returnvalue(inObj.id_company) + ') as o left outer join users u1 on u1.id = o.id_add left outer join users u2 on u2.id = o.id_upd order by o.ymdhms_add desc';
+        const retObj = await knex.raw(query);
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }    
+};
+
+const findByCompanyForOutai = async (id_company) => {
+    try {
+        const query = 'select o.*, u1.name as name_add, u2.name as name_upd from ( select * from outais where id_company = "' + id_company + '" ) as o left outer join users u1 on u1.id = o.id_add left outer join users u2 on u2.id = o.id_upd order by o.status desc, o.ymdhms_add desc';
         const retObj = await knex.raw(query);
         return retObj[0];
     } catch(err) {
@@ -85,6 +95,7 @@ module.exports = {
     find,
     findPKey,
     findByCompany,
+    findByCompanyForOutai,
     findLikeCount,
     findLikeForPaging,
     insert,

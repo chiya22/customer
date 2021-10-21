@@ -31,7 +31,17 @@ const findByRiyousha = async (inObj) => {
     }    
 };
 
+const findByRiyoushaForOutai = async (id_riyousha) => {
+    try {
+        const query = 'select o.*, u1.name as name_add, u2.name as name_upd from ( select * from outaiskaigi where id_riyousha = "' + id_riyousha + '") as o left outer join users u1 on u1.id = o.id_add left outer join users u2 on u2.id = o.id_upd order by o.status asc, ymdhms_upd desc';
+        const retObj = await knex.raw(query);
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }    
+};
 const findLikeCount = async (likevalue) => {
+
     try {
         const query = 'select count(*) as count_all from outaiskaigi where content like "%' + likevalue + '%"';
         const retObj = await knex.raw(query);
@@ -82,6 +92,7 @@ const setSQL = async (sql) => {
 module.exports = {
     find,
     findPKey,
+    findByRiyoushaForOutai,
     findLikeCount,
     findLikeForPaging,
     insert,

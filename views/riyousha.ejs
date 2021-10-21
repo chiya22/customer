@@ -120,6 +120,33 @@
           </div>
         </div>
       </div>
+      <% if (outaikaigis) { %>
+        <div>
+        <div class="person__header">
+          <p class="midashi">応対履歴</p>
+        </div>
+        <div>
+          <%  outaikaigis.forEach( outaikaigi => { %>
+            <div>
+            <%
+                const tagvalue = outaikaigi.ymdhms_add.slice(0,4) + '.' + outaikaigi.ymdhms_add.slice(4,6) + '.' + outaikaigi.ymdhms_add.slice(6,8) + ' ' + outaikaigi.ymdhms_add.slice(8,10) + ':' + outaikaigi.ymdhms_add.slice(10,12) + ':' + outaikaigi.ymdhms_add.slice(12,14);
+                if (outaikaigi.status === '完了') {
+            %>
+              <span class="tag-middle-done"><%= tagvalue %></span>
+              <span class="item-readonly-style"><%= outaikaigi.content.slice(0,50) %></span>
+              <a class="btn-move-done" href="/outaikaigi/<%= outaikaigi.id %>">READ MORE</a>
+            <% } else { %>
+              <span class="tag-middle"><%= tagvalue %></span>
+              <span class="item-readonly-style"><%= outaikaigi.content.slice(0,50) %></span>
+              <a class="btn-move" href="/outaikaigi/<%= outaikaigi.id %>">READ MORE</a>
+            <% } %>
+            </div>
+            <%  }); %>
+        </div>
+      </div>
+      <%  }; %>
+      <!-- /.outaikaigis -->
+
     </div>
   </div>
 </body>

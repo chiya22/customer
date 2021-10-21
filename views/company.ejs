@@ -124,6 +124,34 @@
         </div>
       </div>
       <!-- /.company -->
+
+      <% if (outais) { %>
+        <div>
+        <div class="person__header">
+          <p class="midashi">応対履歴</p>
+        </div>
+        <div>
+          <%  outais.forEach( outai => { %>
+            <div>
+            <%
+               const tagvalue = outai.ymdhms_add.slice(0,4) + '.' + outai.ymdhms_add.slice(4,6) + '.' + outai.ymdhms_add.slice(6,8) + ' ' + outai.ymdhms_add.slice(8,10) + ':' + outai.ymdhms_add.slice(10,12) + ':' + outai.ymdhms_add.slice(12,14);
+               if (outai.status === '完了') {
+            %>
+              <span class="tag-middle-done"><%= tagvalue %></span>
+              <span class="item-readonly-style"><%= outai.content.slice(0,50) %></span>
+              <a class="btn-move-done" href="/outai/<%= outai.id %>">READ MORE</a>
+            <% } else { %>
+              <span class="tag-middle"><%= tagvalue %></span>
+              <span class="item-readonly-style"><%= outai.content.slice(0,50) %></span>
+              <a class="btn-move" href="/outai/<%= outai.id %>">READ MORE</a>
+            <% } %>
+            </div>
+            <%  }); %>
+        </div>
+      </div>
+      <%  }; %>
+      <!-- /.outais -->
+
       <div class="person">
         <div class="person__header">
           <p class="midashi">個人

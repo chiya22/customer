@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const security = require("../util/security");
 const riyousha = require("../model/riyoushas");
+const outaikaigi = require("../model/outaiskaigi");
 
 const COUNT_PERPAGE = 20;
 
@@ -76,13 +77,15 @@ router.post("/", security.authorize(), (req, res, next) => {
   })();
 });
 
-// TOPページから「会社リンク選択」での会社ページへの遷移
+// 会議室利用者検索ページから「会議室利用者リンク選択」での会議室利用者ページへの遷移
 router.get("/:id", security.authorize(), (req, res, next) => {
   (async () => {
     //利用者情報の取得
     const retObjRiyousha = await riyousha.findPKey(req.params.id);
+    const retObjOutaikaigi = await outaikaigi.findByRiyoushaForOutai(req.params.id);
     res.render("riyousha", {
       riyousha: retObjRiyousha,
+      outaikaigis: retObjOutaikaigi,
     });
   })();
 });
