@@ -135,15 +135,6 @@ pre {
   letter-spacing: 0.8px;
 }
 
-.item-readonly-style {
-  color: #8a8a8a;
-  display: inline-block;
-  height: 30px;
-  padding: 5px;
-  font-size: 12px;
-  letter-spacing: 0.8px;
-}
-
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -465,6 +456,30 @@ input:checked + .checkbox_label::before {
   margin-right: 10px;
 }
 
+.area-yoyaku {
+  border-bottom: 1px solid #cd5e42;
+  background: #F9F9F9;
+  margin-bottom: 1rem;
+}
+
+.item-readonly-style {
+  color: #cd5e42;
+  display: inline-block;
+  height: 30px;
+  padding: 5px;
+  font-size: 14px;
+  letter-spacing: 0.8px;
+}
+
+.item-readonly-style-done {
+  color: #8a8a8a;
+  display: inline-block;
+  height: 30px;
+  padding: 5px;
+  font-size: 14px;
+  letter-spacing: 0.8px;
+}
+
 .width-base {
   width: 70%;
 }
@@ -772,7 +787,9 @@ input:checked + .checkbox_label::before {
 .company__form,
 .person__form,
 .cancel__form,
-.riyousha {
+.riyousha,
+.riyousha-outai,
+.riyousha-yoyaku {
   margin-top: 1rem;
 }
 
@@ -859,6 +876,15 @@ dd.area__outai-content textarea {
 
 .person .person__items .person__item {
   margin: 5px 15px 5px 0;
+}
+
+.outai {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.outai .outai__header {
+  position: relative;
 }
 
 .room {

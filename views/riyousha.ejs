@@ -120,8 +120,8 @@
           </div>
         </div>
       </div>
-      <% if (outaikaigis) { %>
-        <div>
+      <% if (outaikaigis.length !== 0) { %>
+        <div class="riyousha-outai">
         <div class="person__header">
           <p class="midashi">応対履歴</p>
         </div>
@@ -133,11 +133,11 @@
                 if (outaikaigi.status === '完了') {
             %>
               <span class="tag-middle-done"><%= tagvalue %></span>
-              <span class="item-readonly-style"><%= outaikaigi.content.slice(0,50) %></span>
+              <span class="item-readonly-style-done"><%= outaikaigi.content.slice(0,30) %></span>
               <a class="btn-move-done" href="/outaikaigi/<%= outaikaigi.id %>">READ MORE</a>
             <% } else { %>
               <span class="tag-middle"><%= tagvalue %></span>
-              <span class="item-readonly-style"><%= outaikaigi.content.slice(0,50) %></span>
+              <span class="item-readonly-style"><%= outaikaigi.content.slice(0,30) %></span>
               <a class="btn-move" href="/outaikaigi/<%= outaikaigi.id %>">READ MORE</a>
             <% } %>
             </div>
@@ -147,7 +147,32 @@
       <%  }; %>
       <!-- /.outaikaigis -->
 
-    </div>
+      <% if (yoyakus.length !== 0) { %>
+        <div class="riyousha-yoyaku">
+        <div class="person__header">
+          <p class="midashi">予約情報</p>
+        </div>
+        <div>
+          <%  yoyakus.forEach( yoyaku => { %>
+            <div class="area-yoyaku">
+            <%
+                const tagvalue = yoyaku.ymd_riyou.slice(0,4) + "/" + yoyaku.ymd_riyou.slice(4,6) + "/" + yoyaku.ymd_riyou.slice(6,8) + " " + yoyaku.time_yoyaku;
+                if (yoyaku.stat_shiharai === '受') {
+            %>
+              <span class='tag-middle-done'><%= yoyaku.stat_shiharai %></span>
+              <span class="item-readonly-style-done"><%= tagvalue %> <%= yoyaku.nm_room %> 金額：<%= yoyaku.price %>円 受付者：<%= yoyaku.nm_uketuke %></span>
+            <% } else { %>
+              <span class='tag-middle'><%= yoyaku.stat_shiharai %></span>
+              <span class="item-readonly-style"><%= tagvalue %> <%= yoyaku.nm_room %> 金額：<%= yoyaku.price %>円 受付者：<%= yoyaku.nm_uketuke %></span>
+            <% } %>
+            </div>
+            <%  }); %>
+        </div>
+      </div>
+      <%  }; %>
+      <!-- /.outaikaigis -->
+
+      </div>
   </div>
 </body>
 

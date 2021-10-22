@@ -1,35 +1,37 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 module.exports = {
   port: 3000,
   url: {
-    outai: "http://192.168.1.51:3000/outai/",
-    outaikaigi: "http://192.168.1.51:3000/outaikaigi/",
-    kanri: "https://www.yamori-yoyaku.jp/studio/OfficeLogin.htm",
+    outai: process.env.URL_OUTAI,
+    outaikaigi: process.env.URL_OUTAIKAIGI,
+    kanri: process.env.URL_KANRI,
   },
-  dlpath: "C:\\download\\customer",
-  login_id: "",
-  login_passwd: "",
+  dlpath: process.env.DL_PATH,
+  login_id: process.env.YOYAKU_ID,
+  login_passwd: process.env.YOYAKU_PASSWORD,
   mail: {
       smtp: {
           host: "smtp.gmail.com",
           port: 465,
           secure: true,
       },
-      user: "",
-      passwd: "",
-      from: "",
-      to: "",
+      user: process.env.MAIL_USER,
+      passwd: process.env.MAIL_PASSWORD,
+      from: process.env.MAIL_FROM,
+      to: process.env.MAIL_TO,
   },
   db: {
-      host:"localhost",
-      user: "pfs",
-      password: "",
-      database: "pfs",
-      port: 58020,
-//      port: 3306,
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    port: process.env.DB_PORT,
   },
   cron: {
     // クーロン有効設定
-    effective: "on",
+    effective: "off",
     // 通知メール（応対履歴、会議室）
     outai: "0 9 * * 1-5",
     // 通知メール（応対履歴）

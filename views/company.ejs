@@ -125,8 +125,8 @@
       </div>
       <!-- /.company -->
 
-      <% if (outais) { %>
-        <div>
+      <% if (outais.length !== 0) { %>
+      <div class="outai">
         <div class="person__header">
           <p class="midashi">応対履歴</p>
         </div>
@@ -146,7 +146,7 @@
               <a class="btn-move" href="/outai/<%= outai.id %>">READ MORE</a>
             <% } %>
             </div>
-            <%  }); %>
+          <%  }); %>
         </div>
       </div>
       <%  }; %>

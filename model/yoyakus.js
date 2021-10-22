@@ -10,6 +10,15 @@ const findPKey = async (id) => {
     }
 };
 
+const findByRiyoushaForOutai = async (id) => {
+    try {
+        const query = 'SELECT * FROM yoyakus y WHERE y.id_riyousha = "' + id + '" ORDER BY ymd_riyou desc'
+        const retObj = await knex.raw(query);
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }
+}
 
 const calcTime = async (inObj) => {
     try {
@@ -62,6 +71,7 @@ const downloadNyukinZumi = async (target_yyyymm) => {
 
 module.exports = {
     findPKey,
+    findByRiyoushaForOutai,
     calcTime,
     insert,
     deleteByMonth,

@@ -3,6 +3,7 @@ const router = express.Router();
 const security = require("../util/security");
 const riyousha = require("../model/riyoushas");
 const outaikaigi = require("../model/outaiskaigi");
+const yoyaku = require("../model/yoyakus");
 
 const COUNT_PERPAGE = 20;
 
@@ -83,9 +84,11 @@ router.get("/:id", security.authorize(), (req, res, next) => {
     //利用者情報の取得
     const retObjRiyousha = await riyousha.findPKey(req.params.id);
     const retObjOutaikaigi = await outaikaigi.findByRiyoushaForOutai(req.params.id);
+    const retObjYoyaku = await yoyaku.findByRiyoushaForOutai(req.params.id);
     res.render("riyousha", {
       riyousha: retObjRiyousha,
       outaikaigis: retObjOutaikaigi,
+      yoyakus: retObjYoyaku,
     });
   })();
 });

@@ -130,15 +130,6 @@ pre {
   font-size: 12px;
   letter-spacing: 0.8px;
 }
-.item-readonly-style {
-  color: #8a8a8a;
-  display: inline-block;
-  // width: 100%;
-  height: 30px;
-  padding: 5px;
-  font-size: 12px;
-  letter-spacing: 0.8px;
-}
 //checkbox
 *, *::before, *::after {
   box-sizing: border-box;
@@ -442,6 +433,32 @@ input:checked + .checkbox_label::before {
   margin-right: 10px;
 }
 
+.area-yoyaku {
+  // padding: 0.5rem 1rem;
+  border-bottom: 1px solid $base-color;
+  background: #F9F9F9;
+  margin-bottom: 1rem;
+}
+
+.item-readonly-style {
+  color: $base-color;
+  display: inline-block;
+  // width: 100%;
+  height: 30px;
+  padding: 5px;
+  font-size: 14px;
+  letter-spacing: 0.8px;
+}
+.item-readonly-style-done {
+  color: #8a8a8a;
+  display: inline-block;
+  // width: 100%;
+  height: 30px;
+  padding: 5px;
+  font-size: 14px;
+  letter-spacing: 0.8px;
+}
+
 //部分的な設定
 .width-base {
   width: 70%;
@@ -722,7 +739,9 @@ input:checked + .checkbox_label::before {
 .company__form,
 .person__form,
 .cancel__form,
-.riyousha {
+.riyousha,
+.riyousha-outai,
+.riyousha-yoyaku {
   margin-top: 1rem;
 }
 .company,
@@ -794,6 +813,14 @@ dd.area__outai-content {
     .person__item {
       margin: 5px 15px 5px 0;
     }
+  }
+}
+// company-outai
+.outai {
+  margin-top: 0.5rem;  
+  margin-bottom: 1rem;  
+  .outai__header {
+    position: relative;
   }
 }
 // company-room
