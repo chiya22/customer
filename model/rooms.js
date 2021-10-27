@@ -21,7 +21,7 @@ const find = async () => {
 
 const findForAdmin = async () => {
     try {
-        const query = 'SELECT r.*,  c.name as companyname from rooms r left outer join relation_comroom re ON r.id = re.id_room AND r.ymd_end = "99991231" AND re.ymd_end = "99991231"  left outer join companies c ON re.id_company = c.id order BY r.place ASC, r.floor asc'
+        const query = 'SELECT r.*,  c.name as companyname, c.id_nyukyo from rooms r left outer join relation_comroom re ON r.id = re.id_room AND r.ymd_end = "99991231" AND re.ymd_end = "99991231"  left outer join companies c ON re.id_company = c.id order BY r.place ASC, r.floor asc'
         const retObj = await knex.raw(query);
         return retObj[0];
     } catch(err) {
