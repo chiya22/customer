@@ -205,7 +205,28 @@ router.post('/', security.authorize(), function (req, res, next) {
     let pagecount_max = (count_all % COUNT_PERPAGE) > 0 ? parseInt(count_all / COUNT_PERPAGE) + 1 : parseInt(count_all / COUNT_PERPAGE);
 
     // 検索結果を取得する（表示する件数分のみ）
-    const retObj = await company.setSQL(query2)
+    const retObj = await company.setSQL(query2);
+
+    // 部屋番号を付加する
+    for (let obj of retObj) {
+      const retObjRomms = await company.findByIdWithRoomInfo(obj.id);
+      if (retObjRomms.length !== 0) {
+        let tmp_nameroom = '';
+        let cnt = 0;
+        for (let room of retObjRomms) {
+          cnt += 1;
+          // 4部屋まで表示、それ以上は「....」を追記し処理を抜ける
+          if (cnt >= 5) {
+            tmp_nameroom += ".....";
+            break;
+          } else {
+            tmp_nameroom += room.place_room + ' ' + room.name_room + ' / ';
+          }
+        }
+        tmp_nameroom = tmp_nameroom.slice(0,-2);
+        obj.name_room = tmp_nameroom;
+      }
+    };
 
     /*
     searchvalue:検索文字列

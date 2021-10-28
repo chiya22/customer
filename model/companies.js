@@ -44,6 +44,21 @@ const findForSelect = async () => {
 }
 
 /**
+ * 指定したIDの会社情報に、部屋情報を付加した会社情報を返却
+ * @param {*} id
+ * @returns 
+ */
+const findByIdWithRoomInfo = async (id) => {
+    try {
+        const query = 'SELECT c.*, r.name as name_room, r.place as place_room FROM (SELECT * from companies cc WHERE cc.id = "' + id + '") AS c INNER JOIN relation_comroom rec ON c.id = rec.id_company AND rec.ymd_end = "99991231" LEFT OUTER JOIN rooms r ON r.id = rec.id_room AND r.ymd_end = "99991231" ORDER BY r.place desc;';
+        const retObj = await knex.raw(query)
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }
+}
+
+/**
  * 
  * @param {*} id_nyukyo 
  * @returns company[] 入居番号に紐づいた有効な会社情報（終了年月日に日付が設定されていない対象）
@@ -195,6 +210,7 @@ module.exports = {
     findForSelect,
     findByNyukyo,
     findByNyukyoWithoutKaiyaku,
+    findByIdWithRoomInfo,
     findLikeCount,
     findLikeForPaging,
     findForDispPanel,

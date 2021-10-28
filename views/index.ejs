@@ -112,6 +112,9 @@
                   <a class="btn-link bd-left-disabled" href="./company/<%= result.id %>"><p class="tag bg-disabled"><%= result.header %> <%= result.id_nyukyo %></p>
                   <% } %>
                   <p class="tag bg-disabled"><%= result.kubun %></p>
+                  <% if (result.name_room) { %>
+                    <p class="tag bg-disabled"><%= result.name_room %></p>
+                  <% } %>
                   <p class="tag bg-disabled">解約</p>
                   <span class="color-disabled"><%= result.name %></span>
                   <span class="dateinfo color-disabled">入居：<%= result.ymd_nyukyo.slice(0,4) %>.<%= result.ymd_nyukyo.slice(4,6) %>.<%= result.ymd_nyukyo.slice(-2) %>
@@ -136,6 +139,9 @@
                   <a class="btn-link" href="./company/<%= result.id %>"><p class="tag"><%= result.header %> <%= result.id_nyukyo %></p>
                   <% } %>
                   <p class="tag"><%= result.kubun %></p>
+                  <% if (result.name_room) { %>
+                    <p class="tag"><%= result.name_room %></p>
+                  <% } %>
                   <%= result.name %>
                   <span class="dateinfo">入居：<%= result.ymd_nyukyo.slice(0,4) %>.<%= result.ymd_nyukyo.slice(4,6) %>.<%= result.ymd_nyukyo.slice(-2) %>
                     <% if (result.ymd_kaiyaku !== '99991231') { %>
