@@ -12,10 +12,7 @@ const m_sq = require("../model/sq");
 router.get("/add/:id_company", security.authorize(), (req, res, next) => {
   (async () => {
     //会社情報
-    const retObjCompany = await m_company.findPKey(
-      req.params.id_company,
-      "99991231"
-    );
+    const retObjCompany = await m_company.findPKey(req.params.id_company, "99991231");
 
     // 会社情報のセレクトボックス情報
     const retObjSelectCompany = await m_company.findForSelect();
@@ -39,10 +36,7 @@ router.get("/:id", security.authorize(), (req, res, next) => {
     const retObjPerson = await m_person.findPKey(req.params.id, "99991231");
 
     if (retObjPerson.id_company) {
-      const retObjCompany = await m_company.findPKey(
-        retObjPerson.id_company,
-        "99991231"
-      );
+      const retObjCompany = await m_company.findPKey(retObjPerson.id_company, "99991231");
       res.render("person", {
         person: retObjPerson,
         companyname: retObjCompany.name,
@@ -60,10 +54,7 @@ router.get("/:id", security.authorize(), (req, res, next) => {
 router.get("/update/:id", security.authorize(), (req, res, next) => {
   (async () => {
     const retObjPerson = await m_person.findPKey(req.params.id, "99991231");
-    const retObjCompany = await m_company.findPKey(
-      retObjPerson.id_company,
-      "99991231"
-    );
+    const retObjCompany = await m_company.findPKey(retObjPerson.id_company, "99991231");
     const retObjSelectCompany = await m_company.findForSelect();
 
     res.render("personform", {
@@ -80,10 +71,7 @@ router.get("/update/:id", security.authorize(), (req, res, next) => {
 router.get("/delete/:id", security.authorize(), (req, res, next) => {
   (async () => {
     const retObjPerson = await m_person.findPKey(req.params.id, "99991231");
-    const retObjCompany = await m_company.findPKey(
-      retObjPerson.id_company,
-      "99991231"
-    );
+    const retObjCompany = await m_company.findPKey(retObjPerson.id_company, "99991231");
 
     res.render("personform", {
       person: retObjPerson,
@@ -116,10 +104,7 @@ router.post("/insert", security.authorize(), (req, res, next) => {
 
     if (errors) {
       //会社情報
-      const retObjCompany = await m_company.findPKey(
-        inObjPerson.id_company,
-        "99991231"
-      );
+      const retObjCompany = await m_company.findPKey(inObjPerson.id_company, "99991231");
       const retObjSelectCompany = await m_company.findForSelect();
 
       res.render("personform", {
@@ -153,10 +138,7 @@ router.post("/update", security.authorize(), (req, res, next) => {
     inObjPerson.id_upd = req.user.id;
 
     //会社情報
-    const retObjCompany = await m_company.findPKey(
-      inObjPerson.id_company,
-      "99991231"
-    );
+    const retObjCompany = await m_company.findPKey(inObjPerson.id_company, "99991231");
 
     //エラー情報
     let errors;
@@ -215,10 +197,7 @@ router.post("/delete", security.authorize(), (req, res, next) => {
     inObjPerson.ymd_end = tool.getToday();
 
     //会社情報
-    const retObjCompany = await m_company.findPKey(
-      inObjPerson.id_company,
-      "99991231"
-    );
+    const retObjCompany = await m_company.findPKey(inObjPerson.id_company, "99991231");
 
     //エラー情報
     let errors;
@@ -254,9 +233,7 @@ router.post("/cancel", security.authorize(), (req, res, next) => {
   (async () => {
     let inObjPerson = {};
     inObjPerson.id = req.body.id;
-    inObjPerson.ymd_kaiyaku = req.body.selected_ymd_kaiyaku
-      ? req.body.selected_ymd_kaiyaku
-      : tool.getToday();
+    inObjPerson.ymd_kaiyaku = req.body.selected_ymd_kaiyaku ? req.body.selected_ymd_kaiyaku : tool.getToday();
     inObjPerson.ymd_upd = tool.getToday();
     inObjPerson.id_upd = req.user.id;
 
@@ -271,8 +248,76 @@ router.post("/cancel", security.authorize(), (req, res, next) => {
   })();
 });
 
-const validateData = (body) => {
+/**
+ * 個人情報で会社番号を変更した場合
+ */
+router.post("/change", security.authorize(), (req, res, next) => {
+  (async () => {
+    let inObjPerson = getPersonData(req.body);
 
+    //会社情報
+    const retObjCompany = await m_company.findPKey(inObjPerson.id_company, "99991231");
+
+    //エラー情報
+    let errors;
+
+    //権限チェック
+    if (req.user.role !== "社員") {
+      errors.role = "社員権限のみ実行できます";
+    }
+
+    //入力チェック
+    errors = validateData(req.body);
+
+    const retObjSelectCompany = await m_company.findForSelect();
+
+    if (errors) {
+      res.render("personform", {
+        person: inObjPerson,
+        company: retObjCompany,
+        companies: retObjSelectCompany,
+        mode: "update",
+        errors: errors,
+      });
+    } else {
+      const after_id_company = req.body.id_company;
+      // 解約日を設定
+      inObjPerson.ymd_upd = tool.getToday();
+      inObjPerson.id_upd = req.user.id;
+      inObjPerson.ymd_kaiyaku = tool.getYYYYMMDDBefore1Day(req.body.selected_ymd_change);
+      inObjPerson.id_company = req.body.before_id_company;
+      const retObjPerson = await m_person.update(inObjPerson);
+      if (retObjPerson.changedRows === 0) {
+        let errors = {};
+        errors.common = "更新対象はすでに削除されています";
+        res.render("personform", {
+          person: inObjPerson,
+          company: retObjCompany,
+          companies: retObjSelectCompany,
+          mode: "update",
+          errors: errors,
+        });
+      } else {
+
+        //個人IDの採番号
+        const retObjPersonNo = await m_sq.getSqPerson();
+        inObjPerson.id = "P" + ("00000" + retObjPersonNo.no).slice(-5);
+        inObjPerson.ymd_nyukyo = req.body.selected_ymd_change;
+        inObjPerson.ymd_kaiyaku = "99991231";
+        inObjPerson.id_company = after_id_company;
+        const retObjPerson = await m_person.insert(inObjPerson);
+        // 会社に紐づいている場合は会社情報に戻る
+        if (inObjPerson.id_company) {
+          res.redirect("/company/" + inObjPerson.id_company);
+        } else {
+          res.redirect("/");
+        }
+      }
+    }
+  })();
+});
+
+const validateData = (body) => {
   let isValidated = true;
   let errors = {};
 
@@ -343,7 +388,7 @@ const validateData = (body) => {
   }
 
   return isValidated ? undefined : errors;
-}
+};
 
 const getPersonData = (body) => {
   let inObj = {};
@@ -367,6 +412,6 @@ const getPersonData = (body) => {
   inObj.id_upd = body.id_upd;
   inObj.bikou = body.bikou;
   return inObj;
-}
+};
 
 module.exports = router;
