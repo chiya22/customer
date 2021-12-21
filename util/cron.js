@@ -20,6 +20,18 @@ const fs = require("fs");
 const startcron = () => {
   if (config.cron.effective === "on") {
 
+    cron.schedule(config.cron.trello, () => {
+      (async () => {
+        let content = `毎日Trelloのタスクを確認し、更新しましょう！\r\n\r\n-----------------------------------------------------\r\n`;
+        content += 'https://trello.com/b/vTUUegIw/コンシェルジュ業務';
+
+        //メール送信
+        mail.send("タスク確認", content);
+
+        logger.info(`cronより通知メールを送信しました（Trello）：${new Date()}`);
+      })();
+    });
+
     // 月曜日から金曜日の朝9:00に通知メールを送信する
     cron.schedule(config.cron.outai, () => {
       (async () => {
@@ -35,7 +47,7 @@ const startcron = () => {
         //メール送信
         mail.send("応対履歴一覧", content);
 
-        logger.info(`cronより通知メールを送信しました：${new Date()}`);
+        logger.info(`cronより通知メールを送信しました（入居者）：${new Date()}`);
       })();
     });
 
