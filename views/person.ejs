@@ -38,6 +38,7 @@
           <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= person.name %>" disabled></dd>
           <dt>個人名かな</dt>
           <dd><input type="text" class="form__item-readonly-style" name="kana" value="<%= person.kana %>" disabled></dd>
+          <% if (locals.user.role === '社員') { %>
           <dt>電話番号</dt>
           <dd><input type="text" class="form__item-readonly-style" name="telno" value="<%= person.telno %>" disabled>
           </dd>
@@ -58,6 +59,7 @@
           <dt>住所</dt>
           <dd><input type="text" class="form__item-readonly-style" name="address" value="<%= person.address %>"
               disabled></dd>
+          <% } %>
           <dt>入居年月日</dt>
           <dd><input type="text" class="form__item-readonly-style" name="ymd_nyukyo" value="<%= person.ymd_nyukyo.slice(0,4) %>.<%= person.ymd_nyukyo.slice(4,6) %>.<%= person.ymd_nyukyo.slice(-2) %>"
               required>

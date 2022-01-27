@@ -321,6 +321,7 @@
       </div>
       <!-- /.cabinet -->
 
+      <% if (locals.user.role === '社員') { %>
       <div class="telno">
         <div class="telno__header">
           <p class="midashi">電話番号</p>
@@ -383,6 +384,7 @@
         <!-- /.telno__items -->
       </div>
       <!-- /.telno -->
+      <% } %>
 
       <div class="bicycle">
         <div class="bicycle__header">
