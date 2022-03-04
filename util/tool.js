@@ -227,6 +227,10 @@ const getYYYYMMDDBefore1Day = (yyyymmdd) => {
   return getYYYYMMDD(date);
 }
 
+const sleep = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 module.exports = {
   returnvalue,
   returnvalueWithoutNull,
@@ -236,6 +240,8 @@ module.exports = {
   getDayKubun,
   getDays,
   getHourbyYYYYMM,
+  getYYYYMMDD,
   getYYYYMMDD7dayAfter,
   getYYYYMMDDBefore1Day,
+  sleep,
 };

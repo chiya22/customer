@@ -1,4 +1,6 @@
 const knex = require("../db/knex.js").connect();
+const log4js = require("log4js");
+const logger = log4js.configure("./config/log4js-config.json").getLogger();
 
 const findAll = async () => {
     try {
@@ -31,6 +33,7 @@ const findPKey = async (inObj) => {
 const insert = async (inObj) => {
     try {
         const query = 'insert into perinfo values ("' + inObj.yyyymm + '",' + inObj.per_all_all + ',' + inObj.per_all_weekday + ',' + inObj.per_all_holiday + ',' + inObj.per_45_all + ',' + inObj.per_45_weekday + ',' + inObj.per_45_holiday + ',' + inObj.per_mtg_all + ',' + inObj.per_mtg_weekday + ',' + inObj.per_mtg_holiday + ',' + inObj.per_prj_all + ',' + inObj.per_prj_weekday + ',' + inObj.per_prj_holiday + ',"' + inObj.ymd_add + '")';
+        logger.info(query);
         const retObj = await knex.raw(query);
         return retObj[0];
     } catch(err) {

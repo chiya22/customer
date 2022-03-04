@@ -477,25 +477,25 @@ const startcron = () => {
     });
 
     // 会議室　予約情報初期化
-    cron.schedule(config.cron.calcperyoyaku_minus1, () => {
+    cron.schedule(config.cron.clearyoyaku_minus1, () => {
       // cron.schedule('5 23 * * 1-5', () => {
-      clearyYoyakuInfo(-1);
+      clearYoyakuInfo(-1);
     });
     cron.schedule(config.cron.clearyoyaku_0, () => {
       // cron.schedule('5 23 * * 1-5', () => {
-      clearyYoyakuInfo(0);
+      clearYoyakuInfo(0);
     });
     cron.schedule(config.cron.clearyoyaku_1, () => {
-      clearyYoyakuInfo(1);
+      clearYoyakuInfo(1);
     });
     cron.schedule(config.cron.clearyoyaku_2, () => {
-      clearyYoyakuInfo(2);
+      clearYoyakuInfo(2);
     });
     cron.schedule(config.cron.clearyoyaku_3, () => {
-      clearyYoyakuInfo(3);
+      clearYoyakuInfo(3);
     });
     cron.schedule(config.cron.clearyoyaku_4, () => {
-      clearyYoyakuInfo(4);
+      clearYoyakuInfo(4);
     });
 
     // 会議室　予約情報取込
@@ -540,400 +540,406 @@ const startcron = () => {
       setPerInfo(4);
     });
 
+  };
+};
 
-    //　予約情報ダウンロード
-    const dlinfo = (num) => {
 
-      logger.info(`予約情報ダウンロード開始：${num}`);
+//　◆予約情報ダウンロード
+const dlinfo = async (num) => {
 
-      const addnum = num;
-      (async () => {
-        const browser = await puppeteer.launch({ headless: true });
+  logger.info(`予約情報ダウンロード開始：${num}`);
 
-        let page = await browser.newPage();
+  const addnum = num;
+  // (async () => {
+    const browser = await puppeteer.launch({ headless: true });
 
-        await page.goto(config.url.kanri, { waitUntil: "domcontentloaded" });
+    let page = await browser.newPage();
 
-        // ログイン
-        await page.type('input[name="in_office"]', config.login_id);
-        await page.type('input[name="in_opassword"]', config.login_passwd);
-        await page.click(
-          "body > table > tbody > tr > td > table > tbody > tr:nth-child(1) > td > form > table:nth-child(2) > tbody > tr > td:nth-child(2) > input"
-        );
+    await page.goto(config.url.kanri, { waitUntil: "domcontentloaded" });
 
-        await page.waitForTimeout(1000);
-        // await page.waitForNavigation({waitUntil: 'domcontentloaded'});
+    // ログイン
+    await page.type('input[name="in_office"]', config.login_id);
+    await page.type('input[name="in_opassword"]', config.login_passwd);
+    await page.click(
+      "body > table > tbody > tr > td > table > tbody > tr:nth-child(1) > td > form > table:nth-child(2) > tbody > tr > td:nth-child(2) > input"
+    );
 
-        // 管理画面から「管理者メニュー」をクリック
-        const menu = await page.$(
-          "body > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(2) > tbody > tr:nth-child(3) > td:nth-child(2) > input[type=image]:nth-child(6)"
-        );
-        await menu.click();
+    await page.waitForTimeout(1000);
+    // await page.waitForNavigation({waitUntil: 'domcontentloaded'});
 
-        await page.waitForTimeout(2000);
+    // 管理画面から「管理者メニュー」をクリック
+    const menu = await page.$(
+      "body > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(2) > tbody > tr:nth-child(3) > td:nth-child(2) > input[type=image]:nth-child(6)"
+    );
+    await menu.click();
 
-        // 新しく開いたページを取得
-        let newPage = await getNewPage(page);
+    await page.waitForTimeout(2000);
 
-        // パスワードの設定
-        await newPage.type(
-          'input[name="in_managerpassword"]',
-          config.login_passwd
-        );
-        const inputElement = await newPage.$("input[type=submit]");
-        await inputElement.click();
+    // 新しく開いたページを取得
+    let newPage = await getNewPage(page);
 
-        await newPage.waitForTimeout(2000);
+    // パスワードの設定
+    await newPage.type(
+      'input[name="in_managerpassword"]',
+      config.login_passwd
+    );
+    const inputElement = await newPage.$("input[type=submit]");
+    await inputElement.click();
 
-        // 「ダウンロード」のクリック
-        await newPage.click(
-          "body > div:nth-child(3) > table > tbody > tr > th:nth-child(6) > img"
-        );
+    await newPage.waitForTimeout(2000);
 
-        await newPage.waitForTimeout(2000);
+    // 「ダウンロード」のクリック
+    await newPage.click(
+      "body > div:nth-child(3) > table > tbody > tr > th:nth-child(6) > img"
+    );
 
-        // 「予約情報ダウンロード」のクリック
-        await newPage.click(
-          "#inbody > div > div:nth-child(2) > div:nth-child(2) > div.waku_5 > img"
-        );
+    await newPage.waitForTimeout(2000);
 
-        await newPage.waitForTimeout(2000);
+    // 「予約情報ダウンロード」のクリック
+    await newPage.click(
+      "#inbody > div > div:nth-child(2) > div:nth-child(2) > div.waku_5 > img"
+    );
 
-        // 新しく開いたページを取得
-        let newPageTouroku = await getNewPage(newPage);
+    await newPage.waitForTimeout(2000);
 
-        // Promptが出たら必ずOKとする
-        newPageTouroku.on("dialog", async (dialog) => {
-          await dialog.accept();
+    // 新しく開いたページを取得
+    let newPageTouroku = await getNewPage(newPage);
+
+    // Promptが出たら必ずOKとする
+    newPageTouroku.on("dialog", async (dialog) => {
+      await dialog.accept();
+    });
+
+    const inYYYYMM = getCurrentYYYYMM(addnum);
+    const inYYYY_MM = inYYYYMM.slice(0, 4) + "-" + inYYYYMM.slice(4, 6);
+    const in_DD_matubi = new Date(
+      inYYYYMM.slice(0, 4),
+      inYYYYMM.slice(-2),
+      0
+    ).getDate();
+
+    await logger.info(`対象年月日：${inYYYY_MM}`);
+    await logger.info(`末日：${in_DD_matubi}`);
+
+    await newPageTouroku.select('select[name="in_month"]', inYYYY_MM);
+    await newPageTouroku.select('select[name="in_sday"]', "1");
+    await newPageTouroku.select(
+      'select[name="in_eday"]',
+      "" + Number(in_DD_matubi)
+    );
+
+    // 「項目名-全選択」をクリックする
+    await newPageTouroku.click(
+      "#inbody > table > tbody > tr:nth-child(3) > td.reserve_screen > a:nth-child(2)"
+    );
+    await newPageTouroku.click(
+      "#inbody > table > tbody > tr:nth-child(4) > td.reserve_screen > a:nth-child(2)"
+    );
+
+    // 「予約データ」をクリックする
+    await newPageTouroku.click(
+      "#inbody > p:nth-child(4) > input:nth-child(1)"
+    );
+
+    await newPage.waitForTimeout(2000);
+
+    // 新しく開いたページを取得
+    let newPageResult = await getNewPage(newPageTouroku);
+
+    let a_tag = await newPageResult.$("a");
+    const input_tag = await newPageResult.$("body > div > table > tbody > tr:nth-child(5) > th > input.redbtn_180-30");
+
+    for (let i = 0; i<10; i++) {
+      if (a_tag) {
+        // ダウンロード先の設定
+        await page._client.send("Page.setDownloadBehavior", {
+          behavior: "allow",
+          downloadPath: "C:\\download\\customer",
+          // downloadPath: config.dlpath,
         });
-
-        const inYYYYMM = getCurrentYYYYMM(addnum);
-        const inYYYY_MM = inYYYYMM.slice(0, 4) + "-" + inYYYYMM.slice(4, 6);
-        const in_DD_matubi = new Date(
-          inYYYYMM.slice(0, 4),
-          inYYYYMM.slice(-2),
-          0
-        ).getDate();
-
-        await logger.info(`対象年月日：${inYYYY_MM}`);
-        await logger.info(`末日：${in_DD_matubi}`);
-
-        await newPageTouroku.select('select[name="in_month"]', inYYYY_MM);
-        await newPageTouroku.select('select[name="in_sday"]', "1");
-        await newPageTouroku.select(
-          'select[name="in_eday"]',
-          "" + Number(in_DD_matubi)
-        );
-
-        // 「項目名-全選択」をクリックする
-        await newPageTouroku.click(
-          "#inbody > table > tbody > tr:nth-child(3) > td.reserve_screen > a:nth-child(2)"
-        );
-        await newPageTouroku.click(
-          "#inbody > table > tbody > tr:nth-child(4) > td.reserve_screen > a:nth-child(2)"
-        );
-
-        // 「予約データ」をクリックする
-        await newPageTouroku.click(
-          "#inbody > p:nth-child(4) > input:nth-child(1)"
-        );
-
-        await newPage.waitForTimeout(2000);
-
-        // 新しく開いたページを取得
-        let newPageResult = await getNewPage(newPageTouroku);
-
-        let a_tag = await newPageResult.$("a");
-        const input_tag = await newPageResult.$("body > div > table > tbody > tr:nth-child(5) > th > input.redbtn_180-30");
-
-        for (let i = 0; i<10; i++) {
-          if (a_tag) {
-            // ダウンロード先の設定
-            await page._client.send("Page.setDownloadBehavior", {
-              behavior: "allow",
-              downloadPath: config.dlpath,
-            });
-            await a_tag.click();
-            await logger.info(`予約情報をダウンロードしました：${inYYYY_MM}：${new Date()}`);
-            await page.waitForTimeout(10000);
-            break;
-          } else {
-            if (input_tag) {
-              await newPageResult.click(
-                "body > div > table > tbody > tr:nth-child(5) > th > input.redbtn_180-30"
-              );
-              await page.waitForTimeout(10000);
-              // ダウンロードリンクが表示されているかもしれないので取り直す
-              a_tag = await newPageResult.$("a");
-            } else {
-              await logger.info(`予約情報がありませんでした：${inYYYY_MM}：${new Date()}`);
-              break;
-            }
-          }
-        }
-
-        await browser.close();
-
-        /**
-         * 新しく開いたページを取得
-         * @param {page} page もともと開いていたページ
-         * @returns {page} 別タブで開いたページ
-         */
-        async function getNewPage(page) {
-          const pageTarget = await page.target();
-          const newTarget = await browser.waitForTarget(
-            (target) => target.opener() === pageTarget
+        await a_tag.click();
+        await logger.info(`予約情報をダウンロードしました：${inYYYY_MM}：${new Date()}`);
+        await page.waitForTimeout(10000);
+        break;
+      } else {
+        if (input_tag) {
+          await newPageResult.click(
+            "body > div > table > tbody > tr:nth-child(5) > th > input.redbtn_180-30"
           );
-          const newPage = await newTarget.page();
-          await newPage.waitForSelector("body");
-          return newPage;
+          await page.waitForTimeout(10000);
+          // ダウンロードリンクが表示されているかもしれないので取り直す
+          a_tag = await newPageResult.$("a");
+        } else {
+          await logger.info(`予約情報がありませんでした：${inYYYY_MM}：${new Date()}`);
+          break;
         }
-      })();
-
-      logger.info(`予約情報ダウンロード終了：${num}`);
-    };
-
-    // 予約情報初期化
-    const clearyYoyakuInfo = (num) => {
-      logger.info(`予約情報初期化開始：${num}`);
-      (async () => {
-        // 当月のデータを削除
-        const retObjYoyakudelete = await m_yoyaku.deleteByMonth(getCurrentYYYYMM(num));
-        logger.info(`予約情報を初期化しました：${getCurrentYYYYMM(num)}`);
-      })();
-      logger.info(`予約情報初期化終了：${num}`);
+      }
     }
 
-    // 予約情報取込
-    const setYoyakuInfo = (num) => {
+    await browser.close();
 
-      logger.info(`予約情報取込開始：${num}`);
+    /**
+     * 新しく開いたページを取得
+     * @param {page} page もともと開いていたページ
+     * @returns {page} 別タブで開いたページ
+     */
+    async function getNewPage(page) {
+      const pageTarget = await page.target();
+      const newTarget = await browser.waitForTarget(
+        (target) => target.opener() === pageTarget
+      );
+      const newPage = await newTarget.page();
+      await newPage.waitForSelector("body");
+      return newPage;
+    }
+  // })();
 
-      // ダウンロードディレクトリにあるcsvファイルを取得する
-      let targetfilename = "";
-      fs.readdirSync(config.dlpath).forEach((filename) => {
+  logger.info(`予約情報ダウンロード終了：${num}`);
+};
 
-        // *mdl.csvのファイルの場合処理をする
-        if (filename.slice(-7) === "rdl.csv") {
+// ◆予約情報初期化
+const clearYoyakuInfo = async (num) => {
+  logger.info(`予約情報初期化開始：${num}`);
+  // (async () => {
+    // 当月のデータを削除
+    const retObjYoyakudelete = await m_yoyaku.deleteByMonth(getCurrentYYYYMM(num));
+    logger.info(`予約情報を初期化しました：${getCurrentYYYYMM(num)}`);
+  // })();
+  logger.info(`予約情報初期化終了：${num}`);
+}
 
-          targetfilename = filename;
-          let max_id_yoyaku = 1;
+// ◆予約情報取込
+const setYoyakuInfo = async (num) => {
 
-          // csvファイルはShift-JISのため
-          const src = fs
-            .createReadStream(config.dlpath + "\\" + filename)
-            .pipe(iconv.decodeStream("Shift_JIS"));
+  logger.info(`予約情報取込開始：${num}`);
 
-          // 1行ごとに読み込む
-          const rl = readline.createInterface({
-            input: src,
-            output: process.stdout,
-            terminal: false,
-          });
+  // ダウンロードディレクトリにあるcsvファイルを取得する
+  let targetfilename = "";
+  fs.readdirSync(config.dlpath).forEach((filename) => {
 
-          // 1行ごとの処理
-          rl.on("line", (chunk) => {
-            const linecontents = chunk.split(",");
+    // *mdl.csvのファイルの場合処理をする
+    if (filename.slice(-7) === "rdl.csv") {
 
-            // ヘッダーは飛ばす
-            if (linecontents[0] !== "登録日" && linecontents[0] !== "") {
-              let inObj = {};
-              inObj.id =
-                "Y" +
-                linecontents[1].replace(/\-/g, "").slice(0, 6) +
-                ("" + "0000000000000" + max_id_yoyaku).slice(-14);
-              // inObj.id = max_id_yoyaku;
-              max_id_yoyaku += 1;
-              inObj.ymd_add = linecontents[0].replace(/\-/g, "");
-              inObj.ymd_riyou = linecontents[1].replace(/\-/g, "");
-              if (linecontents[2] !== "") {
-                inObj.ymd_upd = linecontents[2].replace(/\-/g, "");
-              } else {
-                inObj.ymd_upd = linecontents[2];
-              }
-              inObj.nm_kubun_room = linecontents[3];
-              inObj.nm_room = linecontents[4];
-              inObj.time_yoyaku = linecontents[5];
-              inObj.time_start = linecontents[5]
-                .slice(0, 5)
-                .replace(/:/g, "");
-              inObj.time_end = linecontents[5].slice(6, 11).replace(/:/g, "");
-              inObj.id_riyousha = linecontents[6];
-              inObj.nm_riyousha = linecontents[7];
-              inObj.kana_riyousha = linecontents[8];
-              inObj.no_yubin = linecontents[9];
-              inObj.address = linecontents[10];
-              inObj.email = linecontents[11];
-              inObj.telno = linecontents[12];
-              inObj.mokuteki = linecontents[13];
-              inObj.nm_uketuke = linecontents[14];
-              inObj.num_person = linecontents[15];
-              inObj.price = linecontents[16];
-              inObj.stat_shiharai = linecontents[17];
-              inObj.bikou = linecontents[18];
-              inObj.kubun_day = tool.getDayKubun(inObj.ymd_riyou);
-              if (inObj.nm_room.slice(0, 3) === "会議室") {
-                inObj.kubun_room = 1;
-              } else if (inObj.nm_room.slice(0, 6) === "プロジェクト") {
-                inObj.kubun_room = 3;
-              } else {
-                inObj.kubun_room = 2;
-              }
-              (async () => {
-                const retObjYoyakuinsert = await m_yoyaku.insert(inObj);
-                logger.info(`会議室予約情報ID：${inObj.id}`);
-              })();
-            }
-          });
-          src.on("end", () => {
-            // 対象ファイルを処理した場合は対象ファイルをリネーム
-            fs.rename(
-              config.dlpath + "\\" + targetfilename,
-              config.dlpath + "\\" + targetfilename + ".old",
-              (err) => {
-                if (err) {
-                  logger.info(
-                    `${targetfilename}ファイルは存在しません：${new Date()}`
-                  );
-                  throw err;
-                }
-              }
-            );
-          });
+      targetfilename = filename;
+      let max_id_yoyaku = 1;
+
+      // csvファイルはShift-JISのため
+      const src = fs
+        .createReadStream(config.dlpath + "\\" + filename)
+        .pipe(iconv.decodeStream("Shift_JIS"));
+
+      // 1行ごとに読み込む
+      const rl = readline.createInterface({
+        input: src,
+        output: process.stdout,
+        terminal: false,
+      });
+
+      // 1行ごとの処理
+      rl.on("line", (chunk) => {
+        const linecontents = chunk.split(",");
+
+        // ヘッダーは飛ばす
+        if (linecontents[0] !== "登録日" && linecontents[0] !== "") {
+          let inObj = {};
+          inObj.id =
+            "Y" +
+            linecontents[1].replace(/\-/g, "").slice(0, 6) +
+            ("" + "0000000000000" + max_id_yoyaku).slice(-14);
+          // inObj.id = max_id_yoyaku;
+          max_id_yoyaku += 1;
+          inObj.ymd_add = linecontents[0].replace(/\-/g, "");
+          inObj.ymd_riyou = linecontents[1].replace(/\-/g, "");
+          if (linecontents[2] !== "") {
+            inObj.ymd_upd = linecontents[2].replace(/\-/g, "");
+          } else {
+            inObj.ymd_upd = linecontents[2];
+          }
+          inObj.nm_kubun_room = linecontents[3];
+          inObj.nm_room = linecontents[4];
+          inObj.time_yoyaku = linecontents[5];
+          inObj.time_start = linecontents[5]
+            .slice(0, 5)
+            .replace(/:/g, "");
+          inObj.time_end = linecontents[5].slice(6, 11).replace(/:/g, "");
+          inObj.id_riyousha = linecontents[6];
+          inObj.nm_riyousha = linecontents[7];
+          inObj.kana_riyousha = linecontents[8];
+          inObj.no_yubin = linecontents[9];
+          inObj.address = linecontents[10];
+          inObj.email = linecontents[11];
+          inObj.telno = linecontents[12];
+          inObj.mokuteki = linecontents[13];
+          inObj.nm_uketuke = linecontents[14];
+          inObj.num_person = linecontents[15];
+          inObj.price = linecontents[16];
+          inObj.stat_shiharai = linecontents[17];
+          inObj.bikou = linecontents[18];
+          inObj.kubun_day = tool.getDayKubun(inObj.ymd_riyou);
+          if (inObj.nm_room.slice(0, 3) === "会議室") {
+            inObj.kubun_room = 1;
+          } else if (inObj.nm_room.slice(0, 6) === "プロジェクト") {
+            inObj.kubun_room = 3;
+          } else {
+            inObj.kubun_room = 2;
+          }
+          (async () => {
+            const retObjYoyakuinsert = await m_yoyaku.insert(inObj);
+            logger.info(`会議室予約情報ID：${inObj.id}`);
+          })();
         }
       });
-      logger.info(`予約情報取込終了：${num}`);
-    };
-
-    const getCurrentYYYYMM = (numM) => {
-      const dt = new Date();
-      const curYYYY = dt.getFullYear();
-      const curMM = dt.getMonth() + 1;
-
-      // 現在の日付の年月をもとに、月数を求める
-      const fullMonth = (curYYYY * 12) + curMM;
-
-      // 引数で設定された値を加算する
-      const targetMonth = fullMonth + numM;
-
-      // 年月を求める
-      const retYYYY = (targetMonth % 12 === 0 ? Math.floor(targetMonth / 12) - 1 : Math.floor(targetMonth / 12));
-      const retMM = (targetMonth % 12 === 0 ? 12 : targetMonth % 12);
-
-      return "" + retYYYY + ("" + "0" + retMM).slice(-2);
-    };
-
-    // 会議室稼働率情報設定
-    const setPerInfo = (addnum) => {
-      (async () => {
-
-        const yyyymm = getCurrentYYYYMM(addnum);
-
-        // 現在の月の稼働時間を求める
-        // ◆平日
-        const weekdayTimeAll = tool.getHourbyYYYYMM(yyyymm, 1, 1);
-        const weekdayTime45 = tool.getHourbyYYYYMM(yyyymm, 1, 2);
-        const weekdayTimeMtg = tool.getHourbyYYYYMM(yyyymm, 1, 3);
-        const weekdayTimePrj = tool.getHourbyYYYYMM(yyyymm, 1, 4);
-        // ◆土日祝日
-        const holidayTimeAll = tool.getHourbyYYYYMM(yyyymm, 2, 1);
-        const holidayTime45 = tool.getHourbyYYYYMM(yyyymm, 2, 2);
-        const holidayTimeMtg = tool.getHourbyYYYYMM(yyyymm, 2, 3);
-        const holidayTimePrj = tool.getHourbyYYYYMM(yyyymm, 2, 4);
-
-        let inObj = {};
-        inObj.yyyymm = yyyymm;
-        const retObjYoyakucalc = await m_yoyaku.calcTime(inObj);
-        let weekdayWorktimeAll = 0;
-        let weekdayWorktime45 = 0;
-        let weekdayWorktimeMtg = 0;
-        let weekdayWorktimePrj = 0;
-        let holidayWorktimeAll = 0;
-        let holidayWorktime45 = 0;
-        let holidayWorktimeMtg = 0;
-        let holidayWorktimePrj = 0;
-
-        retObjYoyakucalc.forEach((row) => {
-          if (row.kubun_room === "1" && row.kubun_day === "1") {
-            weekdayWorktime45 = row.totaltime;
-          } else if (row.kubun_room === "1" && row.kubun_day === "2") {
-            holidayWorktime45 = row.totaltime;
-          } else if (row.kubun_room === "2" && row.kubun_day === "1") {
-            weekdayWorktimeMtg = row.totaltime;
-          } else if (row.kubun_room === "2" && row.kubun_day === "2") {
-            holidayWorktimeMtg = row.totaltime;
-          } else if (row.kubun_room === "3" && row.kubun_day === "1") {
-            weekdayWorktimePrj = row.totaltime;
-          } else if (row.kubun_room === "3" && row.kubun_day === "2") {
-            holidayWorktimePrj = row.totaltime;
+      src.on("end", () => {
+        // 対象ファイルを処理した場合は対象ファイルをリネーム
+        fs.rename(
+          config.dlpath + "\\" + targetfilename,
+          config.dlpath + "\\" + targetfilename + ".old",
+          (err) => {
+            if (err) {
+              logger.info(
+                `${targetfilename}ファイルは存在しません：${new Date()}`
+              );
+              throw err;
+            }
           }
-        });
-
-        weekdayWorktimeAll =
-          weekdayWorktime45 + weekdayWorktimeMtg + weekdayWorktimePrj;
-        holidayWorktimeAll =
-          holidayWorktime45 + holidayWorktimeMtg + holidayWorktimePrj;
-
-        inObj.per_all_all =
-          Math.round(
-            ((weekdayWorktimeAll + holidayWorktimeAll) /
-              (weekdayTimeAll + holidayTimeAll)) *
-            100 *
-            100
-          ) / 100;
-        inObj.per_all_weekday =
-          Math.round((weekdayWorktimeAll / weekdayTimeAll) * 100 * 100) / 100;
-        inObj.per_all_holiday =
-          Math.round((holidayWorktimeAll / holidayTimeAll) * 100 * 100) / 100;
-
-        inObj.per_45_all =
-          Math.round(
-            ((weekdayWorktime45 + holidayWorktime45) /
-              (weekdayTime45 + holidayTime45)) *
-            100 *
-            100
-          ) / 100;
-        inObj.per_45_weekday =
-          Math.round((weekdayWorktime45 / weekdayTime45) * 100 * 100) / 100;
-        inObj.per_45_holiday =
-          Math.round((holidayWorktime45 / holidayTime45) * 100 * 100) / 100;
-
-        inObj.per_mtg_all =
-          Math.round(
-            ((weekdayWorktimeMtg + holidayWorktimeMtg) /
-              (weekdayTimeMtg + holidayTimeMtg)) *
-            100 *
-            100
-          ) / 100;
-        inObj.per_mtg_weekday =
-          Math.round((weekdayWorktimeMtg / weekdayTimeMtg) * 100 * 100) / 100;
-        inObj.per_mtg_holiday =
-          Math.round((holidayWorktimeMtg / holidayTimeMtg) * 100 * 100) / 100;
-
-        inObj.per_prj_all =
-          Math.round(
-            ((weekdayWorktimePrj + holidayWorktimePrj) /
-              (weekdayTimePrj + holidayTimePrj)) *
-            100 *
-            100
-          ) / 100;
-        inObj.per_prj_weekday =
-          Math.round((weekdayWorktimePrj / weekdayTimePrj) * 100 * 100) / 100;
-        inObj.per_prj_holiday =
-          Math.round((holidayWorktimePrj / holidayTimePrj) * 100 * 100) / 100;
-
-        inObj.ymd_add = tool.getToday();
-
-        const retObjPerinforemove = await m_perinfo.remove(inObj);
-        const retObjPerinfoinsert = await m_perinfo.insert(inObj);
-        logger.info(
-          `${inObj.yyyymm}のレコードを登録しました：${new Date()}`
         );
-      })();
-    };
-  };
+      });
+    }
+  });
+  logger.info(`予約情報取込終了：${num}`);
+};
+
+// ◆会議室稼働率情報設定
+const setPerInfo = async (addnum) => {
+  // (async () => {
+
+    const yyyymm = getCurrentYYYYMM(addnum);
+
+    // 現在の月の稼働時間を求める
+    // ◆平日
+    const weekdayTimeAll = tool.getHourbyYYYYMM(yyyymm, 1, 1);
+    const weekdayTime45 = tool.getHourbyYYYYMM(yyyymm, 1, 2);
+    const weekdayTimeMtg = tool.getHourbyYYYYMM(yyyymm, 1, 3);
+    const weekdayTimePrj = tool.getHourbyYYYYMM(yyyymm, 1, 4);
+    // ◆土日祝日
+    const holidayTimeAll = tool.getHourbyYYYYMM(yyyymm, 2, 1);
+    const holidayTime45 = tool.getHourbyYYYYMM(yyyymm, 2, 2);
+    const holidayTimeMtg = tool.getHourbyYYYYMM(yyyymm, 2, 3);
+    const holidayTimePrj = tool.getHourbyYYYYMM(yyyymm, 2, 4);
+
+    let inObj = {};
+    inObj.yyyymm = yyyymm;
+    const retObjYoyakucalc = await m_yoyaku.calcTime(inObj);
+    let weekdayWorktimeAll = 0;
+    let weekdayWorktime45 = 0;
+    let weekdayWorktimeMtg = 0;
+    let weekdayWorktimePrj = 0;
+    let holidayWorktimeAll = 0;
+    let holidayWorktime45 = 0;
+    let holidayWorktimeMtg = 0;
+    let holidayWorktimePrj = 0;
+
+    retObjYoyakucalc.forEach((row) => {
+      if (row.kubun_room === "1" && row.kubun_day === "1") {
+        weekdayWorktime45 = row.totaltime;
+      } else if (row.kubun_room === "1" && row.kubun_day === "2") {
+        holidayWorktime45 = row.totaltime;
+      } else if (row.kubun_room === "2" && row.kubun_day === "1") {
+        weekdayWorktimeMtg = row.totaltime;
+      } else if (row.kubun_room === "2" && row.kubun_day === "2") {
+        holidayWorktimeMtg = row.totaltime;
+      } else if (row.kubun_room === "3" && row.kubun_day === "1") {
+        weekdayWorktimePrj = row.totaltime;
+      } else if (row.kubun_room === "3" && row.kubun_day === "2") {
+        holidayWorktimePrj = row.totaltime;
+      }
+    });
+
+    weekdayWorktimeAll =
+      weekdayWorktime45 + weekdayWorktimeMtg + weekdayWorktimePrj;
+    holidayWorktimeAll =
+      holidayWorktime45 + holidayWorktimeMtg + holidayWorktimePrj;
+
+    inObj.per_all_all =
+      Math.round(
+        ((weekdayWorktimeAll + holidayWorktimeAll) /
+          (weekdayTimeAll + holidayTimeAll)) *
+        100 *
+        100
+      ) / 100;
+    inObj.per_all_weekday =
+      Math.round((weekdayWorktimeAll / weekdayTimeAll) * 100 * 100) / 100;
+    inObj.per_all_holiday =
+      Math.round((holidayWorktimeAll / holidayTimeAll) * 100 * 100) / 100;
+
+    inObj.per_45_all =
+      Math.round(
+        ((weekdayWorktime45 + holidayWorktime45) /
+          (weekdayTime45 + holidayTime45)) *
+        100 *
+        100
+      ) / 100;
+    inObj.per_45_weekday =
+      Math.round((weekdayWorktime45 / weekdayTime45) * 100 * 100) / 100;
+    inObj.per_45_holiday =
+      Math.round((holidayWorktime45 / holidayTime45) * 100 * 100) / 100;
+
+    inObj.per_mtg_all =
+      Math.round(
+        ((weekdayWorktimeMtg + holidayWorktimeMtg) /
+          (weekdayTimeMtg + holidayTimeMtg)) *
+        100 *
+        100
+      ) / 100;
+    inObj.per_mtg_weekday =
+      Math.round((weekdayWorktimeMtg / weekdayTimeMtg) * 100 * 100) / 100;
+    inObj.per_mtg_holiday =
+      Math.round((holidayWorktimeMtg / holidayTimeMtg) * 100 * 100) / 100;
+
+    inObj.per_prj_all =
+      Math.round(
+        ((weekdayWorktimePrj + holidayWorktimePrj) /
+          (weekdayTimePrj + holidayTimePrj)) *
+        100 *
+        100
+      ) / 100;
+    inObj.per_prj_weekday =
+      Math.round((weekdayWorktimePrj / weekdayTimePrj) * 100 * 100) / 100;
+    inObj.per_prj_holiday =
+      Math.round((holidayWorktimePrj / holidayTimePrj) * 100 * 100) / 100;
+
+    inObj.ymd_add = tool.getToday();
+
+    const retObjPerinforemove = await m_perinfo.remove(inObj);
+    const retObjPerinfoinsert = await m_perinfo.insert(inObj);
+    logger.info(
+      `${inObj.yyyymm}のレコードを登録しました：${new Date()}`
+    );
+  // })();
+};
+
+const getCurrentYYYYMM = (numM) => {
+  const dt = new Date();
+  const curYYYY = dt.getFullYear();
+  const curMM = dt.getMonth() + 1;
+
+  // 現在の日付の年月をもとに、月数を求める
+  const fullMonth = (curYYYY * 12) + curMM;
+
+  // 引数で設定された値を加算する
+  const targetMonth = fullMonth + numM;
+
+  // 年月を求める
+  const retYYYY = (targetMonth % 12 === 0 ? Math.floor(targetMonth / 12) - 1 : Math.floor(targetMonth / 12));
+  const retMM = (targetMonth % 12 === 0 ? 12 : targetMonth % 12);
+
+  return "" + retYYYY + ("" + "0" + retMM).slice(-2);
 };
 
 module.exports = {
   startcron,
+  dlinfo,
+  clearYoyakuInfo,
+  setYoyakuInfo,
+  setPerInfo,
 };

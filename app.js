@@ -20,6 +20,7 @@ var personRouter = require('./routes/person');
 var outaisRouter = require('./routes/outai');
 var riyoushaRouter = require('./routes/riyousha');
 var outaiskaigiRouter = require('./routes/outaikaigi');
+var perinfoRouter = require('./routes/admin/perinfo');
 // var topRouter = require('./routes/top');
 
 var app = express();
@@ -63,6 +64,7 @@ app.use('/admin/telnos', telnosRouter);
 app.use('/company', companyRouter);
 app.use('/person', personRouter);
 app.use('/outai', outaisRouter);
+app.use('/admin/perinfo', perinfoRouter);
 
 app.use('/riyousha', riyoushaRouter);
 app.use('/outaikaigi', outaiskaigiRouter);

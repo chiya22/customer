@@ -1037,3 +1037,25 @@ dd.area__outai-content {
 .kaigi__result__ymd {
   text-align: center;
 }
+
+.recovery_area {
+  padding-top:30px;
+}
+.recovery_input {
+  color: #8a8a8a;
+  display: inline-block;
+  width: 150px;
+  height: 25px;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 27px;
+  background-clip: padding-box;
+  background-color: #fff;
+  font-size: 12px;
+  letter-spacing: 0.8px;
+  &:focus {
+    outline: none;
+    border: 1px solid $base-color;
+    color: $base-color;
+  }
+}

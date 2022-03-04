@@ -10,6 +10,12 @@
   <%- include("../common/header.ejs", {current: "master" }); %>
     <div class="main">
       <div class="main__wrapper">
+        <div class="recovery_area">
+          <form method="POST" action="/admin/perinfo/recovery" name="perinfoform">
+            <input type="text" placeholder="対象年月選択" name="yyyymm_target" class="recovery_input flatpickr1" value="">
+            <input class="btn-base" type="submit" value="リカバリー" />
+          </form>
+        </div>
         <table class="kaigi__result__table">
           <tr>
             <th>年月</th>

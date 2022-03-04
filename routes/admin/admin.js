@@ -193,16 +193,4 @@ router.post("/download/yoyakunyukinzumi", (req, res, next) => {
   })();
 });
 
-/**
- * 会議室稼働率画面へ
- */
-router.get("/perinfo", security.authorize(), (req, res, next) => {
-  (async () => {
-    const retObjPer = await m_perinfo.selectAll();
-    res.render("admin/top", {
-      results: retObjPer,
-    });
-  })();
-});
-
 module.exports = router;
