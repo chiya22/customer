@@ -23,8 +23,9 @@ const startcron = () => {
     cron.schedule(config.cron.trello, () => {
       (async () => {
         let content = `毎日Trelloのタスクを確認し、更新しましょう！\r\n\r\n-----------------------------------------------------\r\n`;
-        content += 'https://trello.com/b/vTUUegIw/コンシェルジュ業務';
-
+        content += `https://trello.com/b/vTUUegIw/コンシェルジュ業務\r\n`;
+        content += `https://trello.com/b/kJnhN0Kj/入退去関連\r\n`;
+  
         //メール送信
         mail.send("タスク確認", content);
 
@@ -82,8 +83,13 @@ const startcron = () => {
         const retObjYoyaku = await m_yoyaku.setSQL(query);
         let content = `直近1週間における未入金の会議室予約情報一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
         content += `利用日 | 利用者 | 会議室名 | 時間 | 金額 | 備考\r\n`;
+        let content_r14r15 = `\r\n▼プロジェクR014,R015\r\n利用日 | 利用者 | 会議室名 | 時間 | 金額 | 備考\r\n`;
         retObjYoyaku.forEach((yoyaku) => {
-          content += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
+          if ((yoyaku.nm_room !== 'プロジェクトR014') && (yoyaku.nm_room !== 'プロジェクトR015')) {
+            content += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
+          } else {
+            content_r14r15 += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
+          }
           // content += `利用日：${tool.returndateWithslash(
           //   yoyaku.ymd_riyou
           // )}\r\n登録日：${tool.returndateWithslash(
@@ -99,7 +105,7 @@ const startcron = () => {
         });
 
         //メール送信
-        mail.send("未入金会議室予約情報", content);
+        mail.send("未入金会議室予約情報", content + content_r14r15);
 
         logger.info(
           `cronより通知メールを送信しました（未入金会議室予約）：${new Date()}`
