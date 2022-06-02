@@ -11,17 +11,6 @@ module.exports = {
   dlpath: process.env.DL_PATH,
   login_id: process.env.YOYAKU_ID,
   login_passwd: process.env.YOYAKU_PASSWORD,
-  mail: {
-      smtp: {
-          host: "smtp.gmail.com",
-          port: 465,
-          secure: true,
-      },
-      user: process.env.MAIL_USER,
-      passwd: process.env.MAIL_PASSWORD,
-      from: process.env.MAIL_FROM,
-      to: process.env.MAIL_TO,
-  },
   db: {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -37,7 +26,7 @@ module.exports = {
     // 通知メール（応対履歴、会議室）
     outai: "0 9 * * 1-5",
     // 通知メール（応対履歴）
-    outaikaigi: "0 9 * * 1-5",
+    outaikaigi: "41 9 * * 1-5",
     // 通知メール（未入金会議室予約情報）
     mishukaigi: "0 9 * * 1-5",
     // 会議室利用者情報ダウンロード
