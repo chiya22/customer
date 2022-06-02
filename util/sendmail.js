@@ -6,23 +6,27 @@ const logger = log4js.configure('./config/log4js-config.json').getLogger();
 
 const send = (title, content) => {
 
-    // SMTP情報
+    // 認証情報
+    const auth = {
+        type         : 'OAuth2',
+        user         : process.env.MAIL_USER,
+        clientId     : process.env.CLIENT_ID,
+        clientSecret : process.env.CLIENT_SECRET,
+        refreshToken : process.env.REFRESH_TOKEN
+    };
+
+    // トランスポート
     const smtp_config = {
-        host: config.mail.smtp.host,
-        port: config.mail.smtp.port,
-        secure: config.mail.smtp.secure,
-        auth: {
-            user: config.mail.user,
-            pass: config.mail.passwd,
-        },
-    }
+        service : 'gmail',
+        auth    : auth
+    };    
 
     let transporter = nodemailer.createTransport(smtp_config);
 
     // メール情報
     let message = {
-        from: config.mail.from,
-        to: config.mail.to,
+        from: process.env.MAIL_FROM,
+        to: process.env.MAIL_TO,
         subject: title,
         text: content,
     };
