@@ -75,6 +75,7 @@ const startcron = () => {
     cron.schedule(config.cron.mishukaigi, () => {
       (async () => {
         const targetYYYYMMDD = tool.getYYYYMMDD7dayAfter();
+        const currentYYYYMMDD = tool.getYYYYMMDD(new Date());
         const query =
           'SELECT y.* FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.id_riyousha <> "00001" AND y.id_riyousha <> "10001"  AND y.ymd_riyou < ' +
           targetYYYYMMDD +
@@ -83,10 +84,17 @@ const startcron = () => {
         const retObjYoyaku = await m_yoyaku.setSQL(query);
         let content = `直近1週間における未入金の会議室予約情報一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
         content += `利用日 | 利用者 | 会議室名 | 時間 | 金額 | 備考\r\n`;
+        let content_nyukyo = `\r\n▼入居者まとめて請求\r\n利用日 | 利用者 | 会議室名 | 時間 | 金額 | 備考\r\n`;
         let content_r14r15 = `\r\n▼プロジェクR014,R015\r\n利用日 | 利用者 | 会議室名 | 時間 | 金額 | 備考\r\n`;
         retObjYoyaku.forEach((yoyaku) => {
           if ((yoyaku.nm_room !== 'プロジェクトR014') && (yoyaku.nm_room !== 'プロジェクトR015')) {
-            content += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
+            // 入居者でかつ、利用日が過去の場合
+            if (yoyaku.nm_riyousha.indexOf("■") !== -1) {
+              content_nyukyo += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
+            } else {
+              content += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
+            }
+          // プロジェクトルーム014、015の貸出
           } else {
             content_r14r15 += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
           }
@@ -105,7 +113,7 @@ const startcron = () => {
         });
 
         //メール送信
-        mail.send("未入金会議室予約情報", content + content_r14r15);
+        mail.send("未入金会議室予約情報", content + content_nyukyo + content_r14r15);
 
         logger.info(
           `cronより通知メールを送信しました（未入金会議室予約）：${new Date()}`
