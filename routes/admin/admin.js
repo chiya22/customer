@@ -53,8 +53,6 @@ router.post("/download/persons", (req, res, next) => {
         "\r\n";
     });
 
-    csv = 
-
     res.setHeader("Content-disposition", "attachment; filename=persons.csv");
     res.setHeader("Content-Type", "text/csv; charset=UTF-8");
     res.status(200).send(csv);
