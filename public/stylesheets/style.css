@@ -76,7 +76,6 @@ pre {
   font-size: 12px;
   letter-spacing: 0.8px;
 }
-
 .form__item-style:focus {
   outline: none;
   border: 1px solid #cd5e42;
@@ -96,7 +95,6 @@ pre {
   font-size: 12px;
   letter-spacing: 0.8px;
 }
-
 .searchform__item-style:focus {
   outline: none;
   border: 1px solid #cd5e42;
@@ -149,12 +147,15 @@ pre {
   background-color: #8a8a8a;
   white-space: nowrap;
   cursor: pointer;
-  user-select: none;
-  transition: background-color .2s, box-shadow .2s;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  transition: background-color 0.2s, box-shadow 0.2s;
 }
 
 .checkbox_label::before {
-  content: '';
+  content: "";
   display: block;
   position: absolute;
   top: 5px;
@@ -163,10 +164,10 @@ pre {
   width: 15px;
   border: 3px solid #fff;
   border-radius: 20px;
-  transition: background-color .2s;
+  transition: background-color 0.2s;
 }
 
-input[type="checkbox"] {
+input[type=checkbox] {
   position: absolute;
   left: -9999px;
 }
@@ -184,11 +185,11 @@ input:checked + .checkbox_label::before {
   margin-left: 10px;
 }
 
-.form__check input[type="checkbox"] {
+.form__check input[type=checkbox] {
   display: none;
 }
 
-.form__check input[type="checkbox"] + label {
+.form__check input[type=checkbox] + label {
   display: block;
   position: relative;
   padding-left: 20px;
@@ -198,7 +199,7 @@ input:checked + .checkbox_label::before {
   margin-bottom: 10px;
 }
 
-.form__check input[type="checkbox"] + label:before {
+.form__check input[type=checkbox] + label:before {
   content: "";
   display: block;
   width: 0.75rem;
@@ -208,11 +209,10 @@ input:checked + .checkbox_label::before {
   left: 0;
   top: 0;
   opacity: 0.6;
-  -webkit-transition: all 0.12s, border-color 0.08s;
   transition: all 0.12s, border-color 0.08s;
 }
 
-.form__check input[type="checkbox"]:checked + label:before {
+.form__check input[type=checkbox]:checked + label:before {
   width: 8px;
   top: -3px;
   left: 5px;
@@ -220,7 +220,6 @@ input:checked + .checkbox_label::before {
   opacity: 1;
   border-top-color: transparent;
   border-left-color: transparent;
-  -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
 }
 
@@ -236,7 +235,6 @@ input:checked + .checkbox_label::before {
   text-align: center;
   font-size: 0.75rem;
 }
-
 .btn-base:hover {
   background-color: #fff;
   color: #cd5e42;
@@ -255,7 +253,6 @@ input:checked + .checkbox_label::before {
   text-align: center;
   font-size: 0.75rem;
 }
-
 .btn-move:hover {
   background-color: #cd5e42;
   color: #fff;
@@ -274,7 +271,6 @@ input:checked + .checkbox_label::before {
   text-align: center;
   font-size: 0.75rem;
 }
-
 .btn-move-done:hover {
   background-color: #A6A6A6;
   color: #fff;
@@ -299,19 +295,15 @@ input:checked + .checkbox_label::before {
   padding: 0.5em 1em;
   text-decoration: none;
   background: #f7f7f7;
-  border-left: solid 6px #cd5e42;
-  /*左線*/
-  color: #cd5e42;
-  /*文字色*/
+  border-left: solid 6px #cd5e42; /*左線*/
+  color: #cd5e42; /*文字色*/
   font-weight: bold;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
   font-size: 0.75rem;
 }
-
 .btn-link:hover {
   opacity: 0.7;
 }
-
 .btn-link:active {
   box-shadow: inset 0 0 2px rgba(128, 128, 128, 0.1);
   transform: translateY(2px);
@@ -321,7 +313,6 @@ input:checked + .checkbox_label::before {
   padding: 5px 0;
   margin-bottom: 5px;
 }
-
 .area-link a {
   margin-right: 5px;
 }
@@ -330,7 +321,6 @@ input:checked + .checkbox_label::before {
   width: 100%;
   text-align: center;
 }
-
 .form__btn .btn-base, .form__btn .btn-move {
   margin: 20px;
 }
@@ -356,7 +346,6 @@ input:checked + .checkbox_label::before {
   text-align: center;
   padding: 1rem;
 }
-
 .msgarea input, .msgarea_add input, .msgarea_add_telno input {
   margin-bottom: 20px;
 }
@@ -542,7 +531,6 @@ input:checked + .checkbox_label::before {
   top: 0;
   left: 0;
 }
-
 .login .login__wrapper {
   position: absolute;
   width: 360px;
@@ -557,11 +545,9 @@ input:checked + .checkbox_label::before {
   margin-left: -180px;
   margin-top: -200px;
 }
-
 .login .login__wrapper .form__header {
   margin-bottom: 1.5rem;
 }
-
 .login .login__wrapper .form__item {
   position: relative;
   display: block;
@@ -574,7 +560,6 @@ input:checked + .checkbox_label::before {
   background-color: #fff;
   position: fixed;
 }
-
 .header .header-wrapper {
   max-width: 900px;
   min-width: 900px;
@@ -587,13 +572,11 @@ input:checked + .checkbox_label::before {
   justify-content: space-between;
   margin: 0 auto;
 }
-
 .header .header-wrapper .header-left {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
 }
-
 .header .header-wrapper .header-left .header-logo {
   display: inline-block;
   background-color: #fff;
@@ -601,14 +584,12 @@ input:checked + .checkbox_label::before {
   width: 300px;
   height: auto;
 }
-
 .header .header-wrapper .header-right {
   display: flex;
   flex-wrap: nowrap;
   justify-content: flex-end;
   align-items: center;
 }
-
 .header .header-wrapper .header-right .btn-header {
   font-size: 0.75rem;
   background-color: #fff;
@@ -618,12 +599,10 @@ input:checked + .checkbox_label::before {
   border: 1px solid #cd5e42;
   margin-right: 10px;
 }
-
 .header .header-wrapper .header-right .btn-header:hover {
   background-color: #cd5e42;
   color: #fff;
 }
-
 .header .header-wrapper .header-right .btn-header-current {
   font-size: 0.75rem;
   background-color: #cd5e42;
@@ -649,18 +628,15 @@ input:checked + .checkbox_label::before {
 .searchform {
   font-size: 0.75rem;
 }
-
 .searchform select {
   margin-bottom: 10px;
 }
-
 .searchform .searchform__top {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   padding: 5px 0;
 }
-
 .searchform .searchform__detail .searchform__detail_btn_close {
   display: inline-block;
   border-radius: 19px;
@@ -670,7 +646,6 @@ input:checked + .checkbox_label::before {
   margin: 5px 0 10px;
   cursor: pointer;
 }
-
 .searchform .searchform__detail .searchform__detail_label {
   font-size: 14px;
   color: #cd5e42;
@@ -679,16 +654,13 @@ input:checked + .checkbox_label::before {
   margin-right: 10px;
   padding: 5px 0;
 }
-
 .searchform .searchform__detail .searchform__detail__summary {
   color: #333;
   outline: none;
 }
-
 .searchform .searchform__detail .searcform_detail_parts {
   padding: 5px;
 }
-
 .searchform .searchform__detail .searchform__detail_ymd_label {
   font-size: 12px;
   font-weight: bold;
@@ -697,22 +669,18 @@ input:checked + .checkbox_label::before {
   margin-right: 10px;
   padding: 5px 0;
 }
-
 .searchform .ymd_nyukyo_area, .searchform .ymd_kaiyaku_area {
   display: inline-block;
 }
-
 .searchform .page-section {
   display: flex;
   align-items: center;
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
-
 .searchform .page-section .search__result-disp {
   margin-left: 10px;
 }
-
 .searchform .page-section .page-disp {
   padding: 0 10px;
   font-weight: normal;
@@ -735,7 +703,6 @@ input:checked + .checkbox_label::before {
   width: 98%;
   position: relative;
 }
-
 .search__result-item a {
   display: block;
   padding-top: 10px;
@@ -747,11 +714,9 @@ input:checked + .checkbox_label::before {
   justify-content: space-between;
   align-items: center;
 }
-
 .result__row .btn-link {
   flex: 0 1 100%;
 }
-
 .result__row .btn-outai {
   background: #f7f7f7;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
@@ -767,16 +732,13 @@ input:checked + .checkbox_label::before {
   height: auto;
   margin: 2px;
 }
-
 .result__row .btn-outai:hover {
   opacity: 0.7;
 }
-
 .result__row .btn-outai:active {
   box-shadow: inset 0 0 2px rgba(128, 128, 128, 0.1);
   transform: translateY(2px);
 }
-
 .result__row .btn-outai-img {
   width: 22px;
   margin: 4px;
@@ -832,7 +794,6 @@ dd.area__outai-company {
 dd.area__outai-content {
   width: 85%;
 }
-
 dd.area__outai-content textarea {
   height: 150px;
   padding: 20px 5%;
@@ -858,22 +819,18 @@ dd.area__outai-content textarea {
 .person {
   margin-bottom: 0.5rem;
 }
-
 .person .person__header {
   position: relative;
 }
-
 .person .person__header .person__addbtn {
   font-size: 12px;
   position: absolute;
   right: 0;
 }
-
 .person .person__items {
   display: flex;
   flex-wrap: wrap;
 }
-
 .person .person__items .person__item {
   margin: 5px 15px 5px 0;
 }
@@ -882,7 +839,6 @@ dd.area__outai-content textarea {
   margin-top: 0.5rem;
   margin-bottom: 1rem;
 }
-
 .outai .outai__header {
   position: relative;
 }
@@ -890,18 +846,15 @@ dd.area__outai-content textarea {
 .room {
   margin-bottom: 0.5rem;
 }
-
 .room .room__form {
   display: flex;
   margin-bottom: 0.5rem;
 }
-
 .room .room__items {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
 }
-
 .room .room__items .room__item {
   background-color: #f7f7f7;
   color: #cd5e42;
@@ -911,7 +864,6 @@ dd.area__outai-content textarea {
   margin: 5px 15px 5px 0;
   font-size: 0.75rem;
 }
-
 .room .room__items .room__item a:hover {
   opacity: 0.7;
 }
@@ -919,12 +871,10 @@ dd.area__outai-content textarea {
 .nyukyo {
   margin-bottom: 0.5rem;
 }
-
 .nyukyo .nyukyo__items {
   display: flex;
   flex-wrap: wrap;
 }
-
 .nyukyo .nyukyo__items .nyukyo__item {
   margin: 5px 15px 5px 0;
 }
@@ -932,18 +882,15 @@ dd.area__outai-content textarea {
 .cabinet {
   margin-bottom: 0.5rem;
 }
-
 .cabinet .cabinet__form {
   display: flex;
   margin-bottom: 0.5rem;
 }
-
 .cabinet .cabinet__items {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
 }
-
 .cabinet .cabinet__items .cabinet__item {
   background-color: #f7f7f7;
   color: #cd5e42;
@@ -953,7 +900,6 @@ dd.area__outai-content textarea {
   font-size: 0.75rem;
   margin: 5px 15px 5px 0;
 }
-
 .cabinet .cabinet__items .cabinet__item a:hover {
   opacity: 0.7;
 }
@@ -961,18 +907,15 @@ dd.area__outai-content textarea {
 .telno {
   margin-bottom: 0.5rem;
 }
-
 .telno .telno__form {
   display: flex;
   margin-bottom: 0.5rem;
 }
-
 .telno .telno__items {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
 }
-
 .telno .telno__items .telno__item {
   background-color: #f7f7f7;
   color: #cd5e42;
@@ -982,7 +925,6 @@ dd.area__outai-content textarea {
   font-size: 0.75rem;
   margin: 5px 15px 5px 0;
 }
-
 .telno .telno__items .telno__item a:hover {
   opacity: 0.7;
 }
@@ -990,18 +932,15 @@ dd.area__outai-content textarea {
 .bicycle {
   margin-bottom: 0.5rem;
 }
-
 .bicycle .bicycle__form {
   display: flex;
   margin-bottom: 0.5rem;
 }
-
 .bicycle .bicycle__items {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
 }
-
 .bicycle .bicycle__items .bicycle__item {
   background-color: #f7f7f7;
   color: #cd5e42;
@@ -1011,7 +950,6 @@ dd.area__outai-content textarea {
   margin: 5px 15px 5px 0;
   font-size: 0.75rem;
 }
-
 .bicycle .bicycle__items .bicycle__item a:hover {
   opacity: 0.7;
 }
@@ -1019,18 +957,15 @@ dd.area__outai-content textarea {
 .car {
   margin-bottom: 0.5rem;
 }
-
 .car .car__form {
   display: flex;
   margin-bottom: 0.5rem;
 }
-
 .car .car__items {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
 }
-
 .car .car__items .car__item {
   background-color: #f7f7f7;
   color: #cd5e42;
@@ -1040,7 +975,6 @@ dd.area__outai-content textarea {
   margin: 5px 15px 5px 0;
   font-size: 0.75rem;
 }
-
 .car .car__items .car__item a:hover {
   opacity: 0.7;
 }
@@ -1049,7 +983,6 @@ dd.area__outai-content textarea {
   margin-top: 2rem;
   margin-left: 1.5rem;
 }
-
 .area-admin a, .area-admin input {
   margin: 10px 15px;
 }
@@ -1058,7 +991,6 @@ dd.area__outai-content textarea {
   margin-top: 1rem;
   margin-left: 1.5rem;
 }
-
 .area-admin-link a {
   margin-right: 15px;
 }
@@ -1073,7 +1005,6 @@ dd.area__outai-content textarea {
   margin-top: 0.5rem;
   margin-left: 1.5rem;
 }
-
 .admin__user a,
 .admin__nyukyos a,
 .admin__rooms a,
@@ -1095,14 +1026,14 @@ dd.area__outai-content textarea {
 .kaigi__result__table {
   margin-top: 40px;
   border-collapse: collapse;
-  border: 3px solid white;
+  border: 3px solid rgb(255, 255, 255);
   table-layout: fixed;
   width: 100%;
 }
 
 .kaigi__result__table th, .kaigi__result__table td {
-  border: 3px solid white;
-  padding: .6em;
+  border: 3px solid rgb(255, 255, 255);
+  padding: 0.6em;
 }
 
 .kaigi__result__table th {
@@ -1150,9 +1081,16 @@ dd.area__outai-content textarea {
   font-size: 12px;
   letter-spacing: 0.8px;
 }
-
 .recovery_input:focus {
   outline: none;
   border: 1px solid #cd5e42;
   color: #cd5e42;
 }
+
+.disable-color {
+  color: #a6a6a6;
+}
+
+.disable-bg {
+  background-color: #A6A6A6;
+}/*# sourceMappingURL=style.css.map */

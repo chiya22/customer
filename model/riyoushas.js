@@ -70,6 +70,17 @@ const update = async (inObj) => {
     }
 };
 
+const remove = async (inObj) => {
+    try {
+        const query = 'update riyoushas set ymd_upd = ' + tool.returnvalue(inObj.ymd_upd) + ', ymd_end = ' + tool.returnvalue(inObj.ymd_end) + ' where id = ' + tool.returnvalue(inObj.id) + '';
+        const retObj = await knex.raw(query);
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }
+};
+
+
 const setSQL = async (sql) => {
     try {
         const retObj = await knex.raw(sql);
@@ -87,5 +98,6 @@ module.exports = {
     findLikeForPaging,
     insert,
     update,
+    remove,
     setSQL,
 };

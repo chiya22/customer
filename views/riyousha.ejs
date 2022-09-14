@@ -8,15 +8,28 @@
 
 <body>
   <%- include("./common/header.ejs", {current: 'kaigi'}) %>
-
+  <%
+  const d = new Date();
+  const mm = ('00' + (d.getMonth() + 1)).slice(-2);
+  const dd = ('00' + d.getDate()).slice(-2);
+  const current_yyyymmdd = d.getFullYear() + mm + dd;
+  %>
   <div class="main">
     <div class="main__wrapper">
 
       <div class="fix_header">
-        <div class="title">
-          <span class="tag-big"><%= riyousha.id %></span>
+        <% if ((riyousha.ymd_end) &&(riyousha.ymd_end <= current_yyyymmdd)) { %>
+          <div class="title disable-bg">
+          <span class="tag-big disable-color"><%= riyousha.id %></span>
+          <span class="tag-big disable-color">抹消</span>
           <%= riyousha.name %>
-        </div>
+          </div>
+        <% } else { %>
+          <div class="title">
+            <span class="tag-big"><%= riyousha.id %></span>
+            <%= riyousha.name %>
+          </div>
+          <% } %>
       </div>
       <!-- /.fix_header -->
 
@@ -59,6 +72,7 @@
 		  <%
 			const ymd_add = (riyousha.ymd_add ? `${riyousha.ymd_add.slice(0,4)}.${riyousha.ymd_add.slice(4,6)}.${riyousha.ymd_add.slice(-2)}` : '');
 			const ymd_upd = (riyousha.ymd_upd ? `${riyousha.ymd_upd.slice(0,4)}.${riyousha.ymd_upd.slice(4,6)}.${riyousha.ymd_upd.slice(-2)}` : '');
+			const ymd_end = (riyousha.ymd_end ? `${riyousha.ymd_end.slice(0,4)}.${riyousha.ymd_end.slice(4,6)}.${riyousha.ymd_end.slice(-2)}` : '');
 		  %>
           <dt>登録年月日</dt>
           <dd><input type="text" class="form__item-readonly-style" name="ymd_add" value="<%= ymd_add %>"
@@ -67,6 +81,9 @@
           <dt>更新年月日</dt>
           <dd><input type="text" class="form__item-readonly-style" name="ymd_upd" value="<%= ymd_upd %>"
               disabled>
+          </dd>
+          <dt>廃止年月日</dt>
+          <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= ymd_end %>" disabled>
           </dd>
           <dt>備考</dt>
           <dd><input type="text" class="form__item-readonly-style" name="name" value="<%= riyousha.bikou %>" disabled>
@@ -124,6 +141,14 @@
               <input type="submit" class="btn-move" value="応対履歴（会議室）へ">
             </form>
           </div>
+          <% if (!riyousha.ymd_end) { %>
+            <div class="riyousha__btn">
+              <form method="POST" action="/riyousha/remove">
+                <input type="hidden" name="id" value="<%= riyousha.id %>">
+                <input type="submit" class="btn-move" value="登録抹消する">
+              </form>
+            </div>
+          <% } %>
         </div>
       </div>
       <% if (outaikaigis.length !== 0) { %>

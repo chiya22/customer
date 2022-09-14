@@ -5,6 +5,7 @@ const riyousha = require("../model/riyoushas");
 const outaikaigi = require("../model/outaiskaigi");
 const yoyaku = require("../model/yoyakus");
 const ischeckyoyaku = require("../model/ischeckyoyaku");
+const tool = require("../util/tool");
 
 const COUNT_PERPAGE = 20;
 
@@ -38,7 +39,7 @@ router.post("/", security.authorize(), (req, res, next) => {
     const offset = (pagecount_target - 1) * COUNT_PERPAGE;
 
     const query_search_riyousha =
-      'select r.id, r.name, r.kubun, r.kubun2, r.ymd_add from riyoushas as r where ((r.id like "%' +
+      'select r.id, r.name, r.kubun, r.kubun2, r.ymd_add, r.ymd_end from riyoushas as r where ((r.id like "%' +
       searchvalue +
       '%") or (r.name like "%' +
       searchvalue +
@@ -97,6 +98,25 @@ router.get("/:id", security.authorize(), (req, res, next) => {
       yoyakus: retObjYoyaku,
       ischeckyoyaku: retObjIsCheckYoyaku,
     });
+  })();
+});
+
+
+/**
+ * 利用者情報の廃止
+ */
+router.post("/remove", security.authorize(), (req, res, next) => {
+  (async () => {
+    
+    let inObjRiyousha = {};
+    inObjRiyousha.id = req.body.id;
+    inObjRiyousha.ymd_upd = tool.getToday();
+    inObjRiyousha.ymd_end = tool.getToday();
+
+    const retObjRiyousha = await riyousha.remove(inObjRiyousha);
+
+    res.redirect("/riyousha");
+
   })();
 });
 

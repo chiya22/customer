@@ -53,36 +53,63 @@
       </div>
 
       <% if (results) { %>
+      <%
+        const d = new Date();
+        const mm = ('00' + (d.getMonth() + 1)).slice(-2);
+        const dd = ('00' + d.getDate()).slice(-2);
+        const current_yyyymmdd = d.getFullYear() + mm + dd;
+      %> 
       <div class="search__result-riyousha">
         <div class="search__result-items">
           <%  results.forEach( result => { %>
           <div class="search__result-item">
+            <% if (result.ymd_end >= current_yyyymmdd) { %>
             <div class="result__row">
-              <a class="btn-link" href="./riyousha/<%= result.id %>">
-                <p class="tag"><%= result.id %></p>
-                <p class="tag"><%= result.kubun %></p>
+              <a class="btn-link bd-left-disabled" href="./riyousha/<%= result.id %>">
+                <p class="tag bg-disabled"><%= result.id %></p>
+                <p class="tag bg-disabled"><%= result.kubun %></p>
                 <% if (result.kubun2) { %> 
-                <p class="tag"><%= result.kubun2 %></p>
+                <p class="tag bg-disabled"><%= result.kubun2 %></p>
                 <% } %>
-                <%= result.name %>
-                <span class="dateinfo">　|　登録日：<%= result.ymd_add.slice(0,4) %>.<%= result.ymd_add.slice(4,6) %>.<%= result.ymd_add.slice(-2) %></span>
+                <span class="color-disabled"><%= result.name %></span>
+                <span class="dateinfo color-disabled">　|　登録日：<%= result.ymd_add.slice(0,4) %>.<%= result.ymd_add.slice(4,6) %>.<%= result.ymd_add.slice(-2) %>　抹消日：<%= result.ymd_end.slice(0,4) %>.<%= result.ymd_end.slice(4,6) %>.<%= result.ymd_end.slice(-2) %></span>
               </a>
               <form method="POST" action="/outaikaigi">
                 <div class="btn-outai">
                   <input type="hidden" name="id_riyousha" value="<%= result.id %>">
                   <input type="hidden" name="searchvalue" value="">
-                  <input type="image" class="btn-outai-img" src="/static/images/list.png">
+                  <input type="image" class="btn-outai-img" src="/static/images/list_disabled.png">
                 </div>
               </form>
               <a href="./outaikaigi/insert/<%= result.id %>" class="btn-outai"><img class="btn-outai-img"
-                  src="/static/images/add.png"></a>
+                  src="/static/images/add_disabled.png"></a>
             </div>
+            <% } else { %>
+              <div class="result__row">
+                <a class="btn-link" href="./riyousha/<%= result.id %>">
+                  <p class="tag"><%= result.id %></p>
+                  <p class="tag bg-disabld"><%= result.kubun %></p>
+                  <% if (result.kubun2) { %> 
+                  <p class="tag bg-disabld"><%= result.kubun2 %></p>
+                  <% } %>
+                  <%= result.name %>
+                  <span class="dateinfo">　|　登録日：<%= result.ymd_add.slice(0,4) %>.<%= result.ymd_add.slice(4,6) %>.<%= result.ymd_add.slice(-2) %></span>
+                </a>
+                <form method="POST" action="/outaikaigi">
+                  <div class="btn-outai">
+                    <input type="hidden" name="id_riyousha" value="<%= result.id %>">
+                    <input type="hidden" name="searchvalue" value="">
+                    <input type="image" class="btn-outai-img" src="/static/images/list.png">
+                  </div>
+                </form>
+                <a href="./outaikaigi/insert/<%= result.id %>" class="btn-outai"><img class="btn-outai-img"
+                    src="/static/images/add.png"></a>
+              </div>
+              <% } %>
           </div>
           <% }) %>
-        </div>
-        <% } %>
-
       </div>
+      <% } %>
       <!-- /.main__wrpper -->
     </div>
     <!-- /.main -->
