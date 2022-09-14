@@ -52,17 +52,25 @@
     <div class="main__wrapper">
 
       <div class="fix_header">
-        <div class="title">
+        <% if (company.ymd_kaiyaku < current_yyyymmdd) { %>
+          <div class="title disable-bg">
+            <% if (company.id_nyukyo) { %>
+            <span class="tag-big disable-color"><%= company.id_nyukyo %></span>
+            <% } %>
+            <span class="tag-big disable-color"><%= company.kubun_company %></span>
+            <!-- 会社の解約日　＜　現在の日付　-->
+            <span class="tag-big disable-color">解約</span>
+            <%= company.name %>
+          </div>
+        <% } else { %>
+          <div class="title">
           <% if (company.id_nyukyo) { %>
           <span class="tag-big"><%= company.id_nyukyo %></span>
           <% } %>
           <span class="tag-big"><%= company.kubun_company %></span>
-          <!-- 会社の解約日　＜　現在の日付　-->
-          <% if (company.ymd_kaiyaku < current_yyyymmdd) { %>
-          <span class="tag-big">解約</span>
-          <% } %>
           <%= company.name %>
-        </div>
+          </div>
+        <% } %>
       </div>
       <!-- /.fix_header -->
 
