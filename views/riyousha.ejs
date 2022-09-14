@@ -106,8 +106,14 @@
             </dd>
           </dl>
         </div>
-        
         <div class="riyousha__btnarea">
+          <div class="riyousha__btn">
+          <% if (ischeckyoyaku) { %>
+            <a class="btn-move" href="/riyousha/checkyoyaku/<%= riyousha.id %>">監視対象から外す</a>
+          <% } else { %>
+            <a class="btn-move-done" href="/riyousha/checkyoyaku/<%= riyousha.id %>">監視対象とする</a>
+          <% } %>
+          </div>
           <div class="riyousha__btn">
             <a class="btn-move" href="/riyousha">会議室利用者検索へ</a>
           </div>

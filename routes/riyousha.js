@@ -4,6 +4,7 @@ const security = require("../util/security");
 const riyousha = require("../model/riyoushas");
 const outaikaigi = require("../model/outaiskaigi");
 const yoyaku = require("../model/yoyakus");
+const ischeckyoyaku = require("../model/ischeckyoyaku");
 
 const COUNT_PERPAGE = 20;
 
@@ -81,14 +82,53 @@ router.post("/", security.authorize(), (req, res, next) => {
 // 会議室利用者検索ページから「会議室利用者リンク選択」での会議室利用者ページへの遷移
 router.get("/:id", security.authorize(), (req, res, next) => {
   (async () => {
+
+    //会議室予約情報監視チェックのON/OFF
+    const retObjIsCheckYoyaku = await ischeckyoyaku.findPKey(req.params.id);
+
     //利用者情報の取得
     const retObjRiyousha = await riyousha.findPKey(req.params.id);
     const retObjOutaikaigi = await outaikaigi.findByRiyoushaForOutai(req.params.id);
     const retObjYoyaku = await yoyaku.findByRiyoushaForOutai(req.params.id);
+
     res.render("riyousha", {
       riyousha: retObjRiyousha,
       outaikaigis: retObjOutaikaigi,
       yoyakus: retObjYoyaku,
+      ischeckyoyaku: retObjIsCheckYoyaku,
+    });
+  })();
+});
+
+/**
+ * 会議室予約情報監視チェックのON/OFFを実行する
+ */
+router.get("/checkyoyaku/:id", security.authorize(), (req, res, next) => {
+  (async () => {
+
+    //会議室予約情報監視チェックのON/OFF
+    const retObjIsCheckYoyaku = await ischeckyoyaku.findPKey(req.params.id);
+
+    if (retObjIsCheckYoyaku) {
+      // 存在する（ON）場合　⇒　OFFにするためレコード削除
+      await ischeckyoyaku.remove(req.params.id);
+    } else {
+      // 存在しない（OFF）場合　⇒　ONにするためレコード追加
+      await ischeckyoyaku.insert(req.params.id);
+    }
+
+    // 更新結果を再度取得する
+    const retObjIsCheckYoyakuUpdate = await ischeckyoyaku.findPKey(req.params.id);
+
+    const retObjRiyousha = await riyousha.findPKey(req.params.id);
+    const retObjOutaikaigi = await outaikaigi.findByRiyoushaForOutai(req.params.id);
+    const retObjYoyaku = await yoyaku.findByRiyoushaForOutai(req.params.id);
+
+    res.render("riyousha", {
+      riyousha: retObjRiyousha,
+      outaikaigis: retObjOutaikaigi,
+      yoyakus: retObjYoyaku,
+      ischeckyoyaku: retObjIsCheckYoyakuUpdate,
     });
   })();
 });
