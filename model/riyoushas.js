@@ -33,7 +33,7 @@ const findForSelect = async () => {
 
 const findLikeCount = async (likevalue) => {
     try {
-        const query = 'select count(*) as count_all from riyoushas where ((id like "%' + likevalue + '%") or (name like "%' + likevalue + '%") or (kana like "%' + likevalue + '%"))';
+        const query = 'select count(*) as count_all from riyoushas where ((id like "%' + likevalue + '%") or (name like "%' + likevalue + '%") or (kana like "%' + likevalue + '%") or (mail1 like "%' + likevalue + '%") or (mail2 like "%' + likevalue + '%"))';
         const retObj = await knex.raw(query);
         return retObj[0];
     } catch(err) {
@@ -43,7 +43,7 @@ const findLikeCount = async (likevalue) => {
 
 const findLikeForPaging = async (likevalue, percount, offset) => {
     try {
-        const query = 'select * from riyoushas where ((id like "%' + likevalue + '%") or (name like "%' + likevalue + '%") or (kana like "%' + likevalue + '%")) limit ' + percount + ' offset ' + offset + ' order by id asc';
+        const query = 'select * from riyoushas where ((id like "%' + likevalue + '%") or (name like "%' + likevalue + '%") or (kana like "%' + likevalue + '%") or (mail1 like "%' + likevalue + '%") or (mail2 like "%' + likevalue + '%")) limit ' + percount + ' offset ' + offset + ' order by id asc';
         const retObj = await knex.raw(query);
         return retObj[0];
     } catch(err) {

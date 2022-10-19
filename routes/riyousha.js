@@ -45,6 +45,10 @@ router.post("/", security.authorize(), (req, res, next) => {
       searchvalue +
       '%") or (r.kana like "%' +
       searchvalue +
+      '%") or (r.mail1 like "%' +
+      searchvalue +
+      '%") or (r.mail2 like "%' +
+      searchvalue +
       '%"))';
 
     // 合体
