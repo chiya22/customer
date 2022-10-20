@@ -63,7 +63,7 @@
         <div class="search__result-items">
           <%  results.forEach( result => { %>
           <div class="search__result-item">
-            <% if (result.ymd_end >= current_yyyymmdd) { %>
+            <% if ((result.ymd_end) && (result.ymd_end <= current_yyyymmdd)) { %>
             <div class="result__row">
               <a class="btn-link bd-left-disabled" href="./riyousha/<%= result.id %>">
                 <p class="tag bg-disabled"><%= result.id %></p>
