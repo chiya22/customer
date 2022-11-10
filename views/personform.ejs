@@ -9,7 +9,7 @@
 <body>
   <div class="msg">
     <div class="msgarea">
-      <p class="msgarea__text">設定された年月日から所属会社を変更します。<br>よろしいですか？</p>
+      <p class="msgarea__text">設定された年月日から変更を適用します。<br>よろしいですか？</p>
       <input type="text" placeholder="年月日を選択する" class="form__item-style flatpickr" name="select_ymd_change"
         id="select_ymd_change">
       <button class="msgarea__okbtn">はい</button>
@@ -287,7 +287,7 @@
   <script>
 
     /*
-    会社番号を変更し「更新」ボタンをクリックした際に表示されるメッセージエリアで「OK」「NG」をクリックした際の挙動
+    「更新」ボタンをクリックした際に表示されるメッセージエリアで「OK」「NG」をクリックした際の挙動
     */
     let okbtn = document.getElementsByClassName("msgarea__okbtn")[0];
     okbtn.addEventListener('click', function () {
@@ -295,7 +295,7 @@
       let selected = document.getElementById("selected_ymd_change");
       if (select.value) {
         selected.value = select.value;
-        document.personform.action = "/person/change";
+        document.personform.action = "/person/update";
         document.personform.submit();
       } else {
         select.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
@@ -316,21 +316,12 @@
       })
     }
     // 変更前の会社番号を取得
-    const beforeIdCompany = document.getElementById("before_id_company");
     let updatebtn = document.getElementById("btn_update");
     if (updatebtn) {
       updatebtn.addEventListener("click", function () {
-        // 変更後の会社番号を取得
-        const idCompany = document.getElementById("id_company");
-        // 会社番号に変更が発生している場合
-        if (idCompany.value !== beforeIdCompany.value) {
           scrollTo(0, 0);
           let msg = document.getElementsByClassName("msg")[0];
           msg.style.visibility = "visible";
-        } else {
-          document.personform.action = "/person/update";
-          document.personform.submit();
-        }
       })
     }
     let deletebtn = document.getElementById("btn_delete");

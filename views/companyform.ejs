@@ -9,7 +9,7 @@
 <body>
   <div class="msg">
     <div class="msgarea">
-      <p class="msgarea__text">設定された年月日からONに変更しす。<br>よろしいですか？</p>
+      <p class="msgarea__text">設定された年月日から変更を適用します。<br>よろしいですか？</p>
       <input type="text" placeholder="年月日を選択する" class="form__item-style flatpickr" name="select_ymd_change"
         id="select_ymd_change">
       <button class="msgarea__okbtn">はい</button>
@@ -135,6 +135,7 @@
             let flgONL = "";
             let flgCN = "";
             let flgTS = "";
+            let flgCity = "";
             if (company.kubun_company === 'ON') {
               flgON = "checked";
             } else if (company.kubun_company === 'ONL') {
@@ -143,6 +144,8 @@
               flgCN = "checked";
             } else if (company.kubun_company === 'TS') {
               flgTS = "checked";
+            } else if (company.kubun_company === '市町村') {
+              flgCity = "checked";
             }
             %> 
             <input id="kubun_company_1" class="form__radio-style" type="radio" value="ON" name="kubun_company" <%= flgON %> >
@@ -153,7 +156,7 @@
             <label for="kubun_company_3" class="form__radio-label">CN</label>
             <input id="kubun_company_4" class="form__radio-style" type="radio" value="TS" name="kubun_company" <%= flgTS %> >
             <label for="kubun_company_4" class="form__radio-label">TS</label>
-            <input id="kubun_company_5" class="form__radio-style" type="radio" value="市町村" name="kubun_company" <%= flgTS %> >
+            <input id="kubun_company_5" class="form__radio-style" type="radio" value="市町村" name="kubun_company" <%= flgCity %> >
             <label for="kubun_company_5" class="form__radio-label">市町村</label>
           </dd>
           <dt><span class="tag">必須</span>会社名</dt>
@@ -186,9 +189,40 @@
                 value="<%= company.id_nyukyo %>" disabled></dd>
                 <input type="hidden" name="id_nyukyo" value="<%= company.id_nyukyo %>">
             <dt>会社区分</dt>
-            <dd><input class="form__item-style bg-input-disabled" type="text" name="kubun_company"
-                value="<%= company.kubun_company %>" disabled></dd>
-            <input type="hidden" name="kubun_company" value="<%= company.kubun_company %>">
+            <dd>
+              <%
+              let flgON = "";
+              let flgONL = "";
+              let flgCN = "";
+              let flgTS = "";
+              let flgCity = "";
+              if (company.kubun_company === 'ON') {
+                flgON = "checked";
+              } else if (company.kubun_company === 'ONL') {
+                flgONL = "checked";
+              } else if (company.kubun_company === 'CN') {
+                flgCN = "checked";
+              } else if (company.kubun_company === 'TS') {
+                flgTS = "checked";
+              } else if (company.kubun_company === '市町村') {
+                flgCity = "checked";
+              }
+              %> 
+              <input id="kubun_company_1" class="form__radio-style" type="radio" value="ON" name="kubun_company" <%= flgON %> >
+              <label for="kubun_company_1" class="form__radio-label">ON</label>
+              <input id="kubun_company_2" class="form__radio-style" type="radio" value="ONL" name="kubun_company" <%= flgONL %> >
+              <label for="kubun_company_2" class="form__radio-label">ONL</label>
+              <input id="kubun_company_3" class="form__radio-style" type="radio" value="CN" name="kubun_company" <%= flgCN %> >
+              <label for="kubun_company_3" class="form__radio-label">CN</label>
+              <input id="kubun_company_4" class="form__radio-style" type="radio" value="TS" name="kubun_company" <%= flgTS %> >
+              <label for="kubun_company_4" class="form__radio-label">TS</label>
+              <input id="kubun_company_5" class="form__radio-style" type="radio" value="市町村" name="kubun_company" <%= flgCity %> >
+              <label for="kubun_company_5" class="form__radio-label">市町村</label>              
+              
+              <!-- <input class="form__item-style bg-input-disabled" type="text" name="kubun_company"
+                value="<%= company.kubun_company %>" disabled> -->
+              </dd>
+            <!-- <input type="hidden" name="kubun_company" value="<%= company.kubun_company %>"> -->
             <dt>会社名</dt>
             <dd><input class="form__item-style" type="text" name="name" value="<%= company.name %>" required></dd>
             <dt>会社名（追加）</dt>
@@ -208,9 +242,6 @@
             <input type="hidden" id="name" value="<%= company.id %>">
             <div class="form__btn">
               <input type="button" class="btn-base" id="btn_update" value="更新">
-              <% if (company.kubun_company === "CN") { %>
-                <input type="button" class="btn-base" id="btn_change" value="ONへ変更">
-              <% } %>
               <input type="hidden" name="selected_ymd_change" id="selected_ymd_change" value="">
               <input type="hidden" name="ymd_start" id="ymd_start" value="<%= company.ymd_start %>">
               <input type="hidden" name="ymd_end" id="ymd_end" value="<%= company.ymd_end %>">
@@ -259,18 +290,18 @@
   </section>
   <script>
     /*
-    「ONへ変更」ボタンをクリックした際のメッセージエリア表示制御
+    「変更」ボタンをクリックした際のメッセージエリア表示制御
     */
-    let changebtn = document.getElementById("btn_change");
-    if (changebtn) {
-      changebtn.addEventListener('click', function () {
+    let updatebtn = document.getElementById("btn_update");
+    if (updatebtn) {
+      updatebtn.addEventListener('click', function () {
         scrollTo(0, 0);
         let msg = document.getElementsByClassName("msg")[0];
         msg.style.visibility = "visible";
       });
     }
     /*
-    「ONへ変更」ボタンをクリックした際に表示されるメッセージエリアで「OK」「NG」をクリックした際の挙動
+    「変更」ボタンをクリックした際に表示されるメッセージエリアで「OK」「NG」をクリックした際の挙動
     */
     let okbtn = document.getElementsByClassName("msgarea__okbtn")[0];
     okbtn.addEventListener('click', function () {
@@ -278,8 +309,11 @@
       let selected = document.getElementById("selected_ymd_change");
       if (select.value) {
         selected.value = select.value;
-        document.companyform.action = "/company/change";
+        document.companyform.action = "/company/update";
         document.companyform.submit();
+
+        // document.companyform.action = "/company/change";
+        // document.companyform.submit();
       } else {
         select.style.backgroundColor = "rgba(255, 0, 0, 0.3)";
         return false;
@@ -298,13 +332,13 @@
         document.companyform.submit();
       })
     }
-    let updatebtn = document.getElementById("btn_update");
-    if (updatebtn) {
-      updatebtn.addEventListener("click", function () {
-        document.companyform.action = "/company/update";
-        document.companyform.submit();
-      })
-    }
+    // let updatebtn = document.getElementById("btn_update");
+    // if (updatebtn) {
+    //   updatebtn.addEventListener("click", function () {
+    //     document.companyform.action = "/company/update";
+    //     document.companyform.submit();
+    //   })
+    // }
     let deletebtn = document.getElementById("btn_delete");
     if (deletebtn) {
       deletebtn.addEventListener("click", function () {
