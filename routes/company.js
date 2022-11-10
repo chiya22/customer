@@ -139,6 +139,8 @@ router.post("/insert", security.authorize(), (req, res, next) => {
   (async () => {
     let inObjCompany = getCompanyData(req.body);
     inObjCompany.ymd_start = tool.getToday();
+    inObjCompany.ymd_end = "99991231";
+    inObjCompany.ymd_kaiyaku = "99991231";
     inObjCompany.ymd_upd = tool.getToday();
     inObjCompany.id_upd = req.user.id;
 
@@ -171,6 +173,13 @@ router.post("/update", security.authorize(), (req, res, next) => {
     inObjCompany.ymd_upd = tool.getToday();
     inObjCompany.id_upd = req.user.id;
 
+    //更新前の会社情報を取得
+    const retObjBeforeCompany = await m_company.findPKey(inObjCompany.id, inObjCompany.ymd_end);
+    retObjBeforeCompany.ymd_upd = tool.getToday();
+
+    //適用開始年月日を取得
+    const ymd_target =req.body.selected_ymd_change;
+
     //入力チェック
     const errors = validateData(req.body);
     if (errors) {
@@ -182,19 +191,84 @@ router.post("/update", security.authorize(), (req, res, next) => {
         errors: errors,
       });
     } else {
-      const retObjCompany = await m_company.update(inObjCompany);
-      if (retObjCompany.changedRows === 0) {
+
+      //会社情報が更新されている場合
+      if (isUpdateCompanyData(inObjCompany, retObjBeforeCompany)) {
+
+        //会社IDの採番号
+        const retObj = await m_sq.getSqCompany();
+        const id_forRireki = "C" + ("00000" + retObj.no).slice(-5);
+
+        //会社区分（kubun_company）が変更されている場合
+        if (retObjBeforeCompany.kubun_company !== inObjCompany.kubun_company) {
+
+          retObjBeforeCompany.ymd_kaiyaku = tool.getYYYYMMDDBefore1Day(ymd_target);
+          inObjCompany.ymd_nyukyo = ymd_target;
+
+          //更新
+          //変更前の会社情報を更新する
+          const retObjCompanyUpdate = await m_company.update(retObjBeforeCompany);
+          if (retObjCompanyUpdate.changedRows === 0) {
+            const retObjSelect = await m_nyukyo.findForSelect();
+            let errors = {};
+            errors.common = "更新対象がすでに削除されています";
+            res.render("companyform", {
+              company: inObjCompany,
+              nyukyos: retObjSelect,
+              mode: "update",
+              errors: errors,
+            });
+          } else {
+
+            //新規登録
+            //変更後の会社情報を新規登録する
+            inObjCompany.id = id_forRireki;
+            await m_company.insert(inObjCompany);
+  
+            res.redirect("/company/" + inObjCompany.id);
+          }
+
+        //会社区分（kubun_company）が変更されていない場合
+        } else {
+
+          retObjBeforeCompany.ymd_end = tool.getYYYYMMDDBefore1Day(ymd_target);
+          inObjCompany.ymd_start = ymd_target;
+
+          //更新
+          //変更後の会社情報を既存の情報に上書きする（他の情報との紐づけを維持するため）
+          const retObjCompanyUpdate = await m_company.update(inObjCompany);
+          if (retObjCompanyUpdate.changedRows === 0) {
+            const retObjSelect = await m_nyukyo.findForSelect();
+            let errors = {};
+            errors.common = "更新対象がすでに削除されています";
+            res.render("companyform", {
+              company: inObjCompany,
+              nyukyos: retObjSelect,
+              mode: "update",
+              errors: errors,
+            });
+          } else {
+
+            //新規登録
+            //変更前の会社情報を履歴として新規登録する
+            retObjBeforeCompany.id = id_forRireki;
+            await m_company.insert(retObjBeforeCompany);
+  
+            res.redirect("/company/" + inObjCompany.id);
+          }
+        }
+        
+      //会社情報が更新されていない場合
+      } else {
         const retObjSelect = await m_nyukyo.findForSelect();
         let errors = {};
-        errors.common = "更新対象がすでに削除されています";
+        errors.common = "会社情報が変更されていません";
         res.render("companyform", {
           company: inObjCompany,
           nyukyos: retObjSelect,
           mode: "update",
           errors: errors,
         });
-      } else {
-        res.redirect("/company/" + inObjCompany.id);
       }
     }
   })();
@@ -283,62 +357,6 @@ router.post("/cancel", security.authorize(), (req, res, next) => {
     res.redirect("/");
   })();
 });
-
-/**
- * 会社をCNからONへ変更
- */
- router.post("/change", security.authorize(), (req, res, next) => {
-  (async () => {
-    let inObjCompany = getCompanyData(req.body);
-    inObjCompany.ymd_upd = tool.getToday();
-    inObjCompany.ymd_kaiyaku = tool.getYYYYMMDDBefore1Day(req.body.selected_ymd_change);;
-    inObjCompany.id_upd = req.user.id;
-
-    //入力チェック
-    const errors = validateData(req.body);
-    if (req.body.kubun_company !== "CN") {
-      errors.kubun_company = "会社区分「CN」のみ「ON」へ変更できます。";
-    }
-  
-    if (errors) {
-      const retObjSelect = await m_nyukyo.findForSelect();
-      res.render("companyform", {
-        company: inObjCompany,
-        nyukyos: retObjSelect,
-        mode: "update",
-        errors: errors,
-      });
-    } else {
-      // 解約日を設定
-      const retObjCompany = await m_company.update(inObjCompany);
-      if (retObjCompany.changedRows === 0) {
-        const retObjSelect = await m_nyukyo.findForSelect();
-        let errors = {};
-        errors.common = "更新対象がすでに削除されています";
-        res.render("companyform", {
-          company: inObjCompany,
-          nyukyos: retObjSelect,
-          mode: "update",
-          errors: errors,
-        });
-      } else {
-        //CNの会社のIDを退避
-        const before_id_company = inObjCompany.id;
-        //会社IDの採番号
-        const retObj = await m_sq.getSqCompany();
-        inObjCompany.id = "C" + ("00000" + retObj.no).slice(-5);
-        //ONで会社登録
-        inObjCompany.kubun_company = "ON";
-        inObjCompany.ymd_nyukyo = req.body.selected_ymd_change;
-        inObjCompany.ymd_kaiyaku = "99991231";
-        await m_company.insert(inObjCompany);
-        // res.redirect("/");
-        res.redirect("/company/" + before_id_company);
-      }
-    }
-  })();
-});
-
 
 /**
  * 会社に部屋を紐づける
@@ -638,5 +656,23 @@ const getCompanyData = (body) => {
   inObj.bikou = body.bikou;
   return inObj;
 };
+
+/**
+ * 引数のinObj1、inObj2を比較し、値が異なる場合は「true」、値が同じ場合は「false」を返却する
+ * @param {inObj1, inObj2}  比較対象の会社情報
+ * @returns boolean
+ */
+const isUpdateCompanyData = (inObj1, inObj2) => {
+  if ((tool.returnvalueWithoutNull(inObj1.id_kaigi) !== tool.returnvalueWithoutNull(inObj2.id_kaigi)) ||
+  (tool.returnvalueWithoutNull(inObj1.kubun_company) !== tool.returnvalueWithoutNull(inObj2.kubun_company)) ||
+  (tool.returnvalueWithoutNull(inObj1.name) !== tool.returnvalueWithoutNull(inObj2.name)) ||
+  (tool.returnvalueWithoutNull(inObj1.name_other) !== tool.returnvalueWithoutNull(inObj2.name_other)) ||
+  (tool.returnvalueWithoutNull(inObj1.kana) !== tool.returnvalueWithoutNull(inObj2.kana)) 
+  ){
+    return true;
+  } else {
+    return false;
+  }
+}
 
 module.exports = router;
