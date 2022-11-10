@@ -123,7 +123,7 @@ const findLikeForPaging = async (likevalue, percount, offset) => {
  */
 const insert = async (inObj) => {
     try {
-        const query = 'INSERT INTO companies VALUES ("' + inObj.id + '",' + tool.returnvalue(inObj.id_nyukyo) + ',' + tool.returnvalue(inObj.id_kaigi) + ',"' + inObj.kubun_company + '","' + inObj.name + '", "' + inObj.name_other + '", ' + tool.returnvalue(inObj.kana) + ',"' + inObj.ymd_nyukyo + '","99991231","' + inObj.ymd_start + '","99991231", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '", ' + tool.returnvalue(inObj.bikou) + ')';
+        const query = 'INSERT INTO companies VALUES ("' + inObj.id + '",' + tool.returnvalue(inObj.id_nyukyo) + ',' + tool.returnvalue(inObj.id_kaigi) + ',"' + inObj.kubun_company + '","' + inObj.name + '", ' + tool.returnvalue(inObj.name_other) + ', ' + tool.returnvalue(inObj.kana) + ',"' + inObj.ymd_nyukyo + '","' + inObj.ymd_kaiyaku + '","' + inObj.ymd_start + '","' + inObj.ymd_end + '", "' + inObj.ymd_upd + '", "' + inObj.id_upd + '", ' + tool.returnvalue(inObj.bikou) + ')';
         const retObj = await knex.raw(query)
         return retObj[0];
     } catch(err) {
@@ -138,7 +138,7 @@ const insert = async (inObj) => {
  */
 const update = async (inObj) => {
     try {
-        const query = 'UPDATE companies SET kubun_company = ' + tool.returnvalue(inObj.kubun_company) + ', id_nyukyo = ' + tool.returnvalue(inObj.id_nyukyo) + ', id_kaigi = ' + tool.returnvalue(inObj.id_kaigi) + ', name = ' + tool.returnvalue(inObj.name) + ', name_other = ' + tool.returnvalue(inObj.name_other) + ', kana = ' + tool.returnvalue(inObj.kana) + ', bikou = ' + tool.returnvalue(inObj.bikou) + ', ymd_nyukyo = "' + inObj.ymd_nyukyo + '", ymd_kaiyaku = "' + inObj.ymd_kaiyaku + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" WHERE  id = "' + inObj.id + '" AND  ymd_end = "99991231"';
+        const query = 'UPDATE companies SET kubun_company = ' + tool.returnvalue(inObj.kubun_company) + ', id_nyukyo = ' + tool.returnvalue(inObj.id_nyukyo) + ', id_kaigi = ' + tool.returnvalue(inObj.id_kaigi) + ', name = ' + tool.returnvalue(inObj.name) + ', name_other = ' + tool.returnvalue(inObj.name_other) + ', kana = ' + tool.returnvalue(inObj.kana) + ', bikou = ' + tool.returnvalue(inObj.bikou) + ', ymd_nyukyo = "' + inObj.ymd_nyukyo + '", ymd_kaiyaku = "' + inObj.ymd_kaiyaku + '", ymd_start = "' + inObj.ymd_start + '", ymd_end = "' + inObj.ymd_end + '", ymd_upd = "' + inObj.ymd_upd + '", id_upd = "' + inObj.id_upd + '" WHERE  id = "' + inObj.id + '" AND  ymd_end = "' + inObj.ymd_end + '";'
         const retObj = await knex.raw(query)
         return retObj[0];
     } catch(err) {
