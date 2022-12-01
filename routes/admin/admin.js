@@ -5,12 +5,13 @@ const security = require("../../util/security");
 const m_person = require("../../model/persons");
 const m_nyukyo = require("../../model/nyukyos");
 const m_company = require("../../model/companies");
-const m_perinfo = require("../../model/perinfo");
 const m_yoyaku = require("../../model/yoyakus");
 
 const tool = require("../../util/tool");
+const cron = require("../../util/cron");
 
 const iconv = require('iconv-lite');
+// const { cron } = require("../../config/app.config");
 
 /* GET home page. */
 router.get("/", security.authorize(), (req, res, next) => {
@@ -189,6 +190,27 @@ router.post("/download/yoyakunyukinzumi", (req, res, next) => {
     res.setHeader("Content-Type", "text/csv; charset=UTF-8");
     res.status(200).send(iconv.encode(csv, "Shift_JIS"));
   })();
+});
+
+//通知メールのリカバリー
+router.get("/mailrecovery", security.authorize(), (req, res, next) => {
+
+  (async () => {
+
+    await cron.alertTrelloMail();
+
+    await cron.alertOutairirekiMail();
+
+    await cron.alertOutairirekiKaigiMail();
+
+    await cron.alertMishuKaigiMail();
+
+    await cron.alertYoyakuKanshiMail();
+            
+    await res.redirect(req.baseUrl);
+
+  })();
+
 });
 
 module.exports = router;

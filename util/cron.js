@@ -17,137 +17,153 @@ const puppeteer = require("puppeteer");
 const tool = require("./tool");
 const fs = require("fs");
 
+/**
+ * Trelloの情報を通知する
+ */
+const alertTrelloMail = async () => {
+
+  let content = `毎日Trelloのタスクを確認し、更新しましょう！\r\n\r\n-----------------------------------------------------\r\n`;
+  content += `https://trello.com/b/vTUUegIw/コンシェルジュ業務\r\n`;
+  content += `https://trello.com/b/kJnhN0Kj/入退去関連\r\n`;
+
+  //メール送信
+  mail.send("タスク確認", content);
+
+  logger.info(`cronより通知メールを送信しました（Trello）：${new Date()}`);
+
+}
+
+/**
+ * 応対履歴の未完了情報を通知する
+ */
+const alertOutairirekiMail = async () => {
+  query =
+  'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.status != "完了" ORDER BY ocu.ymdhms_upd desc';
+  const retObjoutai = await m_outai.setSQL(query);
+  let content = `未完了の応対履歴一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
+
+  retObjoutai.forEach((outai) => {
+    content += `会社：${outai.name_company}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${config.url.outai}${outai.id}\r\n------------------------------------------------------\r\n`;
+  });
+
+  //メール送信
+  mail.send("応対履歴一覧", content);
+
+  logger.info(`cronより通知メールを送信しました（入居者）：${new Date()}`);
+}
+
+/**
+ * 応対履歴（会議室）の未完了情報を通知する
+ */
+const alertOutairirekiKaigiMail = async () => {
+  query =
+  'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(r.name, "利用者指定なし") as name_riyousha FROM outaiskaigi o left outer JOIN riyoushas r ON o.id_riyousha = r.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) oru WHERE oru.status != "完了" ORDER BY oru.ymdhms_upd desc';
+  const retObjOutai = await m_outai.setSQL(query);
+  let content = `未完了の応対履歴（会議室）一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
+
+  retObjOutai.forEach((outai) => {
+    content += `利用者：${outai.name_riyousha}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${config.url.outaikaigi}${outai.id}\r\n------------------------------------------------------\r\n`;
+  });
+
+  //メール送信
+  mail.send("応対履歴一覧（会議室）", content);
+
+  logger.info(
+    `cronより通知メールを送信しました（会議室）：${new Date()}`
+  );
+}
+
+/**
+ * 会議室予約の未入金情報を通知する
+ */
+const alertMishuKaigiMail = async () => {
+
+  const targetYYYYMMDD = tool.getYYYYMMDD7dayAfter();
+  const query =
+    'SELECT y.* FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.id_riyousha <> "00001" AND y.id_riyousha <> "10001"  AND y.ymd_riyou < ' +
+    targetYYYYMMDD +
+    ' ORDER BY y.ymd_riyou, y.id_riyousha';
+
+  const retObjYoyaku = await m_yoyaku.setSQL(query);
+  let content = `直近1週間における未入金の会議室予約情報一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
+  content += `利用日 | 利用者 | 会議室名 | 時間 | 金額 | 備考\r\n`;
+  let content_nyukyo = `\r\n▼入居者まとめて請求対象\r\n利用日 | 利用者 | 会議室名 | 時間 | 金額 | 備考\r\n`;
+  retObjYoyaku.forEach((yoyaku) => {
+    // 入居者でかつ、利用日が過去の場合
+    if (yoyaku.nm_riyousha.indexOf("■") !== -1) {
+      content_nyukyo += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
+    } else {
+      content += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
+    }
+  });
+
+  //メール送信
+  mail.send("未入金会議室予約情報", content + content_nyukyo);
+
+  logger.info(
+    `cronより通知メールを送信しました（未入金会議室予約）：${new Date()}`
+  );
+}
+
+/**
+ * 監視対象となっている利用者の会議室予約情報を通知する
+ */
+const alertYoyakuKanshiMail = async () => {
+
+  let content = `会議室予約情報の監視結果の一覧となります。\r\n\r\n-----------------------------------------------------\r\n`;
+  content += `利用日 | 利用者(ID) | 会議室名 | 時間 | 金額 | 備考\r\n`;
+
+  // 当日を設定
+  const targetYYYYMMDD = tool.getYYYYMMDD(new Date());
+
+  // 監視対象利用者の会議室予約が当日以降に存在するか確認する
+  const retObjCheckYoyaku = await m_ischeckyoyaku.findwithYoyaku(targetYYYYMMDD);
+
+  // 会議室予約情報が存在するかチェック
+  if (retObjCheckYoyaku) {
+    // 予約情報の出力
+    retObjCheckYoyaku.forEach((yoyaku) => {
+      content += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
+    })
+  }          
+  
+  //メール送信
+  mail.send("会議室予約監視一覧", content);
+
+  logger.info(
+    `cronより通知メールを送信しました（会議室予約監視）：${new Date()}`
+  );
+
+}
+
 // cron設定
 const startcron = () => {
   if (config.cron.effective === "on") {
 
     // Trelloタスクリンク通知メール
     cron.schedule(config.cron.trello, () => {
-      (async () => {
-        let content = `毎日Trelloのタスクを確認し、更新しましょう！\r\n\r\n-----------------------------------------------------\r\n`;
-        content += `https://trello.com/b/vTUUegIw/コンシェルジュ業務\r\n`;
-        content += `https://trello.com/b/kJnhN0Kj/入退去関連\r\n`;
-  
-        //メール送信
-        mail.send("タスク確認", content);
-
-        logger.info(`cronより通知メールを送信しました（Trello）：${new Date()}`);
-      })();
+      alertTrelloMail();
     });
 
     // 応対履歴通知メール
     cron.schedule(config.cron.outai, () => {
-      (async () => {
-        query =
-          'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(c.name, "会社指定なし") as name_company FROM outais o left outer JOIN companies c ON o.id_company = c.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) ocu WHERE ocu.status != "完了" ORDER BY ocu.ymdhms_upd desc';
-        const retObjoutai = await m_outai.setSQL(query);
-        let content = `未完了の応対履歴一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
-
-        retObjoutai.forEach((outai) => {
-          content += `会社：${outai.name_company}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${config.url.outai}${outai.id}\r\n------------------------------------------------------\r\n`;
-        });
-
-        //メール送信
-        mail.send("応対履歴一覧", content);
-
-        logger.info(`cronより通知メールを送信しました（入居者）：${new Date()}`);
-      })();
-    });
+      alertOutairirekiMail();
+    })
 
     // 応対履歴（会議室）通知メール
     cron.schedule(config.cron.outaikaigi, () => {
-      (async () => {
-        query =
-          'select * from(SELECT o.*,ua.name AS name_add, uu.name AS name_upd, ifnull(r.name, "利用者指定なし") as name_riyousha FROM outaiskaigi o left outer JOIN riyoushas r ON o.id_riyousha = r.id LEFT OUTER JOIN users ua ON ua.id = o.id_add LEFT OUTER JOIN users uu ON uu.id = o.id_upd) oru WHERE oru.status != "完了" ORDER BY oru.ymdhms_upd desc';
-        const retObjOutai = await m_outai.setSQL(query);
-        let content = `未完了の応対履歴（会議室）一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
-
-        retObjOutai.forEach((outai) => {
-          content += `利用者：${outai.name_riyousha}\r\nステータス：${outai.status}\r\n登録日時：${outai.ymdhms_add}\r\n登録者：${outai.name_add}\r\n更新日時：${outai.ymdhms_upd}\r\n更新者：${outai.name_upd}\r\n＜内容＞\r\n${outai.content}\r\n${config.url.outaikaigi}${outai.id}\r\n------------------------------------------------------\r\n`;
-        });
-
-        //メール送信
-        mail.send("応対履歴一覧（会議室）", content);
-
-        logger.info(
-          `cronより通知メールを送信しました（会議室）：${new Date()}`
-        );
-      })();
-    });
+      alertOutairirekiKaigiMail();
+    })
 
     // 未入金情報通知メール
     cron.schedule(config.cron.mishukaigi, () => {
-      (async () => {
-        const targetYYYYMMDD = tool.getYYYYMMDD7dayAfter();
-        const query =
-          'SELECT y.* FROM yoyakus y WHERE y.stat_shiharai <> "受" AND y.id_riyousha <> "00001" AND y.id_riyousha <> "10001"  AND y.ymd_riyou < ' +
-          targetYYYYMMDD +
-          ' ORDER BY y.ymd_riyou, y.id_riyousha';
-
-        const retObjYoyaku = await m_yoyaku.setSQL(query);
-        let content = `直近1週間における未入金の会議室予約情報一覧となります。\r\n内容を確認し、対応を行ってください。\r\n\r\n-----------------------------------------------------\r\n`;
-        content += `利用日 | 利用者 | 会議室名 | 時間 | 金額 | 備考\r\n`;
-        let content_nyukyo = `\r\n▼入居者まとめて請求対象\r\n利用日 | 利用者 | 会議室名 | 時間 | 金額 | 備考\r\n`;
-        retObjYoyaku.forEach((yoyaku) => {
-          // 入居者でかつ、利用日が過去の場合
-          if (yoyaku.nm_riyousha.indexOf("■") !== -1) {
-            content_nyukyo += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
-          } else {
-            content += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
-          }
-          // content += `利用日：${tool.returndateWithslash(
-          //   yoyaku.ymd_riyou
-          // )}\r\n登録日：${tool.returndateWithslash(
-          //   yoyaku.ymd_add
-          // )}\r\n更新日：${tool.returndateWithslash(
-          //   yoyaku.ymd_upd
-          // )}\r\n会議室名：${yoyaku.nm_room}\r\n時間：${yoyaku.time_yoyaku
-          //   }\r\n金額：${yoyaku.price}\r\n利用者：${yoyaku.id_riyousha} | ${yoyaku.nm_riyousha
-          //   }\r\n受付：${yoyaku.nm_uketuke
-          //   }\r\n備考：${tool.returnvalueWithoutNull(
-          //     yoyaku.bikou
-          //   )}\r\n------------------------------------------------------\r\n`;
-        });
-
-        //メール送信
-        mail.send("未入金会議室予約情報", content + content_nyukyo);
-
-        logger.info(
-          `cronより通知メールを送信しました（未入金会議室予約）：${new Date()}`
-        );
-      })();
-    });
+      alertMishuKaigiMail();
+    })
 
     // 予約監視対象利用者の会議室予約確認
     cron.schedule(config.cron.checkyoyaku, () => {
-      (async () => {
-
-        let content = `会議室予約情報の監視結果の一覧となります。\r\n\r\n-----------------------------------------------------\r\n`;
-        content += `利用日 | 利用者(ID) | 会議室名 | 時間 | 金額 | 備考\r\n`;
-
-        // 当日を設定
-        const targetYYYYMMDD = tool.getYYYYMMDD(new Date());
-
-        // 監視対象利用者の会議室予約が当日以降に存在するか確認する
-        const retObjCheckYoyaku = await m_ischeckyoyaku.findwithYoyaku(targetYYYYMMDD);
-
-        // 会議室予約情報が存在するかチェック
-        if (retObjCheckYoyaku) {
-          // 予約情報の出力
-          retObjCheckYoyaku.forEach((yoyaku) => {
-            content += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
-          })
-        }          
-        
-        //メール送信
-        mail.send("会議室予約監視一覧", content);
-
-        logger.info(
-          `cronより通知メールを送信しました（会議室予約監視）：${new Date()}`
-        );
-      })();
-    });
-
+      alertYoyakuKanshiMail();
+    })
 
     // 会議室　利用者登録情報ダウンロード
     cron.schedule(config.cron.dlriyousha, () => {
@@ -984,4 +1000,9 @@ module.exports = {
   clearYoyakuInfo,
   setYoyakuInfo,
   setPerInfo,
+  alertTrelloMail,
+  alertOutairirekiMail,
+  alertOutairirekiKaigiMail,
+  alertYoyakuKanshiMail,
+  alertMishuKaigiMail,
 };
