@@ -19,7 +19,7 @@ const m_perinfo = require("../../model/perinfo");
   })();
 });
 
-//部屋情報の登録
+//会議室情報のリカバリ
 router.post("/recovery", security.authorize(), (req, res, next) => {
 
   (async () => {
@@ -27,7 +27,7 @@ router.post("/recovery", security.authorize(), (req, res, next) => {
     const yyyymm_recovery = req.body.yyyymm_target;
     const yyyymm_current = tool.getYYYYMMDD(new Date());
     const num = yyyymm_recovery - yyyymm_current.slice(0,6);
-
+    
     await cron.dlinfo(num);
 
     await cron.clearYoyakuInfo(num);
