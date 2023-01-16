@@ -7,6 +7,7 @@ html {
 body {
   font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
   color: #333;
+  background-color: #F0DCE2;
 }
 
 pre {
@@ -64,7 +65,7 @@ pre {
 }
 
 .form__item-style {
-  color: #8a8a8a;
+  color: #333333;
   display: block;
   width: 100%;
   height: 30px;
@@ -83,7 +84,7 @@ pre {
 }
 
 .searchform__item-style {
-  color: #8a8a8a;
+  color: #333333;
   display: inline-block;
   width: 100px;
   height: 25px;
@@ -124,7 +125,7 @@ pre {
 }
 
 .form__item-readonly-style {
-  color: #8a8a8a;
+  color: #333333;
   display: block;
   width: 100%;
   height: 30px;
@@ -144,7 +145,7 @@ pre {
   border: 3px solid #fff;
   border-radius: 50px;
   color: #fff;
-  background-color: #8a8a8a;
+  background-color: #333333;
   white-space: nowrap;
   cursor: pointer;
   -webkit-user-select: none;
@@ -194,7 +195,7 @@ input:checked + .checkbox_label::before {
   position: relative;
   padding-left: 20px;
   font-size: 0.75rem;
-  color: #8a8a8a;
+  color: #333333;
   cursor: pointer;
   margin-bottom: 10px;
 }
@@ -204,7 +205,7 @@ input:checked + .checkbox_label::before {
   display: block;
   width: 0.75rem;
   height: 0.75rem;
-  border: 1px solid #8a8a8a;
+  border: 1px solid #333333;
   position: absolute;
   left: 0;
   top: 0;
@@ -461,7 +462,7 @@ input:checked + .checkbox_label::before {
 }
 
 .item-readonly-style-done {
-  color: #8a8a8a;
+  color: #333333;
   display: inline-block;
   height: 30px;
   padding: 5px;
@@ -524,7 +525,7 @@ input:checked + .checkbox_label::before {
 }
 
 .login {
-  background: rgba(0, 0, 0, 0.2);
+  background: #F0DCE2;
   width: 100%;
   height: 100%;
   position: absolute;
@@ -536,7 +537,7 @@ input:checked + .checkbox_label::before {
   width: 360px;
   height: 320px;
   height: auto;
-  background-color: #fff;
+  background-color: #F0DCE2;
   margin: auto;
   border-radius: 5px;
   padding: 20px;
@@ -557,8 +558,9 @@ input:checked + .checkbox_label::before {
 .header {
   width: 100%;
   height: 60px;
-  background-color: #fff;
+  background-color: #F0DCE2;
   position: fixed;
+  z-index: 1;
 }
 .header .header-wrapper {
   max-width: 900px;
@@ -579,7 +581,7 @@ input:checked + .checkbox_label::before {
 }
 .header .header-wrapper .header-left .header-logo {
   display: inline-block;
-  background-color: #fff;
+  background-color: #F0DCE2;
   padding: 5px 10px;
   width: 300px;
   height: auto;
@@ -621,7 +623,7 @@ input:checked + .checkbox_label::before {
   margin: 0 auto;
   top: 52px;
   padding-top: 10px;
-  background-color: #fff;
+  background-color: #F0DCE2;
   z-index: 99;
 }
 
@@ -1026,13 +1028,13 @@ dd.area__outai-content textarea {
 .kaigi__result__table {
   margin-top: 40px;
   border-collapse: collapse;
-  border: 3px solid rgb(255, 255, 255);
+  border: 3px solid #F0DCE2;
   table-layout: fixed;
   width: 100%;
 }
 
 .kaigi__result__table th, .kaigi__result__table td {
-  border: 3px solid rgb(255, 255, 255);
+  border: 3px solid #F0DCE2;
   padding: 0.6em;
 }
 
@@ -1044,7 +1046,7 @@ dd.area__outai-content textarea {
 }
 
 .kaigi__result__table td {
-  background: rgba(205, 94, 66, 0.2);
+  background: #f4eef0;
   text-align: right;
 }
 
@@ -1069,7 +1071,7 @@ dd.area__outai-content textarea {
 }
 
 .recovery_input {
-  color: #8a8a8a;
+  color: #333333;
   display: inline-block;
   width: 150px;
   height: 25px;
