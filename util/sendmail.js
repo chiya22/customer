@@ -39,6 +39,39 @@ const send = (title, content) => {
     });
 }
 
+// XServerを使用してメール送信
+const sendByXserer = (title, content) => {
+
+    // トランスポート
+    const smtp_config = {
+        host: process.env.MAIL_ADMIN_HOST,
+        port: process.env.MAIL_ADMIN_PORT,
+        secure: true,
+        auth: {
+            user: process.env.MAIL_ADMIN_USER,
+            pass: process.env.MAIL_ADMIN_PASSWORD,
+        },
+    };    
+
+    let transporter = nodemailer.createTransport(smtp_config);
+
+    // メール情報
+    let message = {
+        from: process.env.MAIL_ADMIN_FROM,
+        to: process.env.MAIL_ADMIN_TO,
+        subject: title,
+        text: content,
+    };
+
+    // メール送信
+    transporter.sendMail(message, function (err, response) {
+        if (err) {
+            logger.info(`[err]${err}`);
+        }
+    });
+}
+
 module.exports = {
     send,
+    sendByXserer,
 };

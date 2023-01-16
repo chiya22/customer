@@ -140,6 +140,32 @@ const alertYoyakuKanshiMail = async () => {
 const startcron = () => {
   if (config.cron.effective === "on") {
 
+    // エラー検知
+    cron.schedule(config.cron.checkErrInLogfile, () => {
+
+      const logfilepath = process.cwd() + "\\logs\\crud.log";
+      const logcontent = fs.readFileSync(logfilepath, "utf-8");
+      const logcontentlist = logcontent.split("\r\n");
+      const regexp = RegExp('err:', 'g')
+
+      let mailbody = '';
+      for (let i=0;i < logcontentlist.length; i++) {
+        if (regexp.test(logcontentlist[i])) {
+          mailbody += logcontentlist[i] + "\r\n";
+        }
+      }
+
+      //メール送信
+      if (mailbody !== '') {
+        mail.sendByXserer("【入居者管理メール送信】エラー発生", mailbody);
+        logger.info(`cronより通知メールを送信しました（エラーチェック）：${new Date()}`);
+      } else {
+        logger.info(`エラーはありませんでした：${new Date()}`);
+      }
+
+    });
+
+
     // Trelloタスクリンク通知メール
     cron.schedule(config.cron.trello, () => {
       alertTrelloMail();

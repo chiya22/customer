@@ -21,6 +21,8 @@ module.exports = {
   cron: {
     // クーロン有効設定
     effective: "on",
+    // エラー検知
+    checkErrInLogfile: "30 * * * 1-5",
     // Trelloタスク確認
     trello: "0 9 * * 1-5",
     // 通知メール（応対履歴、会議室）
