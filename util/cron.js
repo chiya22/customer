@@ -289,7 +289,8 @@ const startcron = () => {
           // ダウンロード先の設定
           await page._client.send("Page.setDownloadBehavior", {
             behavior: "allow",
-            downloadPath: config.dlpath,
+            downloadPath: "C:\\download\\customer",
+            // downloadPath: config.dlpath,
           });
           await a_tag.click();
           await page.waitForTimeout(10000);
