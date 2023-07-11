@@ -193,345 +193,195 @@ const startcron = () => {
 
     // 会議室　利用者登録情報ダウンロード
     cron.schedule(config.cron.dlriyousha, () => {
-      (async () => {
-        const browser = await puppeteer.launch({ headless: true });
-
-        let page = await browser.newPage();
-
-        await page.goto(config.url.kanri, { waitUntil: "domcontentloaded" });
-
-        // ログイン
-        await page.type('input[name="in_office"]', config.login_id);
-        await page.type('input[name="in_opassword"]', config.login_passwd);
-        await page.click(
-          "body > table > tbody > tr > td > table > tbody > tr:nth-child(1) > td > form > table:nth-child(2) > tbody > tr > td:nth-child(2) > input"
-        );
-
-        await page.waitForTimeout(1000);
-        // await page.waitForNavigation({waitUntil: 'domcontentloaded'});
-
-        // 管理画面から「管理者メニュー」をクリック
-        const menu = await page.$(
-          "body > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(2) > tbody > tr:nth-child(3) > td:nth-child(2) > input[type=image]:nth-child(6)"
-        );
-        await menu.click();
-
-        await page.waitForTimeout(2000);
-
-        // 新しく開いたページを取得
-        let newPage = await getNewPage(page);
-
-        // パスワードの設定
-        await newPage.type(
-          'input[name="in_managerpassword"]',
-          config.login_passwd
-        );
-        const inputElement = await newPage.$("input[type=submit]");
-        await inputElement.click();
-
-        await newPage.waitForTimeout(2000);
-
-        // 「ダウンロード」のクリック
-        await newPage.click(
-          "body > div:nth-child(3) > table > tbody > tr > th:nth-child(6) > img"
-        );
-
-        await newPage.waitForTimeout(2000);
-
-        // 「登録車情報ダウンロード」のクリック
-        await newPage.click(
-          "#inbody > div > div:nth-child(2) > div:nth-child(1) > div.waku_5 > img"
-        );
-
-        await newPage.waitForTimeout(2000);
-
-        // 新しく開いたページを取得
-        let newPageTouroku = await getNewPage(newPage);
-
-        // Promptが出たら必ずOKとする
-        newPageTouroku.on("dialog", async (dialog) => {
-          await dialog.accept();
-        });
-
-        const beforeOneMontYYYYMM = getCurrentYYYYMM(-1);
-        const startYYYY = beforeOneMontYYYYMM.slice(0, 4);
-        const startMM = "" + Number(beforeOneMontYYYYMM.slice(-2));
-        const currentYYYYMM = getCurrentYYYYMM(0);
-        const currentYYYY = currentYYYYMM.slice(0, 4);
-        const currentMM = "" + Number(currentYYYYMM.slice(-2));
-
-        // 開始へ設定する年月
-        await newPageTouroku.select('select[name="start_y"]', startYYYY);
-        await newPageTouroku.select('select[name="start_m"]', startMM);
-        await newPageTouroku.select('select[name="end_y"]', currentYYYY);
-        await newPageTouroku.select('select[name="end_m"]', currentMM);
-        // await newPageTouroku.select('select[name="end_y"]', '2020');
-        // await newPageTouroku.select('select[name="end_m"]', '12');
-
-        // 「項目名-全選択」をクリックする
-        await newPageTouroku.click(
-          "#inbody > form > table > tbody > tr:nth-child(2) > td.reserve_screen > a:nth-child(2)"
-        );
-        // 「登録者データ」をクリックする
-        await newPageTouroku.click("#inbody > form > p > input.btn_150-30");
-
-        await newPage.waitForTimeout(2000);
-
-        // 新しく開いたページを取得
-        let newPageResult = await getNewPage(newPageTouroku);
-
-        const a_tag = await newPageResult.$("a");
-        if (a_tag) {
-          await logger.info(
-            `会議室マスタ情報をダウンロードしました：${new Date()}`
-          );
-
-          // ダウンロード先の設定
-          await page._client.send("Page.setDownloadBehavior", {
-            behavior: "allow",
-            downloadPath: "C:\\download\\customer",
-            // downloadPath: config.dlpath,
-          });
-          await a_tag.click();
-          await page.waitForTimeout(10000);
-        } else {
-          await logger.info(
-            `会議室マスタ情報がありませんでした：${new Date()}`
-          );
-        }
-
-        /**
-         * 新しく開いたページを取得
-         * @param {page} page もともと開いていたページ
-         * @returns {page} 別タブで開いたページ
-         */
-        async function getNewPage(page) {
-          const pageTarget = await page.target();
-          const newTarget = await browser.waitForTarget(
-            (target) => target.opener() === pageTarget
-          );
-          const newPage = await newTarget.page();
-          await newPage.waitForSelector("body");
-          return newPage;
-        }
-
-        await browser.close();
-      })();
+      logger.info(`会議室利用者登録情報ダウンロード開始`);
+      downloadRiyousha();
+      logger.info(`会議室利用者登録情報ダウンロード終了`);
     });
 
+    
     // 会議室　利用者情報取込
-    cron.schedule(config.cron.setriyousha, () => {
-
+    cron.schedule(config.cron.setriyousha, async () => {
+      logger.info(`会議室利用者情報取込　開始`);
       // ダウンロードディレクトリにあるcsvファイルを取得する
       let targetfilename = "";
       fs.readdirSync(config.dlpath).forEach((filename) => {
-
         // *mdl.csvのファイルの場合処理をする
         if (filename.slice(-7) === "mdl.csv") {
           targetfilename = filename;
 
+          // ダウンロードファイルより最新の利用者情報を取得する
           // csvファイルはShift-JISのため
-          const src = fs
-            .createReadStream(config.dlpath + "\\" + filename)
-            .pipe(iconv.decodeStream("Shift_JIS"));
+          const file = fs.readFileSync(config.dlpath + "\\" + filename);
+          const data = iconv.decode(Buffer.from(file), "Shift_JIS");
+          const lines = data.split("\n");
+          let objRiyoushaFromFile = [];
 
-          src.on("data", (chunk) => {
+          lines.forEach((line) => {
+            let linecontents = line.split(",");
 
-            let detaillog = "";
-            const lines = chunk.split("\n");
-            lines.forEach((line) => {
-              let linecontents = line.split(",");
-              if (linecontents[0] !== "利用者" && linecontents[0] !== "") {
-                logger.info(`更新前情報：${line}`);
-
-                // linecontentsの項目
-                // 00:利用者
-                // 01:ふりがな
-                // 02:生年月日
-                // 03:性別
-                // 04:郵便番号
-                // 05:住所
-                // 06:電話番号
-                // 07:お知らせメール
-                // 08:E-mail(1)
-                // 09:E-mail(2)
-                // 10:利用者区分
-                // 11:ＶＩＰ区分
-                // 12:施設管理番号
-                // 13:有効期限
-                // 14:備考
-                // 15:登録日
-                // 16:更新日
-
-                // yyyy年mm月dd日　⇒　yyyymmdd
-                const target_ymd_upd =
-                  linecontents[16].slice(0, 4) +
-                  linecontents[16].slice(5, 7) +
-                  linecontents[16].slice(8, 10);
-                const target_ymd_add =
-                  linecontents[15].slice(0, 4) +
-                  linecontents[15].slice(5, 7) +
-                  linecontents[15].slice(8, 10);
-
-                (async () => {
-                  let inObj = {};
-                  inObj.id = linecontents[12];
-                  linecontents[0] = linecontents[0]
-                    .replace(/ /g, "　")
-                    .replace(/[*]/g, "＊");
-
-                  const retObjRiyousha = await m_riyousha.findPKey(linecontents[12]);
-
-                  // 新規登録用、更新用のオブジェクトを作成
-                  inObj.id = linecontents[12];
-                  if (
-                    linecontents[0].indexOf("●") === -1 &&
-                    linecontents[0].indexOf("■") === -1
-                  ) {
-                    inObj.kubun = "千代田区外";
-                    if (linecontents[0].indexOf("◆") === -1) {
-                      inObj.kubun2 = "中小企業・公共団体";
-                    } else {
-                      inObj.kubun2 = "大企業・任意団体・個人・その他";
-                    }
-                  } else {
-                    if (linecontents[0].indexOf("■") !== -1) {
-                      inObj.kubun = "入居者";
-                      inObj.kubun2 = "";
-                    } else {
-                      inObj.kubun = "千代田区内";
-                      if (linecontents[0].indexOf("◆") === -1) {
-                        inObj.kubun2 = "中小企業・公共団体・個人";
-                      } else {
-                        inObj.kubun2 = "大企業・任意団体";
-                      }
-                    }
-                  }
-                  inObj.name = linecontents[0];
-                  inObj.kana = linecontents[1];
-                  inObj.sex = linecontents[3];
-                  inObj.no_yubin = linecontents[4];
-                  inObj.address = linecontents[5];
-                  inObj.no_tel = linecontents[6];
-                  inObj.mail1 = linecontents[8];
-                  inObj.mail2 = linecontents[9];
-                  inObj.kubun_riyousha = linecontents[10];
-                  inObj.kubun_vip = linecontents[11];
-                  inObj.bikou = linecontents[14];
-                  inObj.ymd_add = target_ymd_add;
-                  inObj.ymd_upd = target_ymd_upd;
-
-                  // すでに利用者が存在している場合
-                  if (retObjRiyousha) {
-                    if (!retObjRiyousha.ymd_upd) {
-                      retObjRiyousha.ymd_upd = '';
-                    }
-                    // 更新されているかを判別する
-                    if (target_ymd_add !== retObjRiyousha.ymd_add || target_ymd_upd !== retObjRiyousha.ymd_upd) {
-                      const retObjRiyoushaupdate = await m_riyousha.update(inObj);
-                      if (retObjRiyoushaupdate.changedRows === 0) {
-                        logger.info(`更新対象が存在しません：${inObj.id}`);
-                      } else {
-                        detaillog =
-                          inObj.id +
-                          "," +
-                          inObj.kubun +
-                          "," +
-                          inObj.kubun2 +
-                          "," +
-                          inObj.name +
-                          "," +
-                          inObj.kana +
-                          "," +
-                          inObj.sex +
-                          "," +
-                          inObj.no_yubin +
-                          "," +
-                          inObj.address +
-                          "," +
-                          inObj.no_tel +
-                          "," +
-                          inObj.mail1 +
-                          "," +
-                          inObj.mail2 +
-                          "," +
-                          inObj.kubun_riyousha +
-                          "," +
-                          inObj.kubun_vip +
-                          "," +
-                          inObj.bikou +
-                          "," +
-                          inObj.ymd_add +
-                          "," +
-                          inObj.ymd_upd +
-                          "\n";
-                        logger.info(`会議室利用者情報更新ログ：${detaillog}`);
-                      }
-                    } else {
-                      logger.info(`会議室利用者情報更新ログ：更新なし`);
-                    }
-
-                    // 利用者に存在しない場合
-                  } else {
-                    const retObjRiyoushainsert = await m_riyousha.insert(inObj);
-                    detaillog =
-                      inObj.id +
-                      "," +
-                      inObj.kubun +
-                      "," +
-                      inObj.kubun2 +
-                      "," +
-                      inObj.name +
-                      "," +
-                      inObj.kana +
-                      "," +
-                      inObj.sex +
-                      "," +
-                      inObj.no_yubin +
-                      "," +
-                      inObj.address +
-                      "," +
-                      inObj.no_tel +
-                      "," +
-                      inObj.mail1 +
-                      "," +
-                      inObj.mail2 +
-                      "," +
-                      inObj.kubun_riyousha +
-                      "," +
-                      inObj.kubun_vip +
-                      "," +
-                      inObj.bikou +
-                      "," +
-                      inObj.ymd_add +
-                      "," +
-                      inObj.ymd_upd +
-                      "\n";
-                    logger.info(`会議室利用者情報登録ログ：${detaillog}`);
-                  }
-                })();
-              }
-            });
+            // 先頭行ではない、または、空行ではない場合
+            if (linecontents[0] !== "利用者" && linecontents[0] !== "") {
+              // ダウンロードしたファイルの行を利用者オブジェクトに変換
+              let inObj = makeObjRiyoushas(linecontents);
+              objRiyoushaFromFile.push(inObj);
+            }
           });
+          
+          let objRiyoushaFromFileSorted = objRiyoushaFromFile.sort((a, b) => {
+            return (a.id > b.id) ? -1 : 1;  //オブジェクトのid降順ソート
+          });
+          (async () => {
+            // データベースより既存の利用者情報を取得する
+            let objRiyoushaFromDB = await m_riyousha.findByAll();
+            let i_db = 0;
+            let s_db_key = objRiyoushaFromDB[i_db].id;
+            let o_db = objRiyoushaFromDB[i_db];
 
-          src.on("end", () => {
-            // 対象ファイルを処理した場合は対象ファイルをリネーム
-            fs.rename(
-              config.dlpath + "\\" + targetfilename,
-              config.dlpath + "\\" + targetfilename + ".old",
-              (err) => {
-                if (err) {
-                  logger.info(
-                    `${targetfilename}ファイルは存在しません：${new Date()}`
-                  );
-                  throw err;
+            let i_file = 0;
+            let s_file_key = objRiyoushaFromFileSorted[i_file].id;
+            let o_file = objRiyoushaFromFileSorted[i_file];
+
+            const C_MINVALUE = -1;
+
+            // let inObj = {};
+            while (s_db_key !== C_MINVALUE || s_file_key !== C_MINVALUE) {
+              // logger.info(`利用者情報トラン：${i_file}回目：${o_file.id} | ${o_file.name}`);
+              // logger.info(`利用者情報マスタ：${i_db}回目：${o_db.id} | ${o_db.name}`);
+              // ★マッチング（1:1）
+              if (s_file_key === s_db_key) {
+                // ダウンロードファイルに存在する、かつ、データベースにも存在する
+                // inObjの情報を使用して利用者情報を更新する
+                (async () => {
+                  await m_riyousha.update(o_file);
+                })()
+                i_db += 1;
+                if (i_db !== objRiyoushaFromDB.length) {
+                  s_db_key = objRiyoushaFromDB[i_db].id;
+                  o_db = objRiyoushaFromDB[i_db];
+                } else {
+                  s_db_key = C_MINVALUE;
+                }
+                i_file += 1;
+                if (i_file !== objRiyoushaFromFileSorted.length) {
+                  s_file_key = objRiyoushaFromFileSorted[i_file].id;
+                  o_file = objRiyoushaFromFileSorted[i_file];
+                } else {
+                  s_file_key = C_MINVALUE;
+                }
+              } else if (s_file_key < s_db_key) {
+                // ダウンロードファイルには存在しない、データベースに存在する
+                // マスタ情報を廃止にする
+                o_db.ymd_upd = tool.getToday();
+                o_db.ymd_end = tool.getToday();
+                logger.info(`利用者情報（廃止）：${o_db.id} ${o_db.name}`);
+                (async () => {
+                  await m_riyousha.remove(o_db);
+                })();
+                i_db += 1;
+                if (i_db !== objRiyoushaFromDB.length) {
+                  s_db_key = objRiyoushaFromDB[i_db].id;
+                  o_db = objRiyoushaFromDB[i_db];
+                } else {
+                  s_db_key = C_MINVALUE;
+                }
+              } else {
+                // ダウンロードファイルには存在する、データベースに存在しない
+                // inObjの情報を使用して利用者情報を登録する
+                logger.info(`利用者情報（登録）：${o_file.id} ${o_file.name}`);
+                (async () => {
+                  await m_riyousha.insert(o_file);
+                })();
+                i_file += 1;
+                if (i_file !== objRiyoushaFromFileSorted.length) {
+                  s_file_key = objRiyoushaFromFileSorted[i_file].id;
+                  o_file = objRiyoushaFromFileSorted[i_file];
+                } else {
+                  s_file_key = C_MINVALUE;
                 }
               }
-            );
+            }
+          })();
+          // 対象ファイルを処理した場合は対象ファイルをリネーム
+          fs.rename(config.dlpath + "\\" + targetfilename, config.dlpath + "\\" + targetfilename + ".old", (err) => {
+            if (err) {
+              logger.info(`${targetfilename}ファイルは存在しません：${new Date()}`);
+              throw err;
+            }
           });
+          logger.info(`会議室利用者情報取込　終了`);
         }
       });
     });
+
+    /**
+     * ダウンロードファイルの1行をもとに、
+     * 利用者情報のオブジェクトを作成し返却する
+     */
+    const makeObjRiyoushas = (linecontents) => {
+      // linecontentsの項目
+      // 00:利用者
+      // 01:ふりがな
+      // 02:生年月日
+      // 03:性別
+      // 04:郵便番号
+      // 05:住所
+      // 06:電話番号
+      // 07:お知らせメール
+      // 08:E-mail(1)
+      // 09:E-mail(2)
+      // 10:利用者区分
+      // 11:ＶＩＰ区分
+      // 12:施設管理番号
+      // 13:有効期限
+      // 14:備考
+      // 15:登録日
+      // 16:更新日
+      // yyyy年mm月dd日　⇒　yyyymmdd
+      // const target_ymd_add = linecontents[15].slice(0, 4) + linecontents[15].slice(5, 7) + linecontents[15].slice(8, 10);
+      // const target_ymd_upd = linecontents[16] !== ''? linecontents[16].slice(0, 4) + linecontents[16].slice(5, 7) + linecontents[16].slice(8, 10):target_ymd_add;
+      const target_ymd_add = '20230710';
+      const target_ymd_upd = '20230710';
+
+      let inObj = {};
+      inObj.id = linecontents[12];
+      inObj.id = linecontents[12];
+      linecontents[0] = linecontents[0].replace(/ /g, "　").replace(/[*]/g, "＊");
+      if (linecontents[0].indexOf("●") === -1 && linecontents[0].indexOf("■") === -1) {
+        inObj.kubun = "千代田区外";
+        if (linecontents[0].indexOf("◆") === -1) {
+          inObj.kubun2 = "中小企業・公共団体";
+        } else {
+          inObj.kubun2 = "大企業・任意団体・個人・その他";
+        }
+      } else {
+        if (linecontents[0].indexOf("■") !== -1) {
+          inObj.kubun = "入居者";
+          inObj.kubun2 = "";
+        } else {
+          inObj.kubun = "千代田区内";
+          if (linecontents[0].indexOf("◆") === -1) {
+            inObj.kubun2 = "中小企業・公共団体・個人";
+          } else {
+            inObj.kubun2 = "大企業・任意団体";
+          }
+        }
+      }
+      inObj.name = linecontents[0];
+      inObj.kana = linecontents[1];
+      inObj.sex = linecontents[3];
+      inObj.no_yubin = linecontents[4];
+      inObj.address = linecontents[5];
+      inObj.no_tel = linecontents[6];
+      inObj.mail1 = linecontents[8];
+      inObj.mail2 = linecontents[9];
+      inObj.kubun_riyousha = linecontents[10];
+      inObj.kubun_vip = linecontents[11];
+      inObj.bikou = linecontents[14];
+      inObj.ymd_add = target_ymd_add;
+      inObj.ymd_upd = target_ymd_upd;
+
+      return inObj;
+    };
 
     // 会議室　予約情報ダウンロード
     // 当月－１
@@ -703,8 +553,8 @@ const dlinfo = async (num) => {
       0
     ).getDate();
 
-    await logger.info(`対象年月日：${inYYYY_MM}`);
-    await logger.info(`末日：${in_DD_matubi}`);
+    logger.info(`対象年月日：${inYYYY_MM}`);
+    logger.info(`末日：${in_DD_matubi}`);
 
     await newPageTouroku.select('select[name="in_month"]', inYYYY_MM);
     await newPageTouroku.select('select[name="in_sday"]', "1");
@@ -743,7 +593,7 @@ const dlinfo = async (num) => {
           // downloadPath: config.dlpath,
         });
         await a_tag.click();
-        await logger.info(`予約情報をダウンロードしました：${inYYYY_MM}：${new Date()}`);
+        logger.info(`予約情報をダウンロードしました：${inYYYY_MM}：${new Date()}`);
         await page.waitForTimeout(10000);
         break;
       } else {
@@ -755,7 +605,7 @@ const dlinfo = async (num) => {
           // ダウンロードリンクが表示されているかもしれないので取り直す
           a_tag = await newPageResult.$("a");
         } else {
-          await logger.info(`予約情報がありませんでした：${inYYYY_MM}：${new Date()}`);
+          logger.info(`予約情報がありませんでした：${inYYYY_MM}：${new Date()}`);
           break;
         }
       }
@@ -1020,6 +870,159 @@ const getCurrentYYYYMM = (numM) => {
 
   return "" + retYYYY + ("" + "0" + retMM).slice(-2);
 };
+
+/**
+ * 会議室利用者情報を全件ダウンロードする
+ * 
+ */
+const downloadRiyousha = () => {
+  (async () => {
+    const browser = await puppeteer.launch({ headless: true });
+    let page = await browser.newPage();
+    await page.goto(config.url.kanri, { waitUntil: "domcontentloaded" });
+
+    // ログイン
+    await page.type('input[name="in_office"]', config.login_id);
+    await page.type('input[name="in_opassword"]', config.login_passwd);
+    await page.click(
+      "body > table > tbody > tr > td > table > tbody > tr:nth-child(1) > td > form > table:nth-child(2) > tbody > tr > td:nth-child(2) > input"
+    );
+
+    await page.waitForTimeout(1000);
+    // await page.waitForNavigation({waitUntil: 'domcontentloaded'});
+
+    // 管理画面から「管理者メニュー」をクリック
+    const menu = await page.$(
+      "body > table > tbody > tr > td > table > tbody > tr > td > table:nth-child(2) > tbody > tr:nth-child(3) > td:nth-child(2) > input[type=image]:nth-child(6)"
+    );
+    await menu.click();
+
+    await page.waitForTimeout(2000);
+
+    // 新しく開いたページを取得
+    let newPage = await getNewPage(page);
+
+    // パスワードの設定
+    await newPage.type(
+      'input[name="in_managerpassword"]',
+      config.login_passwd
+    );
+    const inputElement = await newPage.$("input[type=submit]");
+    await inputElement.click();
+
+    await newPage.waitForTimeout(2000);
+
+    // 「ダウンロード」のクリック
+    await newPage.click(
+      "body > div:nth-child(3) > table > tbody > tr > th:nth-child(6) > img"
+    );
+
+    await newPage.waitForTimeout(2000);
+
+    // 「登録車情報ダウンロード」のクリック
+    await newPage.click(
+      "#inbody > div > div:nth-child(2) > div:nth-child(1) > div.waku_5 > img"
+    );
+
+    await newPage.waitForTimeout(2000);
+
+    // 新しく開いたページを取得
+    let newPageTouroku = await getNewPage(newPage);
+
+    // Promptが出たら必ずOKとする
+    newPageTouroku.on("dialog", async (dialog) => {
+      await dialog.accept();
+    });
+
+    // const beforeOneMonthYYYYMM = getCurrentYYYYMM(toMonth);
+    // const startYYYY = beforeOneMonthYYYYMM.slice(0, 4);
+    // const startMM = "" + Number(beforeOneMonthYYYYMM.slice(-2));
+    const currentYYYYMM = getCurrentYYYYMM(0);
+    const currentYYYY = currentYYYYMM.slice(0, 4);
+    const currentMM = "" + Number(currentYYYYMM.slice(-2));
+
+    // 開始へ設定する年月
+    await newPageTouroku.select('select[name="start_y"]', '2004');
+    await newPageTouroku.select('select[name="start_m"]', '1');
+    await newPageTouroku.select('select[name="end_y"]', currentYYYY);
+    await newPageTouroku.select('select[name="end_m"]', currentMM);
+    // await newPageTouroku.select('select[name="end_y"]', '2020');
+    // await newPageTouroku.select('select[name="end_m"]', '12');
+
+    // 「項目名-全選択」をクリックする
+    await newPageTouroku.click(
+      "#inbody > form > table > tbody > tr:nth-child(2) > td.reserve_screen > a:nth-child(2)"
+    );
+
+    logger.info('開始年月：2004/1');
+    logger.info(`終了年月：${currentYYYY}/${currentMM}`);
+
+    // 「登録者データ」をクリックする
+    await newPageTouroku.click("#inbody > form > p > input.btn_150-30");
+
+    await newPage.waitForTimeout(2000);
+
+    // 新しく開いたページを取得
+    let newPageResult = await getNewPage(newPageTouroku);
+
+    let a_tag = await newPageResult.$("a");
+    const input_tag = await newPageResult.$("#inbody > table > tbody > tr:nth-child(3) > th > input[type=submit]:nth-child(1)");
+    logger.info(input_tag);
+    for (let i = 0; i<10; i++) {
+      // logger.info(`${i}回目`);
+      if (a_tag) {
+        logger.info(
+          `会議室マスタ情報をダウンロードしました：${new Date()}`
+        );
+  
+        // ダウンロード先の設定
+        await page._client.send("Page.setDownloadBehavior", {
+          behavior: "allow",
+          downloadPath: "C:\\download\\customer",
+          // downloadPath: config.dlpath,
+        });
+        await a_tag.click();
+        await page.waitForTimeout(10000);
+        break;
+      } else {
+        if (input_tag) {
+          // logger.info(`${i}回目：継続ボタンクリック前`);
+          await newPageResult.click(
+            "#inbody > table > tbody > tr:nth-child(3) > th > input[type=submit]:nth-child(1)"
+          );
+          // logger.info(`${i}回目：継続ボタンクリック後`);
+          await page.waitForTimeout(10000);
+          // ダウンロードリンクが表示されているかもしれないので取り直す
+          a_tag = await newPageResult.$("a");
+        } else {
+          // logger.info(`${i}回目：会議室情報なし`);
+          logger.info(
+            `会議室マスタ情報がありませんでした：${new Date()}`
+          );
+          break;
+        }
+      }
+    }
+
+    /**
+     * 新しく開いたページを取得
+     * @param {page} page もともと開いていたページ
+     * @returns {page} 別タブで開いたページ
+     */
+    async function getNewPage(page) {
+      const pageTarget = await page.target();
+      const newTarget = await browser.waitForTarget(
+        (target) => target.opener() === pageTarget
+      );
+      const newPage = await newTarget.page();
+      await newPage.waitForSelector("body");
+      return newPage;
+    }
+
+    await browser.close();
+  })();
+};
+
 
 module.exports = {
   startcron,
