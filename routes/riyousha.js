@@ -138,7 +138,7 @@ router.get("/checkyoyaku/:id", security.authorize(), (req, res, next) => {
       await ischeckyoyaku.remove(req.params.id);
     } else {
       // 存在しない（OFF）場合　⇒　ONにするためレコード追加
-      await ischeckyoyaku.insert(req.params.id);
+      await ischeckyoyaku.insert(req.params.id, tool.getYYYYMMDD(new Date()));
     }
 
     // 更新結果を再度取得する

@@ -150,7 +150,6 @@ pre {
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   transition: background-color 0.2s, box-shadow 0.2s;
 }
@@ -1003,6 +1002,7 @@ dd.area__outai-content textarea {
 .admin__bicycles,
 .admin__cars,
 .admin__telnos,
+.admin__ischeckyoyaku,
 .admin__cabinets {
   margin-top: 0.5rem;
   margin-left: 1.5rem;
@@ -1013,6 +1013,7 @@ dd.area__outai-content textarea {
 .admin__bicycles a,
 .admin__cars a,
 .admin__telnos a,
+.admin__ischeckyoyaku a,
 .admin__cabinets a {
   margin: 0.5rem 0.5rem;
 }

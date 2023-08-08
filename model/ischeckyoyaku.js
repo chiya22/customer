@@ -19,6 +19,16 @@ const find = async () => {
     }
 };
 
+const findAllWithName = async () => {
+    try {
+        const query = "select i.id_riyousha , r.name, i.ymd_add  from ischeckyoyaku i left outer join riyoushas r on i.id_riyousha = r.id order by i.id_riyousha;"
+        const retObj = await knex.raw(query);
+        return retObj[0];
+    } catch(err) {
+        throw err;
+    }
+}
+
 /**
  * 監視対象利用者の日付指定以降の予約情報を返却する
  * @param {*} yyyymmdd 日付
@@ -34,9 +44,9 @@ const findwithYoyaku = async (yyyymmdd) => {
     }
 };
 
-const insert = async (id) => {
+const insert = async (id, ymd_add) => {
     try {
-        const query = 'insert into ischeckyoyaku values ("' + id + '")';
+        const query = 'insert into ischeckyoyaku values ("' + id + '", "' + ymd_add + '")';
         const retObj = await knex.raw(query);
         return retObj[0];
     } catch(err) {
@@ -58,6 +68,7 @@ module.exports = {
     find,
     findPKey,
     findwithYoyaku,
+    findAllWithName,
     insert,
     remove,
 };

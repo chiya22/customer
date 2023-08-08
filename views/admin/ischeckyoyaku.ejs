@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>監視対象管理</title>
+  <%- include("../common/stylesheets.ejs") %>
+</head>
+
+<body>
+  <%- include("../common/header.ejs", {current: 'master'}) %>
+  <div class="main">
+    <div class="main__wrapper">
+      <div class="admin__ischeckyoyaku" style="margin-top:30px">
+        <% if (ischeckyoyakus) { %>
+        <%  ischeckyoyakus.forEach( ischeckyoyaku => { %>
+        <div class="admin_ischeckyoyaku">
+          <a class="btn-link" href="/riyousha/<%= ischeckyoyaku.id_riyousha %>">
+            <%= ischeckyoyaku.id_riyousha %> <%= ischeckyoyaku.name %> <%= ischeckyoyaku.id %><span class="dateinfo-small">　登録年月日：<%= ischeckyoyaku.ymd_add.slice(0,4) %>.<%= ischeckyoyaku.ymd_add.slice(4,6) %>.<%= ischeckyoyaku.ymd_add.slice(6,8) %>
+          </a>
+        </div>
+        <%  }) %>
+        <% } %>
+      </div>
+    </div>
+    <!-- /.main__wrapper -->
+  </div>
+  <!-- /.main -->
+</body>
+<%- include("../common/javascripts.ejs") %>
+
+</html>
