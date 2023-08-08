@@ -111,7 +111,7 @@ const alertMishuKaigiMail = async () => {
 const alertYoyakuKanshiMail = async () => {
 
   let content = `会議室予約情報の監視結果の一覧となります。\r\n\r\n-----------------------------------------------------\r\n`;
-  content += `利用日 | 利用者(ID) | 会議室名 | 時間 | 金額 | 備考\r\n`;
+  content += `利用日 | 利用者(ID) | 会議室名 | 時間 | 金額 | 支払状況 | 備考\r\n`;
 
   // 当日を設定
   const targetYYYYMMDD = tool.getYYYYMMDD(new Date());
@@ -123,7 +123,7 @@ const alertYoyakuKanshiMail = async () => {
   if (retObjCheckYoyaku) {
     // 予約情報の出力
     retObjCheckYoyaku.forEach((yoyaku) => {
-      content += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
+      content += `${tool.returndateWithslash(yoyaku.ymd_riyou)} | ${yoyaku.nm_riyousha}(${yoyaku.id_riyousha}) | ${yoyaku.nm_room} | ${yoyaku.time_yoyaku} | ${yoyaku.price.toLocaleString()} | ${tool.returnvalueWithoutNull(yoyaku.stat_shiharai)} | ${tool.returnvalueWithoutNull(yoyaku.bikou)}\r\n`
     })
   }          
   
@@ -207,6 +207,7 @@ const startcron = () => {
       fs.readdirSync(config.dlpath).forEach((filename) => {
         // *mdl.csvのファイルの場合処理をする
         if (filename.slice(-7) === "mdl.csv") {
+          logger.info(`会議室利用者情報取込　処理対象ファイル名：${filename}`);
           targetfilename = filename;
 
           // ダウンロードファイルより最新の利用者情報を取得する
